@@ -469,7 +469,7 @@ You will receive a response like the following:
               "links":[
                 {
                   "rel":"self",
-                  "url":" https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -1293,7 +1293,29 @@ These are raw results returned by the acquirer.
 ```
 
 <a name="authenticationobject"></a>
-authentication
+## authentication
+
+|Element            |Type                           |Description                        |
+|---                |---                            |---                                |
+|eci                |number<br/>`length=1-10`       |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. <br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**MasterCard**<ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
+|cavv               |string<br/>`length<=80`        |This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated. This value should be appended to the authorization request signifying that the transaction has been successfully authenticated.| 
+|xid                |string<br/>`length<=40`        |This is the transaction identifier returned by the card issuer.|
+|threeDEnrollment   |string                         |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul>|
+|threeDResult       |string                         |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li>N &dash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>|
+|signatureStatus    |string                         |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
+
+```apib
+{
+  "authentication":{
+    "eci":5,
+    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+    "threeDEnrollment":"Y",
+    "threeDResult":"Y",
+    "signatureStatus":"Y"
+  }
+}
+```
 
 <a name="authorizationobject"></a>
 ## auths
@@ -1313,7 +1335,7 @@ authentication
 |profile            |[profile](#profileobject)              |These are some details about the customer.|
 |billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
 |shippingDetails    |[shippingDetails](#shippingdetailsobject) |These are the shipping details for the request.|
-|recurring          |number                                 |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|recurring          |string                                 |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
 |keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g., for reporting purposes in the merchant back office. For example, the merchant could use this as a tag to identify the transaction or the product purchased at their site.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
@@ -1514,6 +1536,57 @@ When providing card information, merchants can provide either card details or a 
 }
 ```
 
+<a name="originalcreditsobject"></a>
+## originalcredits
+
+|Element            |Type                                   |Description                        |
+|---                |---                                    |---                                |
+|id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit.|
+|childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|card               |[card](#cardobject)                    |These are the details of the card used.|
+|authCode           |string<br/>`length<=50`                |This is the Authorization code assigned by the issuing bank and returned in the response.|
+|profile            |[profile](#profileobject)              |These are some details about the customer.|
+|billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
+|customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
+|dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
+|description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
+|txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
+|error              |[error](#errorobject)                  |       |
+|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
+|acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+  "merchantRefNum":"merchant ABC-444",
+  "amount":10098,
+  "card":{
+    "cardNum":"4111111111111111",
+    "cardExpiry":{
+      "month":2,
+      "year":2017
+    }
+  },
+  "profile":{
+    "firstName":"Joe",
+    "lastName":"Smith",
+    "email":"Joe.Smith@canada.com"
+  },
+  "billingDetails":{
+    "street":"100 Queen Street West",
+    "city":"Toronto",
+    "state":"ON",
+    "country":"CA",
+    "zip":"M5H 2N2"
+  },
+  "customerIp":"204.91.0.12",
+  "description":"Winning payment from Loto 649"
+}    
+```
+
 <a name="profileobject"></a>
 ## profile
 |Element            |Type                       |Required   |Description    |
@@ -1532,6 +1605,51 @@ When providing card information, merchants can provide either card details or a 
 }
 ```
 
+<a name="refundsobject"></a>
+## refunds
+|Element            |Type                                   |Description                        |
+|---                |---                                    |---                                |
+|id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br>`max=99999999999`            |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
+|txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|error              |[error](#errorobject)                  |       |
+|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
+|acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+    "merchantRefNum":"REFUND_ID:1231",
+    "amount":10098
+}
+```
+
+<a name="settlementsobject"></a>
+## settlements
+|Element            |Type                                   |Description                        |
+|---                |---                                    |---                                |
+|id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|availableToRefund  |number<br/>`max=99999999999`           |This is the amount of this settlement that is available to refund, in minor units.|
+|childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|error              |[error](#errorobject)                  |       |
+|dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
+|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
+|riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
+|acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+    "merchantRefNum":"merchantRef_2014_04_11_05",
+    "amount":100
+}
+```
+
 <a name="shippingdetailsobject"></a>
 ## shippingDetails
 
@@ -1545,6 +1663,122 @@ When providing card information, merchants can provide either card details or a 
 |state              |string                     |           |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
 |country            |string                     |           |See [Country Codes](#countrycodes). |
 
+```apib
+{
+  "shippingDetails":{
+    "carrier":"UPS",
+    "shipMethod":"N",
+    "street":"100 Queen Street West",
+    "city":"Toronto",
+    "state":"ON",
+    "country":"CA",
+    "zip":"M5H 2N2"
+  }
+}
+```
+
+<a name="standalonecreditsobject"></a>
+## standalonecredits
+
+|Element            |Type                                   |Description                        |
+|---                |---                                    |---                                |
+|id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit.|
+|childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|card               |[card](#cardobject)                    |These are the details of the card used.|
+|authCode           |string<br/>`length<=50`                |This is the Authorization code assigned by the issuing bank and returned in the response.|
+|profile            |[profile](#profileobject)              |These are some details about the customer.|
+|billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
+|customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
+|dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
+|description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
+|txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
+|error              |[error](#errorobject)                  |       |
+|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
+|acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+  "merchantRefNum":"merchant ABC-444",
+  "amount":10098,
+  "card":{
+    "cardNum":"4111111111111111",
+    "cardExpiry":{
+      "month":2,
+      "year":2017
+    }
+  },
+  "profile":{
+    "firstName":"Joe",
+    "lastName":"Smith",
+    "email":"Joe.Smith@canada.com"
+  },
+  "billingDetails":{
+    "street":"100 Queen Street West",
+    "city":"Toronto",
+    "state":"ON",
+    "country":"CA",
+    "zip":"M5H 2N2"
+  },
+  "customerIp":"204.91.0.12",
+  "description":"Refund without receipt"
+}    
+```
+
+<a name="verificationsobject"></a>
+## verifications
+
+|Element            |Type                                   |Description                        |
+|---                |---                                    |---                                |
+|id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|card               |[card](#cardobject)                    |These are the details of the card used.|
+|authCode           |string<br/>`length<=50`                |This is the Authorization code assigned by the issuing bank and returned in the response.|
+|profile            |[profile](#profileobject)              |These are some details about the customer.|
+|billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
+|customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
+|dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
+|description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
+|txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
+|avsResponse        |string                                 |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|cvvVerification    |string                                 |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|error              |[error](#errorobject)                  |       |
+|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li></ul>|
+|riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
+|acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+    "merchantRefNum": "merchant ABC-444",
+    "card": {
+        "cardNum": "4111111111111111",
+        "cardExpiry": {
+            "month": 2,
+            "year": 2017
+        },
+        "cvv": "123"
+    },
+    "profile": {
+        "firstName": "Joe",
+        "lastName": "Smith",
+        "email": "Joe.Smith@canada.com"
+    },
+    "billingDetails": {
+        "street": "100 Queen Street West",
+        "city": "Toronto",
+        "state": "ON",
+        "country": "CA",
+        "zip": "M5H2N2"
+    },
+    "customerIp": "204.91.0.12",
+    "description": "This is a test transaction"
+}    
+```
 
 <a name="visaadditionalauthdataobject"></a>
 ## visaAdditionalAuthData
@@ -1717,30 +1951,2225 @@ The recipient is deemed to be the person or party who has the contractual relati
 
 ## Authorization [POST /accounts/{ACCOUNT_ID}/auths]
 
-This is how you submit an authorization request.
+This is how you submit an Authorization request.
 
-+ Parameters
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+ * To settle the authorization in the same request, just set the *settleWithAuth* parameter to *true*.
+
+ * If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. These details are stored with the payment token.
+
+The following lists describe the mandatory and optional parameters for processing an Authorization request. For a detailed description of the attributes, please refer to the [auths object](#authorizationobject).
+
+**Required Parameters**
+* merchantRefNum
+* amount
+* card
+* settleWithAuth
+
+**Optional Parameters**
+* preAuth
+* authentication
+* profile
+* billingDetails
+* shippingDetails
+* recurring
+* customerIp
+* dupCheck
+* keywords
+* merchantDescriptor
+* accordD
+* description
+* masterPass
+* visaAdditionalAuthData
+
+
++ Request Authorization (application/json)
+
+    + Parameters
+        + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+        
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+
+
+    + Headers
     
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "settleWithAuth":false,
+              "card":{
+                "cardNum":"4111111111111111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                },
+                "cvv":123
+              },
+              "authentication":{
+                "eci":5,
+                "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                "threeDEnrollment":"Y",
+                "threeDResult":"Y",
+                "signatureStatus":"Y"
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "shippingDetails":{
+                "carrier":"UPS",
+                "shipMethod":"N",
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Got U a video"
+            }
+        ```
     
 + Response 200 (application/json)
 
-    + Attributes    
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+    
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/a02e52c7-c991-4418-966a-b62989cb0eae"
+                },
+                {
+                  "rel":"settlement",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
+                }
+             ],
+              "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
+              "merchantRefNum":"ORDER_ID:1231",
+              "amount":10098,
+              "settleWithAuth":true,
+              "availableToSettle":0,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+                },
+              "billingDetails":{
+                   "zip":"M5H 2N2"
+                },
+              "authCode":"1234567890",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"NOT_PROCESSED",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED"
+            }        
+        ```
+        
++ Request Authorization with Payment Token (application/json)
+
+    + Parameters
+        + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+        
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - This is the payment token that represents the card used for the request.
+        + settleWithAuth (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "settleWithAuth":false,
+              "card":{
+                "paymentToken":"LTEyMzYzMjQ3ODg"
+                },
+              "authentication":{
+                "eci":5,
+                "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                "threeDEnrollment":"Y",
+                "threeDResult":"Y",
+                "signatureStatus":"Y"
+              },
+              "shippingDetails":{
+                "carrier":"UPS",
+                "shipMethod":"N",
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Got U a video"
+            }
+        ```
+    
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + settleWithAuth (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+    
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/a02e52c7-c991-4418-966a-b62989cb0eae"
+                },
+                {
+                  "rel":"settlement",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
+                }
+             ],
+              "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
+              "merchantRefNum":"ORDER_ID:1231",
+              "amount":10098,
+              "settleWithAuth":true,
+              "availableToSettle":0,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+                },
+              "billingDetails":{
+                   "zip":"M5H 2N2"
+                },
+              "authCode":"1234567890",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"NOT_PROCESSED",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED"
+            }        
+        ```        
+        
+## Get Authorization [GET /auths/{AUTH_ID}]
+
+This is how you look up an Authorization request using the ID returned in the response to the original request.
+
++ Parameters
+    + AUTH_ID:5f2164fa-7141-40a9-b065-1426243970f1 - This is the authorization ID returned in the response.
+        
++ Request Get Authorization (application/json)   
+
+    + Headers
+            
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+ + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+    
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/a02e52c7-c991-4418-966a-b62989cb0eae"
+                },
+                {
+                  "rel":"settlement",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
+                }
+             ],
+              "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
+              "merchantRefNum":"ORDER_ID:1231",
+              "amount":10098,
+              "settleWithAuth":true,
+              "availableToSettle":0,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+                },
+              "billingDetails":{
+                   "zip":"M5H 2N2"
+                },
+              "authCode":"1234567890",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"NOT_PROCESSED",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED",
+              "settlements":[
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
+                    }
+                  ],
+                  "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
+                  "merchantRefNum":"ORDER_ID:1231",
+                  "amount":10098,
+                  "availableToRefund":0,
+                  "txnTime":"2013-12-14T15:12:18Z",
+                  "status":"PENDING"
+                }
+              ]
+            }        
+        ```
+        
+## Get Authorization Using Merchant Reference Number [GET /auths?merchantRefNum=merchant-ABC-123&limit=2]
+
+This is how you look up an Authorization request using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchant-ABC-123 (string, required) - This is the *merchantRefNum* returned in the response to the Authorization request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+
+
++ Request Get Authorization (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
++ Response 200 (application/json)
+
+    + Attributes
+
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+       + card (object, required) - These are the details of the card used for the request.
+        + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + preAuth (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
+        + authentication (object, optional) - These are 3D Secure details.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + shippingDetails (object, optional) - These are the shipping details for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate.
+        + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
+        + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+        + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + masterPass (object, optional) - This is the MasterPass information that is passed to the gateway on authorizations.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method. 
+    
+    
+    + Body
+
+        ```apib
+            {
+              "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                    }    
+              ],
+              "auths":[
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e3058030-1a0c-4b8a-b7f7-ceb79157df3f"
+                    }
+                  ],
+                  "id":"e3058030-1a0c-4b8a-b7f7-ceb79157df3f",
+                  "merchantRefNum":"merchantRef_2014_03_10_01",
+                  "amount":5,
+                  "settleWithAuth": false,
+                  "availableToSettle":0,
+                  "childAccountNum":"1000203713",
+                  "card":{
+                    "type":"VI",
+                    "lastDigits":"1111",
+                    "cardExpiry":{
+                      "month":2,
+                      "year":2017
+                    }
+                  },
+                  "authCode":"100002",
+                  "billingDetails":{
+                    "street":"100QueenStreetWest",
+                    "city":"Toronto",
+                    "state":"ON",
+                    "country":"CA",
+                    "zip":"M5H2N2"
+                  },
+                  "txnTime":"2014-03-10T13:06:20Z",
+                  "currencyCode":"CAD",
+                  "avsResponse":"MATCH",
+                  "cvvVerification":"MATCH",
+                  "error":{
+                    "code":"3009",
+                    "message":"Your request has been declined by the issuing bank."
+                  },
+                  "status":"FAILED",
+                  "riskReasonCode":[
+                    1005
+                  ]
+                },
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/6d1b087f-da60-4ae1-a901-fafb39704e63"
+                    }
+                  ],
+                  "id":"6d1b087f-da60-4ae1-a901-fafb39704e63",
+                  "merchantRefNum":"merchantRef_2014_03_10_01",
+                  "amount":100,
+                  "settleWithAuth": false,
+                  "availableToSettle":100,
+                  "childAccountNum":"1000203713",
+                  "card":{
+                    "type":"VI",
+                    "lastDigits":"1111",
+                    "cardExpiry":{
+                      "month":2,
+                      "year":2017
+                    }
+                  },
+                  "authCode":"100003",
+                  "billingDetails":{
+                    "street":"100QueenStreetWest",
+                    "city":"Toronto",
+                    "state":"ON",
+                    "country":"CA",
+                    "zip":"M5H2N2"
+                  },
+                  "txnTime":"2014-03-10T13:06:50Z",
+                  "currencyCode":"CAD",
+                  "avsResponse":"MATCH",
+                  "cvvVerification":"MATCH",
+                  "status":"COMPLETED"
+                }
+              ]
+            }
+        ```        
+        
+## Complete an Authorization [PUT /auths/{AUTH_ID}]
+
+This is how you complete (settle) an Authorization request.
+
++ Request Complete Authorization (application/json)
+
+    + Parameters
+        + AUTH_ID:5f2164fa-7141-40a9-b065-1426243970f1 - This is the authorization ID returned in the response.
+    
+    + Attributes
+        + status (string, required) - This is the status to which you want to change the Authorization (COMPLETED or CANCELLED).
+
+    + Headers
+            
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "status":"COMPLETED"
+            }
+        ```            
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+    
+    + Body
+    
+        ```apib
+                {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                    }
+                ],
+                "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
+                "txnTime": "2014-04-09T20:07:20Z",
+                "status": "COMPLETED",
+                "amount": 100,
+                "settleWithAuth": false,
+                "availableToSettle": 100
+             }        
+        ```
 
 # Authorization Reversals [/voidauths]
 <a name="voidauths"></a>
 
-# Settlements [/settlements/SETTLEMENT_ID]
+## Reverse an Authorization [POST /accounts/{ACCOUNT_ID}/voidauths]
+
+This is how you submit an Authorization Reversal request. You can reverse an Authorization only if it has not yet been settled. 
+
+The following lists describe the mandatory and optional parameters for processing an Authorization request. For a detailed description of the attributes, please refer to the [auths object](#authorizationobject).
+
+**Required Parameters**
+* merchantRefNum
+
+**Optional Parameters**
+* amount
+* dupCheck
+
++ Request Authorization Reversal (application/json)
+
+    + Parameters
+        + AUTH_ID:ef8e4da6-68c1-40fb-ba43-d735148b1a7f (string, required) - This is the authorization ID returned in the response.
+        
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        
+    
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchant ABC-123-voidauths",
+              "amount":898
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+
+
+    + Body
+    
+        ```apib
+                    {
+              "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                    }
+                ],
+              "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+              "merchantRefNum":"merchant ABC-123-voidauths",
+              "amount":898,
+              "txnTime":"2014-03-14T15:12:18Z",
+              "status":"COMPLETED"
+            }
+        ```
+        
+## Get Authorization Reversal [GET /voidauths/{VOID_AUTH_ID}]
+
+This is how you look up an Authorization Reversal request using the ID returned in the response to the original request.
+
++ Parameters
+    + VOID_AUTH_ID:d1fb46ee-2736-4ef5-a724-f263ace75373e (string, required) - This is the ID returned in the response to the Authorization Reversal request. 
+    
++ Request Get Authorization Reversal (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
++ Response 200 (application/json)
+
+    + Attributes
+
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request. 
+    
+    
+    + Body
+
+        ```apib
+                {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                    }
+                ],
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchant-ABC-123-voidauths",
+                "amount": 898,
+                "status": "COMPLETED"
+            }
+        ```
+        
+## Get Authorization Reversal Using Merchant Reference Number [GET /voidauths?merchantRefNum=merchant-ABC-123-voidauths]
+
+This is how you look up an Authorization Reversal request using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchant-ABC-123-voidauth (string, required) - This is the *merchantRefNum* used in the Authorization Reversal request. 
+    
++ Request Get Authorization Reversal (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
++ Response 200 (application/json)
+
+    + Attributes
+
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + status (string, required) - This is the status of the transaction request. 
+    
+    
+    + Body
+
+            ```apib
+               {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                    }
+                ],
+                "voidAuths": [
+                    {
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                            }
+                        ],
+                        "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                        "merchantRefNum": "merchant-ABC-123-voidauths",
+                        "amount": 898,
+                        "status": "COMPLETED"
+                    }
+                ]
+            }
+            ```        
+    
+# Settlements [/settlements]
 <a name="settlements"></a>
+
+## Settlement [POST /auths/{AUTH_ID/settlements]
+
+This is how you submit a Settlement request.
+
+The following lists describe the mandatory and optional parameters for processing a Settlement request. For a detailed description of the attributes, please refer to the [settlements object](#settlementsobject).
+
+**Required Parameters**
+* merchantRefNum
+
+**Optional Parameters**
+* amount
+* dupCheck
+
++ Request Settlement (application/json)
+
+    + Parameters
+        + AUTH_ID:e3058030-1a0c-4b8a-b7f7-ceb79157df3f (string, required) - This is the ID returned in the response to the Authorization request.
+        
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units. 
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchantRef_2014_04_11_05",
+              "amount":50
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units.
+        
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                    }
+                ],
+                "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
+                "merchantRefNum": "merchantRef_2014_04_11_05",
+                "txnTime": "2014-04-11T14:04:36Z",
+                "status": "PENDING",
+                "amount": 50,
+                "availableToRefund": 50
+            }
+        ```
+        
+## Cancel a Settlement [PUT /settlements/{SETTLEMENT_ID}]
+
+This is how you submit a Cancel Settlement request.
+
+**Required Parameters**
+* status
+
++ Request Cancel Settlement (application/json)
+
+    + Parameters
+        + SETTLEMENT_ID:6ddbc05a-ff40-4dc1-b2d3-f200934dfdde (string, required) -  This is the ID returned in the response to the Settlement request.
+        
+    + Attributes
+        + status (string, required) - This is the status of the transaction request.
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "status":"CANCELLED"  
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                    }
+                ],
+                "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
+                "txnTime": "2014-04-09T20:07:20Z",
+                "status": "CANCELLED"
+            }
+        ```
+        
+## Get Settlement [GET /settlements/{SETTLEMENT_ID}]      
+
+This is how you look up a Settlement request using the ID returned in the response to the original request.
+
++ Parameters
+    + SETTLEMENT_ID:00ec4b4f-f601-4430-8fb6-f90271cf9291 - This is the settlement ID returned in the response.
+    
++ Request Get Settlement (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
+            
+    + Body
+
+        ```apib
+            {
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                }],
+                "id": "00ec4b4f-f601-4430-8fb6-f90271cf9291",
+                "merchantRefNum": "merchantRef_2014_04_01_03",
+                "txnTime": "2014-04-01T18:04:22Z",
+                "status": "PENDING",
+                "amount": 50,
+                "availableToRefund": 50
+            }
+        ```
+        
+## Get Settlement Using Merchant Reference Number [GET /settlements?merchantRefNum=merchantRef_2014_04_01_03]
+
+This is how you look up a Settlement using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    
++ Request Get Settlement (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
+        
+    + Body
+    
+        ```apib
+              {
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                }
+              ],
+              "settlements":[
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                    }
+                  ],
+                  "id":"00ec4b4f-f601-4430-8fb6-f90271cf9291",
+                  "merchantRefNum":"merchantRef_2014_04_01_03",
+                  "txnTime":"2014-04-01T18:04:22Z",
+                  "status":"PENDING",
+                  "amount":50,
+                  "availableToRefund":50
+                }
+              ]
+            }
+        ```
+
 
 # Refunds [/refunds]
 <a name="refunds"></a>
 
+## Refund [POST /settlements/{SETTLEMENT_ID}/refunds]
+
+This is how you submit a Refund request. 
+
+The following lists describe the mandatory and optional parameters for processing a Refund request. For a detailed description of the attributes, please refer to the [refunds object](#refundsobject).
+
+**Required Parameters**
+* merchantRefNum
+
+**Optional Parameters**
+* amount
+* dupCheck
+
++ Request Refund (application/json)
+
+    + Parameters
+        SETTLEMENT_ID:6ddbc05a-ff40-4dc1-b2d3-f200934dfdde (string, required) -  This is the ID returned in the response to the Settlement request.
+        
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+    
+        ```apib
+            {
+                "merchantRefNum": "merchantABC-444-refund",
+                "amount": 1000
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://netbanx.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
+                    }
+                ],
+                "id": "410a51a2-73e7-4a59-bab7-3cce49a25ff6",
+                "merchantRefNum": "merchantABC-444-refund",
+                "txnTime": "2014-04-11T14:04:36Z",
+                "status": "PENDING",
+                "amount": 1000
+            }
+        ```
+        
+## Cancel a Refund [PUT /refunds/{REFUND_ID}]
+
+This is how you submit a Cancel Refund request.
+
+**Required Parameters**
+* status
+
++ Request Cancel Refund (application/json)
+
+    + Parameters
+    
+        + REFUND_ID:410a51a2-73e7-4a59-bab7-3cce49a25ff6 (string, required) - This is the ID returned in the response to the Refund request.
+        
+    + Attributes
+    
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "status":"CANCELLED"  
+            }
+        ```
+
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+                        {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
+                    }
+                ],
+                "id": "410a51a2-73e7-4a59-bab7-3cce49a25ff6",
+                "txnTime": "2014-04-09T20:07:20Z",
+                "status": "CANCELLED"
+            }        
+        ```
+        
+## Get Refund [GET /refunds/{REFUND_ID}]      
+
+This is how you look up a Refund request using the ID returned in the response to the original request.
+
++ Parameters
+    + REFUND_ID:00ec4b4f-f601-4430-8fb6-f90271cf9291 - This is the refund ID returned in the response.
+    
++ Request Get Refund (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        
+    + Body 
+    
+        ```apib
+            {
+                "links": [{
+                     "rel": "self",
+                     "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                 }],
+                "id": "00ec4b4f-f601-4430-8fb6-f90271cf9291",
+                "merchantRefNum": "merchantRef_2014_04_01_03",
+                "txnTime": "2014-04-01T18:04:22Z",
+                "status": "PENDING",
+                "amount": 50
+            }
+        ```
+        
+## Get Refund Using Merchant Reference Number [GET /refunds?merchantRefNum=merchantRef_2014_04_01_03]
+
+This is how you look up a Refund using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    
++ Request Get Refund (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
+        
+    + Body
+    
+        ```apib
+              {
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                }
+              ],
+              "refunds":[
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                    }
+                  ],
+                  "id":"00ec4b4f-f601-4430-8fb6-f90271cf9291",
+                  "merchantRefNum":"merchantRef_2014_04_01_03",
+                  "txnTime":"2014-04-01T18:04:22Z",
+                  "status":"PENDING",
+                  "amount":50
+                }
+              ]
+            }
+        ```        
+
 # Verifications [/verifications]
 <a name="verifications"></a>
+
+## Verification [POST /verifications]
+
+This is how you submit a Verification request. This example verifies a card and associated billing details.
+
+ * If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. These details are stored with the payment token.
+ 
+The following lists describe the mandatory and optional parameters for processing a Verification request. For a detailed description of the attributes, please refer to the [verifications object](#verificationsobject). 
+
+**Required Parameters**
+* merchantRefNum
+* card
+
+**Optional Parameters**
+* profile
+* customerIp
+* dupCheck
+* description
+* billingDetails
+
++ Request Verification (application/json)
+
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+    
+        ```apib
+            {
+                "merchantRefNum": "merchant ABC-444",
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2017
+                    },
+                    "cvv": "123"
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "This is a test transaction"
+            }            
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + card (object, required) - These are the details of the card used for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + profile (object, optional) - These are some details about the customer.  
+        + billingDetails (object, optional) - These are the billing details for the request.        
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "authCode":"026189",
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"This is a test transaction",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"MATCH",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED"
+            }
+        ```
+        
++ Request Verification with Payment Token (application/json)
+
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+    
+        ```apib
+            {
+                "merchantRefNum": "merchant ABC-444",
+                "card": {
+                    "paymentToken": "merchant ABC-444",
+                    "cvv": "123"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "This is a test transaction"
+            }            
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + card (object, required) - These are the details of the card used for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + profile (object, optional) - These are some details about the customer.  
+        + billingDetails (object, optional) - These are the billing details for the request.        
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "authCode":"026189",
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"This is a test transaction",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"MATCH",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED"
+            }
+        ```
+        
+## Get Verification [GET /verifications/{VERIFICATION_ID}]
+
+This is how you look up a Verification request using the ID returned in the response to the original request.
+
++ Parameters
+    + VERIFICATION_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the verification ID returned in the response.
+        
++ Request Get Verification (application/json)   
+
+    + Headers
+            
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + card (object, required) - These are the details of the card used for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + profile (object, optional) - These are some details about the customer.  
+        + billingDetails (object, optional) - These are the billing details for the request.        
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "authCode":"026189",
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"This is a test transaction",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "avsResponse":"MATCH",
+              "cvvVerification":"MATCH",
+              "status":"COMPLETED"
+            }
+        ```        
+
+## Get Verification Using Merchant Reference Number [GET /verifications?merchantRefNum=merchant-ABC-444&limit=2]
+
+This is how you look up a Verification request using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchant-ABC-444 (string, required) - This is the *merchantRefNum* used in the Verification request. 
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50. 
+    
++ Request Get Verification (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
++ Response 200 (application/json)
+
+    + Attributes
+
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + card (object, required) - These are the details of the card used for the request.
+        + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + profile (object, optional) - These are some details about the customer.  
+        + billingDetails (object, optional) - These are the billing details for the request.        
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + avsResponse (string, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (string, required) - This is the status of the transaction request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        
+    + Body
+        
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                }
+              ],
+              "verifications":[
+                {
+                  "links":[
+                    {
+                      "rel":"self",
+                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                    }
+                  ],
+                  "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                  "merchantRefNum":"merchant-ABC-444",
+                  "card":{
+                    "type":"VI",
+                    "lastDigits":"1111",
+                    "cardExpiry":{
+                      "month":2,
+                      "year":2017
+                    }
+                  },
+                  "authCode":"026189",
+                  "profile":{
+                    "firstName":"Joe",
+                    "lastName":"Smith",
+                    "email":"Joe.Smith@canada.com"
+                  },
+                  "billingDetails":{
+                    "street":"100 Queen Street West",
+                    "city":"Toronto",
+                    "state":"ON",
+                    "country":"CA",
+                    "zip":"M5H 2N2"
+                  },
+                  "customerIp":"204.91.0.12",
+                  "description":"This is a test transaction",
+                  "txnTime":"2013-12-14T15:12:18Z",
+                  "currencyCode":"USD",
+                  "avsResponse":"MATCH",
+                  "cvvVerification":"MATCH",
+                  "status":"COMPLETED"
+                }
+              ]
+            }
+                    
+        ```
 
 # Original Credits [/originalcredits]
 <a name="originalcredits"></a>
 
+Original Credits allow certain merchants to issue winnings as credits to cardholders, without requiring a previous authorization/settlement. 
+
+The merchant category codes (MCCs) for merchants who can process Original Credits are 7994 and 7995.
+
+## Original Credit [POST /originalcredits]
+
+This is how you submit an Original Credit request.
+
+The following lists describe the mandatory and optional parameters for processing an Original Credit request. For a detailed description of the attributes, please refer to the [originalcredits object](#originalcreditsobject).
+
+**Required Parameters**
+* merchantRefNum
+* amount
+* card
+
+**Optional Parameters**
+* profile
+* customerIp
+* dupCheck
+* description
+* billingDetails
+
++ Request Original Credit (application/json)
+
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "cardNum":"4111111111111111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Winning payment from Loto"
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Winning payment from Loto 649",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "status":"PENDING"
+            }        
+        ```
+
+## Cancel an Original Credit [PUT /originalcredits/{ORIGINAL_CREDIT_ID}]
+
+This is how you submit a Cancel Original Credit request.
+
+**Required Parameters**
+* status
+
++ Request Cancel Original Credit (application/json)
+
+    + Parameters
+        + ORIGINAL_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 (string, required) - This is the ID returned in the response to the Original Credit request.
+        
+    + Attributes
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "status":"CANCELLED"  
+            }
+        ```
+
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                    }
+                ],
+                "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                "txnTime": "2014-04-09T20:07:20Z",
+                "status": "CANCELLED"
+            }        
+        ```
+        
+## Get Original Credit [GET /originalcredits/{ORIGINAL_CREDIT_ID}]
+
+This is how you look up an Original Credit request using the ID returned in the response to the original request.
+
++ Parameters
+    + ORIGINAL_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the original credit ID returned in the response.
+    
++ Request Get Original Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+
+    + Body 
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Winning payment from Loto",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "status":"PENDING"
+            }
+        ```
+
+## Get Original Credit Using Merchant Reference Number [GET /originalcredits?merchantRefNum=merchantRef_2014_04_01_03]
+
+This is how you look up an Original Credit using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    
++ Request Get Original Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                    }
+                ],
+                "originalcredits": [
+                    {
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": " https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                            }
+                        ],
+                        "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                        "merchantRefNum": "merchantRef_2014_04_01_03",
+                        "amount": 10098,
+                        "card": {
+                            "type": "VI",
+                            "lastDigits": "1111",
+                            "cardExpiry": {
+                                "month": 2,
+                                "year": 2017
+                            }
+                        },
+                        "profile": {
+                            "firstName": "Joe",
+                            "lastName": "Smith",
+                            "email": "Joe.Smith@canada.com"
+                        },
+                        "billingDetails": {
+                            "street": "100 Queen Street West",
+                            "city": "Toronto",
+                            "state": "ON",
+                            "country": "CA",
+                            "zip": "M5H 2N2"
+                        },
+                        "customerIp": "204.91.0.12",
+                        "description": "Winning payment from Loto",
+                        "txnTime": "2014-05-14T15:12:18Z",
+                        "currencyCode": "USD",
+                        "status": "COMPLETED"
+                    }
+                ]
+            }
+        ```
+
 # Standalone Credits [/standalonecredits]
 <a name="standalonecredtis"></a>
+
+Standalone Credits allow merchants to issue credits to cardholders without requiring a previous authorization/settlement.
+
+**Note:** If your merchant category code (MCC) is 7994 or 7995, you must use Original Credits to issue a credit that does not correspond to a previous authorization/settlement.
+
+## Standalone Credit [POST /standalonecredits]
+
+This is how you submit a Standalone request.
+
+The following lists describe the mandatory and optional parameters for processing a Standalone Credit request. For a detailed description of the attributes, please refer to the [standalonecredits object](#standalonecreditsobject).
+
+**Required Parameters**
+* merchantRefNum
+* amount
+* card
+
+**Optional Parameters**
+* profile
+* customerIp
+* dupCheck
+* description
+* billingDetails
+
++ Request Standalone Credit (application/json)
+
+    + Attributes
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+        
+    + Body
+    
+        ```apib
+            {
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "cardNum":"4111111111111111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Refund without receipt"
+            }
+        ```
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + card (object, required) - These are the details of the card used for the request.
+        + profile (object, optional) - These are some details about the customer.
+        + billingDetails (object, optional) - These are the billing details for the request.
+        + customerIp (string, optional) - This is the customer's IP address.
+        + description (string, optional) - This is a description of the transaction, provided by the merchant.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Refund without receipt",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "status":"PENDING"
+            }        
+        ```
+
+## Cancel a Standalone Credit [PUT /standalonecredits/{STANDALONE_CREDIT_ID}]
+
+This is how you submit a Cancel Standalone Credit request.
+
+**Required Parameters**
+* status
+
++ Request Cancel Standalone Credit (application/json)
+
+    + Parameters
+    
+        + STANDALONE_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 (string, required) - This is the ID returned in the response to the Standalone Credit request.
+        
+    + Attributes
+        
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
+    + Body
+    
+        ```apib
+            {
+              "status":"CANCELLED"  
+            }
+        ```
+
++ Response 200 (application/json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                    }
+                ],
+                "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                "txnTime": "2014-04-09T20:07:20Z",
+                "status": "CANCELLED"
+            }        
+        ```
+
+## Get Standalone Credit [GET /standalonecredits/{STANDALONE_CREDIT_ID}]
+
+This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
+
++ Parameters
+    + STANDALONE_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the standalone credit ID returned in the response.
+    
++ Request Get Standalone Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application json)
+
+    + Attributes
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+
+    + Body 
+    
+        ```apib
+            {
+              "links":[
+                {
+                  "rel":"self",
+                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }
+              ],
+              "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+              "merchantRefNum":"merchant ABC-444",
+              "amount":10098,
+              "card":{
+                "type":"VI",
+                "lastDigits":"1111",
+                "cardExpiry":{
+                  "month":2,
+                  "year":2017
+                }
+              },
+              "profile":{
+                "firstName":"Joe",
+                "lastName":"Smith",
+                "email":"Joe.Smith@canada.com"
+              },
+              "billingDetails":{
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
+              "customerIp":"204.91.0.12",
+              "description":"Refund without receipt",
+              "txnTime":"2013-12-14T15:12:18Z",
+              "currencyCode":"USD",
+              "status":"PENDING"
+            }
+        ```
+
+## Get Standalone Credit Using Merchant Reference Number [GET /standalonecredits?merchantRefNum=merchantRef_2014_04_01_03]
+
+This is how you look up a Standalone Credit using the merchant reference number.
+
++ Parameters
+    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    
++ Request Get Standalone Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + links ([string], required) - This is an array of self-referencing links.
+        + id (string, required) - This is the ID returned in the response. 
+        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        + txnTime (string, required) - This is the date and time the transaction was processed.
+        + status (string, required) - This is the status of the transaction request.
+        + amount (number, required) - This is the amount of the request, in minor units.
+        + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
+        
+    + Body
+    
+        ```apib
+            {
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                    }
+                ],
+                "standalonecredits": [
+                    {
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                            }
+                        ],
+                        "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                        "merchantRefNum": "merchantRef_2014_04_01_03",
+                        "amount": 10098,
+                        "card": {
+                            "type": "VI",
+                            "lastDigits": "1111",
+                            "cardExpiry": {
+                                "month": 2,
+                                "year": 2017
+                            }
+                        },
+                        "profile": {
+                            "firstName": "Joe",
+                            "lastName": "Smith",
+                            "email": "Joe.Smith@canada.com"
+                        },
+                        "billingDetails": {
+                            "street": "100 Queen Street West",
+                            "city": "Toronto",
+                            "state": "ON",
+                            "country": "CA",
+                            "zip": "M5H 2N2"
+                        },
+                        "customerIp": "204.91.0.12",
+                        "description": "Refund without receipt",
+                        "txnTime": "2014-05-14T15:12:18Z",
+                        "currencyCode": "USD",
+                        "status": "COMPLETED"
+                    }
+                ]
+            }
+        ```
