@@ -1214,7 +1214,7 @@ In order to simulate a specific card security code response, provide a CVV value
 ## accordD
 |Element            |Type                       |Required       |Description                        |
 |---                |---                        |---            |---       |
-|financingType      |string                     |Yes            |This is the type of financing offered.<ul><li>DEFERRED_PAYMENT &ndash; Deferred payment financing</li><li>EQUAL_PAYMENT &ndash; Equal payment financing</li></ul>|
+|financingType      |enum                       |Yes            |This is the type of financing offered.<ul><li>DEFERRED_PAYMENT &ndash; Deferred payment financing</li><li>EQUAL_PAYMENT &ndash; Equal payment financing</li></ul>|
 |plan               |string<br/>`length<=3`     |Yes            |This is the plan number for this financing transaction.|
 |gracePeriod        |number<br/>`max=99`        |               |This is the grace period, in months, associated with deferred payment transactions.|
 |term               |number<br/>`max=99`        |               |This is the number of payments, in months, for equal payment transactions.|
@@ -1249,7 +1249,7 @@ These are raw results returned by the acquirer.
 |---                |---        |---            |
 |batchNumber        |string     |This is the batch number.|
 |effectiveDate      |string     |This is the date of the bank deposit associated with the transaction.|
-|financingType      |string     |This is the type of financing offered.|
+|financingType      |enum       |This is the type of financing offered.|
 |gracePeriod        |string     |This is the grace period, in months, associated with deferred payment transactions.|
 |plan               |string     |This is the plan number for this financing transaction.|
 |seqNumber          |string     |This is the merchant's sequence number.|
@@ -1300,9 +1300,9 @@ These are raw results returned by the acquirer.
 |eci                |number<br/>`length=1-10`       |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. <br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**MasterCard**<ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
 |cavv               |string<br/>`length<=80`        |This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated. This value should be appended to the authorization request signifying that the transaction has been successfully authenticated.| 
 |xid                |string<br/>`length<=40`        |This is the transaction identifier returned by the card issuer.|
-|threeDEnrollment   |string                         |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul>|
-|threeDResult       |string                         |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li>N &dash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>|
-|signatureStatus    |string                         |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
+|threeDEnrollment   |enum                           |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul>|
+|threeDResult       |enum                           |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li>N &dash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>|
+|signatureStatus    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
 
 ```apib
 {
@@ -1335,7 +1335,7 @@ These are raw results returned by the acquirer.
 |profile            |[profile](#profileobject)              |These are some details about the customer.|
 |billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
 |shippingDetails    |[shippingDetails](#shippingdetailsobject) |These are the shipping details for the request.|
-|recurring          |string                                 |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|recurring          |enum                                   |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
 |keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g., for reporting purposes in the merchant back office. For example, the merchant could use this as a tag to identify the transaction or the product purchased at their site.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
@@ -1345,10 +1345,10 @@ These are raw results returned by the acquirer.
 |masterPass         |[masterPass](#masterpassobject)        |This is the MasterPass information that is passed to the gateway on authorizations.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
-|avsResponse        |string                                 |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
-|cvvVerification    |string                                 |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|avsResponse        |enum                                   |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|cvvVerification    |enum                                   |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
 |error              |[error](#errorobject)                  |       |
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
@@ -1393,8 +1393,8 @@ These are raw results returned by the acquirer.
 
 <a name="billingdetailsobject"></a>
 ## billingDetails
-|Element            |Type                           |Description                        |
-|---                |---                            |---                                |
+|Element            |Type                             |Description                        |
+|---                |---                              |---                                |
 |street             |string<br/>`length<=50`          |This is the first line of the street address in the billing address.|
 |street2            |string<br/>`length<=50`          |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city               |string<br/>`length<=40`          |This is the city in the billing address.|
@@ -1429,7 +1429,7 @@ When providing card information, merchants can provide either card details or a 
 |Element            |Type                       |Required   |Description                        |
 |---                |---                        |---        |---                                |
 |cardNum            |string <br/>`length=8-20`  |Yes        |This is the card number used for the request. |
-|type               |enumeration                |           |This is type of card used for the request. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DC &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; MasterCard</li><li>MD &ndash; Maestro</li><li>SF &ndash; Swiff</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
+|type               |enum                       |           |This is type of card used for the request. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DC &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; MasterCard</li><li>MD &ndash; Maestro</li><li>SF &ndash; Swiff</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
 |lastDigits         |string<br/>`length=4`      |           |This is the last four digits of the card used for the request.|
 |cardExpiry         |[cardExpiry](#cardexpiryobject)|Yes    |This is the card's expiry date.|
 |cvv                |string<br/>`length=3-4`    |           |This is the 3- or 4-digit security code that appears on the card following the card number.|
@@ -1555,7 +1555,7 @@ When providing card information, merchants can provide either card details or a 
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
 |error              |[error](#errorobject)                  |       |
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1616,7 +1616,7 @@ When providing card information, merchants can provide either card details or a 
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |error              |[error](#errorobject)                  |       |
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1639,7 +1639,7 @@ When providing card information, merchants can provide either card details or a 
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |error              |[error](#errorobject)                  |       |
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.<br/>**Note:** This value defaults to *true*.|
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1655,8 +1655,8 @@ When providing card information, merchants can provide either card details or a 
 
 |Element            |Type                       |Required   |Description |
 |---                |---                        |---        |---        |
-|carrier            |enumeration                |           |This is the shipment carrier. Possible values are:<ul><li>APC &ndash; APC Overnight</li><li>APS &ndash; Anpost</li><li>CAD &ndash; Canada Postal Service</li><li>DHL &ndash; DHL</li><li>FEX &ndash; Fedex</li><li>RML &ndash; Royal Mail</li><li>UPS &ndash; United Parcel Service</li><li>USPS &ndash; United States Postal Service</li><li>CLK &ndash; CityLink</li><li>EMS &ndash; EMS (US Postal Service)</li><li>NEX &ndash; Nexworldwide</li><li>OTHER</li></ul>|
-|shipMethod         |enumeration                |           |This is the method of shipment. Possible values are:<ul><li>T &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
+|carrier            |enum                       |           |This is the shipment carrier. Possible values are:<ul><li>APC &ndash; APC Overnight</li><li>APS &ndash; Anpost</li><li>CAD &ndash; Canada Postal Service</li><li>DHL &ndash; DHL</li><li>FEX &ndash; Fedex</li><li>RML &ndash; Royal Mail</li><li>UPS &ndash; United Parcel Service</li><li>USPS &ndash; United States Postal Service</li><li>CLK &ndash; CityLink</li><li>EMS &ndash; EMS (US Postal Service)</li><li>NEX &ndash; Nexworldwide</li><li>OTHER</li></ul>|
+|shipMethod         |enum                       |           |This is the method of shipment. Possible values are:<ul><li>T &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
 |recipientName      |string<br/>`length<=255`   |           |This is the name of the person receiving the goods.|
 |street             |string<br/>`length<=50`    |           |This is the recipient's street address.|
 |city               |string<br/>`length<=40`    |           |This is the city in which the recipient resides.|
@@ -1696,7 +1696,7 @@ When providing card information, merchants can provide either card details or a 
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
 |error              |[error](#errorobject)                  |       |
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The authorization request has been fully reversed.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1745,10 +1745,10 @@ When providing card information, merchants can provide either card details or a 
 |description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
-|avsResponse        |string                                 |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
-|cvvVerification    |string                                 |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|avsResponse        |enum                                   |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
+|cvvVerification    |enum                                   |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
 |error              |[error](#errorobject)                  |       |
-|status             |string                                 |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1997,7 +1997,7 @@ The following lists describe the mandatory and optional parameters for processin
         + profile (object, optional) - These are some details about the customer.
         + billingDetails (object, optional) - These are the billing details for the request.
         + shippingDetails (object, optional) - These are the shipping details for the request.
-        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + recurring (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
         + customerIp (string, optional) - This is the customer's IP address.
         + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
@@ -2080,10 +2080,10 @@ The following lists describe the mandatory and optional parameters for processin
         + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
-        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
+        + recurring (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
         + customerIp (string, optional) - This is the customer's IP address.
         + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
@@ -2211,10 +2211,10 @@ The following lists describe the mandatory and optional parameters for processin
         + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
-        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
+        + recurring (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
         + customerIp (string, optional) - This is the customer's IP address.
         + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
@@ -2268,7 +2268,7 @@ The following lists describe the mandatory and optional parameters for processin
 This is how you look up an Authorization request using the ID returned in the response to the original request.
 
 + Parameters
-    + AUTH_ID:5f2164fa-7141-40a9-b065-1426243970f1 - This is the authorization ID returned in the response.
+    + AUTH_ID:`5f2164fa-7141-40a9-b065-1426243970f1` - This is the authorization ID returned in the response.
         
 + Request Get Authorization (application/json)   
 
@@ -2295,10 +2295,10 @@ This is how you look up an Authorization request using the ID returned in the re
         + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
-        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
+        + recurring (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
         + customerIp (string, optional) - This is the customer's IP address.
         + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
@@ -2397,10 +2397,10 @@ This is how you look up an Authorization request using the merchant reference nu
         + authCode  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
-        + recurring (string, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
+        + recurring (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
         + customerIp (string, optional) - This is the customer's IP address.
         + dupCheck (boolean, optional) - This validates that this request is not a duplicate.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
@@ -2514,10 +2514,10 @@ This is how you complete (settle) an Authorization request.
 + Request Complete Authorization (application/json)
 
     + Parameters
-        + AUTH_ID:5f2164fa-7141-40a9-b065-1426243970f1 - This is the authorization ID returned in the response.
+        + AUTH_ID:`5f2164fa-7141-40a9-b065-1426243970f1` - This is the authorization ID returned in the response.
     
     + Attributes
-        + status (string, required) - This is the status to which you want to change the Authorization (COMPLETED or CANCELLED).
+        + status (enum, required) - This is the status to which you want to change the Authorization (COMPLETED or CANCELLED).
 
     + Headers
             
@@ -2538,7 +2538,7 @@ This is how you complete (settle) an Authorization request.
         + links ([string], required) - This is an array of self-referencing links.
         + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + settleWithAuth (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + availableToSettle (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
@@ -2581,7 +2581,7 @@ The following lists describe the mandatory and optional parameters for processin
 + Request Authorization Reversal (application/json)
 
     + Parameters
-        + AUTH_ID:ef8e4da6-68c1-40fb-ba43-d735148b1a7f (string, required) - This is the authorization ID returned in the response.
+        + AUTH_ID:`ef8e4da6-68c1-40fb-ba43-d735148b1a7f` (string, required) - This is the authorization ID returned in the response.
         
     + Attributes
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
@@ -2610,7 +2610,7 @@ The following lists describe the mandatory and optional parameters for processin
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
 
 
     + Body
@@ -2636,7 +2636,7 @@ The following lists describe the mandatory and optional parameters for processin
 This is how you look up an Authorization Reversal request using the ID returned in the response to the original request.
 
 + Parameters
-    + VOID_AUTH_ID:d1fb46ee-2736-4ef5-a724-f263ace75373e (string, required) - This is the ID returned in the response to the Authorization Reversal request. 
+    + VOID_AUTH_ID:`d1fb46ee-2736-4ef5-a724-f263ace75373e` (string, required) - This is the ID returned in the response to the Authorization Reversal request. 
     
 + Request Get Authorization Reversal (application/json)
 
@@ -2653,7 +2653,7 @@ This is how you look up an Authorization Reversal request using the ID returned 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request. 
+        + status (enum, required) - This is the status of the transaction request. 
     
     
     + Body
@@ -2694,7 +2694,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
         + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount (number, required) - This is the amount of the request, in minor units.
-        + status (string, required) - This is the status of the transaction request. 
+        + status (enum, required) - This is the status of the transaction request. 
     
     
     + Body
@@ -2743,7 +2743,7 @@ The following lists describe the mandatory and optional parameters for processin
 + Request Settlement (application/json)
 
     + Parameters
-        + AUTH_ID:e3058030-1a0c-4b8a-b7f7-ceb79157df3f (string, required) - This is the ID returned in the response to the Authorization request.
+        + AUTH_ID:`e3058030-1a0c-4b8a-b7f7-ceb79157df3f` (string, required) - This is the ID returned in the response to the Authorization request.
         
     + Attributes
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
@@ -2770,7 +2770,7 @@ The following lists describe the mandatory and optional parameters for processin
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units.
         
@@ -2804,10 +2804,10 @@ This is how you submit a Cancel Settlement request.
 + Request Cancel Settlement (application/json)
 
     + Parameters
-        + SETTLEMENT_ID:6ddbc05a-ff40-4dc1-b2d3-f200934dfdde (string, required) -  This is the ID returned in the response to the Settlement request.
+        + SETTLEMENT_ID:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
         
     + Attributes
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
 
     + Headers
     
@@ -2828,7 +2828,7 @@ This is how you submit a Cancel Settlement request.
         + links ([string], required) - This is an array of self-referencing links.
         + id (string, required) - This is the ID returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -2849,10 +2849,10 @@ This is how you submit a Cancel Settlement request.
 ## Get Settlement [GET /settlements/{SETTLEMENT_ID}]      
 
 This is how you look up a Settlement request using the ID returned in the response to the original request.
-
-+ Parameters
-    + SETTLEMENT_ID:00ec4b4f-f601-4430-8fb6-f90271cf9291 - This is the settlement ID returned in the response.
     
++ Parameters
+    + SETTLEMENT_ID:`00ec4b4f-f601-4430-8fb6-f90271cf9291` - This is the settlement ID returned in the response.
+
 + Request Get Settlement (application/json)
 
     + Headers
@@ -2866,7 +2866,7 @@ This is how you look up a Settlement request using the ID returned in the respon
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
             
@@ -2908,7 +2908,7 @@ This is how you look up a Settlement using the merchant reference number.
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
         
@@ -2961,7 +2961,7 @@ The following lists describe the mandatory and optional parameters for processin
 + Request Refund (application/json)
 
     + Parameters
-        SETTLEMENT_ID:6ddbc05a-ff40-4dc1-b2d3-f200934dfdde (string, required) -  This is the ID returned in the response to the Settlement request.
+        SETTLEMENT_ID:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
         
     + Attributes
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
@@ -2988,7 +2988,7 @@ The following lists describe the mandatory and optional parameters for processin
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         
     + Body
@@ -3020,11 +3020,11 @@ This is how you submit a Cancel Refund request.
 
     + Parameters
     
-        + REFUND_ID:410a51a2-73e7-4a59-bab7-3cce49a25ff6 (string, required) - This is the ID returned in the response to the Refund request.
+        + REFUND_ID:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response to the Refund request.
         
     + Attributes
     
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Headers
     
@@ -3044,7 +3044,7 @@ This is how you submit a Cancel Refund request.
         + links ([string], required) - This is an array of self-referencing links.
         + id (string, required) - This is the ID returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -3067,7 +3067,7 @@ This is how you submit a Cancel Refund request.
 This is how you look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
-    + REFUND_ID:00ec4b4f-f601-4430-8fb6-f90271cf9291 - This is the refund ID returned in the response.
+    + REFUND_ID:`00ec4b4f-f601-4430-8fb6-f90271cf9291` - This is the refund ID returned in the response.
     
 + Request Get Refund (application/json)
 
@@ -3082,7 +3082,7 @@ This is how you look up a Refund request using the ID returned in the response t
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         
     + Body 
@@ -3122,7 +3122,7 @@ This is how you look up a Refund using the merchant reference number.
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
         
@@ -3233,9 +3233,9 @@ The following lists describe the mandatory and optional parameters for processin
         + billingDetails (object, optional) - These are the billing details for the request.        
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + customerIp (string, optional) - This is the customer's IP address.
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         
@@ -3323,9 +3323,9 @@ The following lists describe the mandatory and optional parameters for processin
         + billingDetails (object, optional) - These are the billing details for the request.        
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + customerIp (string, optional) - This is the customer's IP address.
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         
@@ -3377,7 +3377,7 @@ The following lists describe the mandatory and optional parameters for processin
 This is how you look up a Verification request using the ID returned in the response to the original request.
 
 + Parameters
-    + VERIFICATION_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the verification ID returned in the response.
+    + VERIFICATION_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the verification ID returned in the response.
         
 + Request Get Verification (application/json)   
 
@@ -3398,9 +3398,9 @@ This is how you look up a Verification request using the ID returned in the resp
         + billingDetails (object, optional) - These are the billing details for the request.        
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + customerIp (string, optional) - This is the customer's IP address.
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         
@@ -3474,9 +3474,9 @@ This is how you look up a Verification request using the merchant reference numb
         + billingDetails (object, optional) - These are the billing details for the request.        
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + avsResponse (string, optional) - This is the AVS response from the card issuer.
-        + cvvVerification (string, optional) - This is the response to the cvv submitted with the transaction request.
-        + status (string, required) - This is the status of the transaction request.
+        + avsResponse (enum, optional) - This is the AVS response from the card issuer.
+        + cvvVerification (enum, optional) - This is the response to the cvv submitted with the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + customerIp (string, optional) - This is the customer's IP address.
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         
@@ -3619,7 +3619,7 @@ The following lists describe the mandatory and optional parameters for processin
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -3672,10 +3672,10 @@ This is how you submit a Cancel Original Credit request.
 + Request Cancel Original Credit (application/json)
 
     + Parameters
-        + ORIGINAL_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 (string, required) - This is the ID returned in the response to the Original Credit request.
+        + ORIGINAL_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Original Credit request.
         
     + Attributes
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Headers
     
@@ -3695,7 +3695,7 @@ This is how you submit a Cancel Original Credit request.
         + links ([string], required) - This is an array of self-referencing links.
         + id (string, required) - This is the ID returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -3718,7 +3718,7 @@ This is how you submit a Cancel Original Credit request.
 This is how you look up an Original Credit request using the ID returned in the response to the original request.
 
 + Parameters
-    + ORIGINAL_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the original credit ID returned in the response.
+    + ORIGINAL_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the original credit ID returned in the response.
     
 + Request Get Original Credit (application/json)
 
@@ -3733,7 +3733,7 @@ This is how you look up an Original Credit request using the ID returned in the 
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
 
     + Body 
@@ -3798,7 +3798,7 @@ This is how you look up an Original Credit using the merchant reference number.
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
         
@@ -3938,7 +3938,7 @@ The following lists describe the mandatory and optional parameters for processin
         + description (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime (string, required) - This is the date and time the transaction was processed.
         + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -3992,11 +3992,11 @@ This is how you submit a Cancel Standalone Credit request.
 
     + Parameters
     
-        + STANDALONE_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 (string, required) - This is the ID returned in the response to the Standalone Credit request.
+        + STANDALONE_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Standalone Credit request.
         
     + Attributes
         
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Headers
     
@@ -4016,7 +4016,7 @@ This is how you submit a Cancel Standalone Credit request.
         + links ([string], required) - This is an array of self-referencing links.
         + id (string, required) - This is the ID returned in the response.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         
     + Body
     
@@ -4039,7 +4039,7 @@ This is how you submit a Cancel Standalone Credit request.
 This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
 
 + Parameters
-    + STANDALONE_CREDIT_ID:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 - This is the standalone credit ID returned in the response.
+    + STANDALONE_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the standalone credit ID returned in the response.
     
 + Request Get Standalone Credit (application/json)
 
@@ -4054,7 +4054,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
 
     + Body 
@@ -4119,7 +4119,7 @@ This is how you look up a Standalone Credit using the merchant reference number.
         + id (string, required) - This is the ID returned in the response. 
         + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime (string, required) - This is the date and time the transaction was processed.
-        + status (string, required) - This is the status of the transaction request.
+        + status (enum, required) - This is the status of the transaction request.
         + amount (number, required) - This is the amount of the request, in minor units.
         + availableToRefund (number, optional) - This is the amount of of the Authorization remaining to refund, in minor units. 
         
