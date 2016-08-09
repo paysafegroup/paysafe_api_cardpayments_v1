@@ -4117,11 +4117,12 @@ This is how you submit an Original Credit request.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
         + card (object, required) - These are the details of the card used for the request.
-        + profile (object, optional) - These are some details about the customer.
+        + profile (object, optional) - These are some details about the customer. This is required **only when** you are using Credorax (CRX) as your acquirer for Original Credits.
         + billingDetails (object, optional) - These are the billing details for the request.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
         + description:Winning payment from Loto (string, optional) - This is a description of the transaction, provided by the merchant.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
+        + acquirerObject (object, optional) - This is additional information about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
         
     + Headers
     
