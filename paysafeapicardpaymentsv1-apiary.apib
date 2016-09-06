@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.netbanx.com/cardpayments/v1/
+HOST: https://api.paysafe.com/cardpayments/v1/
 
 # Paysafe Card Payments API 
 
@@ -12,6 +12,7 @@ Connect your application directly with our payment engine to process a full suit
 * Use any language or platform to make requests through standard HTTP protocols.
 
 # Authentication 
+<a name="Authentication"></a>
 
 In order for you to use the Paysafe REST API, Paysafe must first set you up on their system
 and provide you with an API key. Your API key looks something like this:
@@ -37,20 +38,20 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 ##  Test URL
 In order to test your integration with Paysafe, use the following Test URL:
 
-`https://api.test.netbanx.com`
+`https://api.test.paysafe.com`
 
 For example:
 
-`https://api.test.netbanx.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
+`https://api.test.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
 
 ## Production URL
 In order to process live requests with Paysafe, use the following Production URL:
 
-`https://api.netbanx.com`
+`https://api.paysafe.com`
 
 For example:
 
-`https://api.netbanx.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
+`https://api.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
 
 
 # Pagination
@@ -100,7 +101,7 @@ The following request types are supported:
   
 **API Endpoint**
 
-`https://api.netbanx.com/cardpayments/v1/accounts/{ACCOUNT_ID}`  
+`https://api.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`  
 
 **Resource Patterns**
 
@@ -141,7 +142,7 @@ The following request verifies that the service is up and accessible from your n
 
 Request:
 
-`curl -X GET https://api.test.netbanx.com/cardpayments/monitor`
+`curl -X GET https://api.test.paysafe.com/cardpayments/monitor`
 
 Response:
 
@@ -163,7 +164,7 @@ To process a Purchase, you must initiate a POST request to the auths endpoint. B
 **Note:** Optionally, you can [validate a card](#verifications) prior to processing a Purchase.
 
 
-            curl -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths \
+            curl -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -199,11 +200,11 @@ By default the card processing system will check for duplicate transactions. Pri
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/ebf6ae3d-88e1-40da-9b98-81044467345b"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/ebf6ae3d-88e1-40da-9b98-81044467345b"
                 },
                 {
                   "rel":"settlement",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/ebf6ae3d-88e1-40da-9b98-81044467345b"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/ebf6ae3d-88e1-40da-9b98-81044467345b"
                 },
             
             
@@ -241,7 +242,7 @@ By default the card processing system will check for duplicate transactions. Pri
                 "links": [        
                   {
                     "rel": "self",
-                    "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/ebf6ae3d-88e1-40da-9b98-81044467345b"
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/ebf6ae3d-88e1-40da-9b98-81044467345b"
                   }
                 ],
                 "id": "ebf6ae3d-88e1-40da-9b98-81044467345b",
@@ -270,7 +271,7 @@ The Authorization verifies that the customer's credit card account is valid and 
 To process an Authorization, you must initiate a POST request to the auths endpoint.
 An amount is authorized (balance is held) on the card and a subsequent Settlement request will be required to charge the customer and initiate transfer of funds to the merchant.
 
-            curl -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths \
+            curl -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -298,7 +299,7 @@ An amount is authorized (balance is held) on the card and a subsequent Settlemen
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/6ce78961-5989-4c4b-ad68-5f5af506143e"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/6ce78961-5989-4c4b-ad68-5f5af506143e"
                 }
               ],
               "id":"6ce78961-5989-4c4b-ad68-5f5af506143e",
@@ -344,7 +345,7 @@ Prior to trying the example, you should:
   * Replace the account number (89987201) in the URL with the test account number you received.
   * Replace the [API key](#Authentication) (after the -u) with the API key you have received.
   
-            curl -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/6ce78961-5989-4c4b-ad68-5f5af506143e/settlements \
+            curl -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/6ce78961-5989-4c4b-ad68-5f5af506143e/settlements \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -362,7 +363,7 @@ Prior to trying the example, you should:
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb"
                 }
               ],
               "id":"0fd73475-9837-4613-8464-355a3a99b8bb",
@@ -381,7 +382,7 @@ Prior to trying the example, you should:
 
 The following request cancels the Settlement.
 
-            curl -X PUT https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb \
+            curl -X PUT https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d  ' {
@@ -401,7 +402,7 @@ Depending on your account configuration, the amount held on the customer's card 
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/0fd73475-9837-4613-8464-355a3a99b8bb"
                 }
               ],
               "id":"0fd73475-9837-4613-8464-355a3a99b8bb",
@@ -413,7 +414,7 @@ Depending on your account configuration, the amount held on the customer's card 
 
 You can look up an existing Authorization transaction by providing the account number and transaction ID in the URL as follows: 
 
-            curl -X GET https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/ebf6ae3d-88e1-40da-9b98-81044467345b \
+            curl -X GET https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/ebf6ae3d-88e1-40da-9b98-81044467345b \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json'
 
@@ -426,7 +427,7 @@ You can look up transactions using a transaction ID to a maximum of one year in 
 
 If you do not have a transaction ID, you can look up a transaction based on the merchantRefNum you supplied with the original request:
 
-            curl -X GET https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths?merchantRefNum=demo-1 \
+            curl -X GET https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths?merchantRefNum=demo-1 \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json'
 
@@ -436,7 +437,7 @@ This request verifies that the customer's card is valid, but without actually ch
 
 To process a Verification, you must initiate a POST request to the verifications endpoint. 
 
-            curl -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/verifications \
+            curl -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/verifications \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -477,7 +478,7 @@ You will receive a response like the following:
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -527,7 +528,7 @@ With the Paysafe Card Payments API you can test the following:
   
 To use the test environment, you must post your requests to the following endpoint:
 
-`https://api.test.netbanx.com/cardpayments/v1/accounts/<test account number>`
+`https://api.test.paysafe.com/cardpayments/v1/accounts/<test account number>`
 
 ## Test Card Numbers
 
@@ -586,7 +587,7 @@ You can return specific response codes by specifying different amounts under $1.
 **Example Request**
 
 ```apib
-            cURL -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths \
+            cURL -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -618,7 +619,7 @@ You can return specific response codes by specifying different amounts under $1.
                "links":[
                   {
                      "rel":"self",
-                     "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/41745f5d-842b-4a3a-bee5-fc558e566f2f"
+                     "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/41745f5d-842b-4a3a-bee5-fc558e566f2f"
                   }
                ],
                "id":"41745f5d-842b-4a3a-bee5-fc558e566f2f",
@@ -650,7 +651,7 @@ By default, all transactions will have an AVS response of MATCH (address informa
 **Example Request**
 
 ```apib
-            cURL -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths  \
+            cURL -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths  \
             -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
             -H 'Content-Type: application/json'  \ 
             -d ' {
@@ -682,11 +683,11 @@ By default, all transactions will have an AVS response of MATCH (address informa
               "links":[
                 {
                   "rel":"settlement",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/09275749-7b1a-4162-b130-3f3ab6c87734"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/09275749-7b1a-4162-b130-3f3ab6c87734"
                 },
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/09275749-7b1a-4162-b130-3f3ab6c87734"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/09275749-7b1a-4162-b130-3f3ab6c87734"
                 }
               ],
               "id":"09275749-7b1a-4162-b130-3f3ab6c87734",
@@ -724,7 +725,7 @@ By default, all transactions will have an AVS response of MATCH (address informa
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/09275749-7b1a-4162-b130-3f3ab6c87734"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/09275749-7b1a-4162-b130-3f3ab6c87734"
                     }
                   ],
                   "id":"09275749-7b1a-4162-b130-3f3ab6c87734",
@@ -752,7 +753,7 @@ In order to simulate a specific card security code response, provide a CVV value
 **Example Request**
 
 ```apib
-            cURL -X POST https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths \
+            cURL -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths \
               -u devcentre322:B-qa2-0-53625f86-302c021476f52bdc9deab7aea876bb28762e62f92fc6712d0214736abf501e9675e55940e83ef77f5c304edc7968 \
               -H 'Content-Type: application/json' \
               -d ' {
@@ -784,11 +785,11 @@ In order to simulate a specific card security code response, provide a CVV value
               "links":[
                 {
                   "rel":"settlement",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
                 },
                 {
                   "rel":"self",
-                  "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/auths/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auths/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
                 }
               ],
               "id":"cbb6471f-720c-407d-8b4c-0aa03fc41e23",
@@ -826,7 +827,7 @@ In order to simulate a specific card security code response, provide a CVV value
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.netbanx.com/cardpayments/v1/accounts/89987201/settlements/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/settlements/cbb6471f-720c-407d-8b4c-0aa03fc41e23"
                     }
                   ],
                   "id":"cbb6471f-720c-407d-8b4c-0aa03fc41e23",
@@ -1601,7 +1602,7 @@ When providing card information, merchants can provide either card details or a 
     "links": [
         {
         "rel": "self",
-        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
         }
         ],
 }
@@ -2129,7 +2130,7 @@ This is how you submit an Authorization request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -2182,7 +2183,7 @@ This is how you submit an Authorization request.
               "links":[
                 {
                   "rel":"self",
-                  "href":" https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":" https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -2330,7 +2331,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10099 (number, required) - This is the amount of the request, in minor units.
@@ -2383,7 +2384,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               "links":[
                 {
                   "rel":"self",
-                  "href":" https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":" https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -2495,7 +2496,7 @@ If you use a payment token, you can submit the request without extra parameters 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
         + id:`a02e52c7-c991-4418-966a-b62989cb0eae` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -2548,11 +2549,11 @@ If you use a payment token, you can submit the request without extra parameters 
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/a02e52c7-c991-4418-966a-b62989cb0eae"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/a02e52c7-c991-4418-966a-b62989cb0eae"
                 },
                 {
                   "rel":"settlement",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/a02e52c7-c991-4418-966a-b62989cb0eae"
                 }
              ],
               "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
@@ -2617,7 +2618,7 @@ This is how you look up an Authorization request using the ID returned in the re
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
         + id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchantRef_2016_05_07_002` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:500 (number, required) - This is the amount of the request, in minor units.
@@ -2669,11 +2670,11 @@ This is how you look up an Authorization request using the ID returned in the re
                 "links": [
                     {
                         "rel": "settlement",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/5f2164fa-7141-40a9-b065-1426243970f1"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/5f2164fa-7141-40a9-b065-1426243970f1"
                     },
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/5f2164fa-7141-40a9-b065-1426243970f1"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/5f2164fa-7141-40a9-b065-1426243970f1"
                     }
                 ],
                 "id": "5f2164fa-7141-40a9-b065-1426243970f1",
@@ -2728,7 +2729,7 @@ This is how you look up an Authorization request using the merchant reference nu
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
          + auths (array, required) - This array lists Authorizations processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -2784,11 +2785,11 @@ This is how you look up an Authorization request using the merchant reference nu
               "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
                     },
                     {
                         "rel": "next",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
                     }    
               ],
               "auths":[
@@ -2796,7 +2797,7 @@ This is how you look up an Authorization request using the merchant reference nu
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/e3058030-1a0c-4b8a-b7f7-ceb79157df3f"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e3058030-1a0c-4b8a-b7f7-ceb79157df3f"
                     }
                   ],
                   "id":"e3058030-1a0c-4b8a-b7f7-ceb79157df3f",
@@ -2838,7 +2839,7 @@ This is how you look up an Authorization request using the merchant reference nu
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/6d1b087f-da60-4ae1-a901-fafb39704e63"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6d1b087f-da60-4ae1-a901-fafb39704e63"
                     }
                   ],
                   "id":"6d1b087f-da60-4ae1-a901-fafb39704e63",
@@ -2905,7 +2906,7 @@ This is how you complete an Authorization request with the status of Held.
        + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
@@ -2925,7 +2926,7 @@ This is how you complete an Authorization request with the status of Held.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
                     }
                 ],
                 "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
@@ -2977,7 +2978,7 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:898 (number, required) - This is the amount of the request, in minor units.
@@ -2998,7 +2999,7 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
               "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
                     }
                 ],
               "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
@@ -3031,7 +3032,7 @@ This is how you look up an Authorization Reversal request using the ID returned 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:898 (number, required) - This is the amount of the request, in minor units.
@@ -3052,7 +3053,7 @@ This is how you look up an Authorization Reversal request using the ID returned 
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
                     }
                 ],
               "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
@@ -3085,7 +3086,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
         + voidAuths (array, required) - This array lists Authorization Reversals processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -3109,7 +3110,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
                     }
                 ],
                 "voidAuths": [
@@ -3117,7 +3118,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
                             }
                         ],
                         "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
@@ -3169,7 +3170,7 @@ This is how you submit a Settlement request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3195,7 +3196,7 @@ This is how you submit a Settlement request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
                     }
                 ],
                 "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
@@ -3240,7 +3241,7 @@ This is how you submit a Cancel Settlement request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -3252,7 +3253,7 @@ This is how you submit a Cancel Settlement request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde"
                     }
                 ],
                 "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
@@ -3283,7 +3284,7 @@ This is how you look up a Settlement request using the ID returned in the respon
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3307,7 +3308,7 @@ This is how you look up a Settlement request using the ID returned in the respon
             {
                 "links": [{
                     "rel": "self",
-                    "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                 }],
                 "id": "00ec4b4f-f601-4430-8fb6-f90271cf9291",
                 "merchantRefNum": "merchantRef_2016_04_01_03",
@@ -3340,7 +3341,7 @@ This is how you look up a Settlement using the merchant reference number used in
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchant-ABC-123-settlements&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchant-ABC-123-settlements&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
         + settlements (array, required) - This array lists Settlements processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -3368,7 +3369,7 @@ This is how you look up a Settlement using the merchant reference number used in
               "links": [
                 {
                   "rel": "self",
-                  "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
                 }
               ],
               "settlements":[
@@ -3376,7 +3377,7 @@ This is how you look up a Settlement using the merchant reference number used in
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                     }
                   ],
                   "id":"00ec4b4f-f601-4430-8fb6-f90271cf9291",
@@ -3429,7 +3430,7 @@ This is how you submit a Refund request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.e
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.e
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3448,7 +3449,7 @@ This is how you submit a Refund request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://netbanx.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
                     }
                 ],
                 "id": "410a51a2-73e7-4a59-bab7-3cce49a25ff6",
@@ -3492,7 +3493,7 @@ This is how you submit a Cancel Refund request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -3504,7 +3505,7 @@ This is how you submit a Cancel Refund request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/410a51a2-73e7-4a59-bab7-3cce49a25ff6"
                     }
                 ],
                 "id": "410a51a2-73e7-4a59-bab7-3cce49a25ff6",
@@ -3534,7 +3535,7 @@ This is how you look up a Refund request using the ID returned in the response t
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3556,7 +3557,7 @@ This is how you look up a Refund request using the ID returned in the response t
             {
                 "links": [{
                      "rel": "self",
-                     "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                     "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                  }],
                 "id": "410a51a2-73e7-4a59-bab7-3cce49a25ff6",
                 "merchantRefNum": "merchantABC-444-refund",
@@ -3588,7 +3589,7 @@ This is how you look up a Refund using the merchant reference number used in the
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
         + refunds (array, required) - This array lists refunds processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -3614,7 +3615,7 @@ This is how you look up a Refund using the merchant reference number used in the
               "links": [
                 {
                   "rel": "self",
-                  "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
                 }
               ],
               "refunds":[
@@ -3622,7 +3623,7 @@ This is how you look up a Refund using the merchant reference number used in the
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                     }
                   ],
                   "id":"410a51a2-73e7-4a59-bab7-3cce49a25ff6",
@@ -3697,7 +3698,7 @@ This is how you submit a Verification request. This example verifies a card and 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the card used for the request.
@@ -3732,7 +3733,7 @@ This is how you submit a Verification request. This example verifies a card and 
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -3814,7 +3815,7 @@ If you use a payment token, you can submit the request without extra parameters 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the card used for the request.
@@ -3849,7 +3850,7 @@ If you use a payment token, you can submit the request without extra parameters 
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -3907,7 +3908,7 @@ This is how you look up a Verification request using the ID returned in the resp
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the card used for the request.
@@ -3942,7 +3943,7 @@ This is how you look up a Verification request using the ID returned in the resp
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4001,7 +4002,7 @@ This is how you look up a Verification request using the merchant reference numb
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
         + verifications (array, required) - This array lists Verifications processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -4039,7 +4040,7 @@ This is how you look up a Verification request using the merchant reference numb
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
                 }
               ],
               "verifications":[
@@ -4047,7 +4048,7 @@ This is how you look up a Verification request using the merchant reference numb
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                     }
                   ],
                   "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4164,7 +4165,7 @@ This is how you submit an Original Credit request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4191,7 +4192,7 @@ This is how you submit an Original Credit request.
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4257,7 +4258,7 @@ This is how you submit a Cancel Original Credit request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -4269,7 +4270,7 @@ This is how you submit a Cancel Original Credit request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                     }
                 ],
                 "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4299,7 +4300,7 @@ This is how you look up an Original Credit request using the ID returned in the 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4325,7 +4326,7 @@ This is how you look up an Original Credit request using the ID returned in the 
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4381,7 +4382,7 @@ This is how you look up an Original Credit using the merchant reference number u
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
         + originalcredits (array, required) - This array lists Original Credits processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -4410,7 +4411,7 @@ This is how you look up an Original Credit using the merchant reference number u
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
                     }
                 ],
                 "originalcredits": [
@@ -4418,7 +4419,7 @@ This is how you look up an Original Credit using the merchant reference number u
                         "links": [
                             {
                                 "rel": "self",
-                                "href": " https://api.netbanx.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                                "href": " https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                             }
                         ],
                         "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4455,7 +4456,7 @@ This is how you look up an Original Credit using the merchant reference number u
         ```
 
 # Standalone Credits [/standalonecredits]
-<a name="standalonecredtis"></a>
+<a name="standalonecredits"></a>
 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
 
@@ -4521,7 +4522,7 @@ This is how you submit a Standalone Credit request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/standalone/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalone/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4547,7 +4548,7 @@ This is how you submit a Standalone Credit request.
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4614,7 +4615,7 @@ This is how you submit a Cancel Standalone Credit request.
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:e50e19a6-8edd-44ec-abc4-18d0a97d51d8 (string, required) - This is the ID returned in the response.
         + txnTime:`2014-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -4626,7 +4627,7 @@ This is how you submit a Cancel Standalone Credit request.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                     }
                 ],
                 "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4657,7 +4658,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4683,7 +4684,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
               "links":[
                 {
                   "rel":"self",
-                  "href":"https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                 }
               ],
               "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
@@ -4739,7 +4740,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
         + links (array, required) - This is an array of links.
             + (object)
                 + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
         + standalonecredits (array, required) - This array lists Standalone Credits processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -4768,7 +4769,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
                     }
                 ],
                 "standalonecredits": [
@@ -4776,7 +4777,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "https://api.netbanx.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                             }
                         ],
                         "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
