@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafe.com/cardpayments/v1/
+HOST: https://api.test.paysafe.com/cardpayments/v1/
 
 # Paysafe Card Payments API 
 
@@ -1745,7 +1745,7 @@ When providing card information, merchants can provide either card details or a 
 |Element            |Type                       |Required   |Description |
 |---                |---                        |---        |---        |
 |carrier            |enum                       |           |This is the shipment carrier. Possible values are:<ul><li>APC &ndash; APC Overnight</li><li>APS &ndash; Anpost</li><li>CAD &ndash; Canada Postal Service</li><li>DHL &ndash; DHL</li><li>FEX &ndash; Fedex</li><li>RML &ndash; Royal Mail</li><li>UPS &ndash; United Parcel Service</li><li>USPS &ndash; United States Postal Service</li><li>CLK &ndash; CityLink</li><li>EMS &ndash; EMS (US Postal Service)</li><li>NEX &ndash; Nexworldwide</li><li>OTHER</li></ul>|
-|shipMethod         |enum                       |           |This is the method of shipment. Possible values are:<ul><li>T &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
+|shipMethod         |enum                       |           |This is the method of shipment. Possible values are:<ul><li>N &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
 |recipientName      |string<br/>`length<=255`   |           |This is the name of the person receiving the goods.|
 |street             |string<br/>`length<=50`    |           |This is the recipient's street address.|
 |city               |string<br/>`length<=40`    |           |This is the city in which the recipient resides.|
@@ -2222,7 +2222,7 @@ This is how you submit an Authorization request.
               },
               "shippingDetails":{
                 "carrier":"UPS",
-                "shipMethod":" NEXT_DAY",
+                "shipMethod":" N",
                 "street":"100 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
@@ -2423,7 +2423,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               },
               "shippingDetails":{
                 "carrier":"UPS",
-                "shipMethod":" NEXT_DAY",
+                "shipMethod":" N",
                 "street":"100 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
