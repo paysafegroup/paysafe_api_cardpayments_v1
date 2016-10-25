@@ -1440,6 +1440,7 @@ These are raw results returned by the acquirer.
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
+|level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.|
 
 ```apib
 {
@@ -1587,6 +1588,25 @@ When providing card information, merchants can provide either card details or a 
    }
 }
 ```
+
+<a name="level2level3object"></a>
+## level2level3
+
+|Element    |Type          |Required    |Description|
+| exemptLocalTax                |boolean |   | This indicates whether or not local tax is exempted for the request. If set to true, then the localTaxAmount parameter will be ignored.<br/>**Note:** This value defaults to *false*. |
+| localTaxAmount                |integer<br/>`length<=99999999999` |   | This is the local sales tax applied to the purchase.|
+| nationalTaxAmount             |integer<br/>`length<=99999999999` |   | This is the national tax included in the transaction amount. |
+| freightAmount                 |integer<br/>`length<=99999999999` |   | This is the freight or shipping portion of the total transaction amount. |
+| dutyAmount                    |integer<br/>`length<=99999999999` |   | This is the duty associated with the import of the purchased goods. |
+| destinationZip                |string<br/>`length<=10`  |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
+| destinationCountry            |string<br/>`length=2`  |       | This is the country to which the goods are being shipped. See Country Codes. |
+| shipFromZip                   |string<br/>`length<=10`  | Max = 10         | This is the postal/zip code of the address from which the purchased goods are being shipped |
+| lineItems                     |[lineItems](#lineItems)    |   | This is more detailed information about the items that are being purchased.| 
+
+<a name="lineItems"></a>
+##lineItems
+
+
 
 <a name="linksobject"></a>
 ## links
