@@ -1602,7 +1602,7 @@ When providing card information, merchants can provide either card details or a 
 | destinationZip        |number<br/>`length<=10`            |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
 | destinationCountry    |number<br/>`length=2`              |           | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
 | shipFromZip           |number<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped |
-| lineItems             |[lineItems](#lineItems)            |           |This is more detailed information about the items that are being purchased.| 
+| lineItems             |[lineItems](#lineitemsobject)            |           |This is more detailed information about the items that are being purchased.| 
 
 ```apib
 {
@@ -1638,7 +1638,7 @@ When providing card information, merchants can provide either card details or a 
 }
 ```
 
-<a name="lineItems"></a>
+<a name="lineitemsobject"></a>
 ##lineItems
 
 |Element                |Type                               |Required   | Description|
@@ -1664,7 +1664,6 @@ When providing card information, merchants can provide either card details or a 
     }
 }
 ```
-
 
 <a name="linksobject"></a>
 ## links
