@@ -1596,12 +1596,12 @@ When providing card information, merchants can provide either card details or a 
 |---                    |---                                |---        |---            |
 | exemptLocalTax        |boolean                            |           | This indicates whether or not local tax is exempted for the request. If set to true, then the localTaxAmount parameter will be ignored.<br/>**Note:** This value defaults to *false*. |
 | localTaxAmount        |integer<br/>`length<=99999999999`  |           | This is the local sales tax applied to the purchase.|
-| nationalTaxAmount     |integer<br/>`length<=99999999999`  |           | This is the national tax included in the transaction amount. |
-| freightAmount         |integer<br/>`length<=99999999999`  |           | This is the freight or shipping portion of the total transaction amount. |
-| dutyAmount            |integer<br/>`length<=99999999999`  |           | This is the duty associated with the import of the purchased goods. |
-| destinationZip        |string<br/>`length<=10`            |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
-| destinationCountry    |string<br/>`length=2`              |           | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
-| shipFromZip           |string<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped |
+| nationalTaxAmount     |number<br/>`length<=99999999999`  |           | This is the national tax included in the transaction amount. |
+| freightAmount         |number<br/>`length<=99999999999`  |           | This is the freight or shipping portion of the total transaction amount. |
+| dutyAmount            |number<br/>`length<=99999999999`  |           | This is the duty associated with the import of the purchased goods. |
+| destinationZip        |number<br/>`length<=10`            |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
+| destinationCountry    |number<br/>`length=2`              |           | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
+| shipFromZip           |number<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped |
 | lineItems             |[lineItems](#lineItems)            |           |This is more detailed information about the items that are being purchased.| 
 
 ```apib
@@ -1644,7 +1644,26 @@ When providing card information, merchants can provide either card details or a 
 |Element                |Type                               |Required   | Description|
 |---                    |---                                |---        |---            |
 |description            |string<br/>`length<=50`            |           |This is a description of the item(s) being purchased.|
+|productCode            |string<br/>`length<=12`            |           |This is a merchant-defined description code of the item being purchased.|
+|quantity               |number<br/>`length<=99999999999`<br/>`max = 4 decimals` |  |This is the quantity of the item.|
+|unitAmount             |number<br/>`length<=99999999999`   |           |This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.|
+|taxRate                |number<br/>`length<=100`<br/>`max = 2 decimals`    |   |This is the tax rate used to calculate the tax amount. For example, if the tax rate is 10.5%, this value should be 10.5.|
+|taxAmount              |number<br/>`length<=99999999999`   |           |This is the amount of any value-added taxes that can be associated with the purchased item, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
+|totalAmount            |number<br/>`length<=99999999999`   |           |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 
+```apib
+{
+    "lineItems": {
+        "description": "Disney Cruise Line",
+        "productCode": "DCL",
+        "quantity": 4,
+        "unitAmount": 120000,
+        "taxRate": 5,
+        "taxAmount": 24000,
+        "totalAmount": 504000
+    }
+}
+```
 
 
 <a name="linksobject"></a>
