@@ -1440,7 +1440,7 @@ These are raw results returned by the acquirer.
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
-|level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.|
+|level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
@@ -1651,9 +1651,9 @@ merchants who provide more detailed information when processing card-not-present
 |---                    |---                                |---        |---            |
 |description            |string<br/>`length<=50`            |           |This is a description of the item(s) being purchased.|
 |productCode            |string<br/>`length<=12`            |           |This is a merchant-defined description code of the item being purchased.|
-|quantity               |number<br/>`length<=99999999999`<br/>`max = 4 decimals` |  |This is the quantity of the item.|
+|quantity               |number<br/>`length<=99999999999`<br/>`max 4 decimals` |  |This is the quantity of the item.|
 |unitAmount             |number<br/>`length<=99999999999`   |           |This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.|
-|taxRate                |number<br/>`length<=100`<br/>`max = 2 decimals`    |   |This is the tax rate used to calculate the tax amount. For example, if the tax rate is 10.5%, this value should be 10.5.|
+|taxRate                |number<br/>`length<=100`<br/>`max 2 decimals`    |   |This is the tax rate used to calculate the tax amount. For example, if the tax rate is 10.5%, this value should be 10.5.|
 |taxAmount              |number<br/>`length<=99999999999`   |           |This is the amount of any value-added taxes that can be associated with the purchased item, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 |totalAmount            |number<br/>`length<=99999999999`   |           |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 
