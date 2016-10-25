@@ -1604,8 +1604,46 @@ When providing card information, merchants can provide either card details or a 
 | shipFromZip           |string<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped |
 | lineItems             |[lineItems](#lineItems)            |           |This is more detailed information about the items that are being purchased.| 
 
+```apib
+{
+    "level2Level3": {
+        "localTaxAmount": 15000,
+        "nationalTaxAmount": 0,
+        "freightAmount": 0,
+        "dutyAmount": 0,
+        "destinationZip": "90210",
+        "destinationCountry": "US",
+        "shipFromZip": "90210",
+        "lineItems": [
+            {
+                "description": "Disney Cruise Line - Adult",
+                "productCode": "DCL-A",
+                "quantity": 2,
+                "unitAmount": 120000,
+                "taxRate": 5,
+                "taxAmount": 12000,
+                "totalAmount": 252000
+            },
+            {
+                "description": "Disney Cruise Line - Kids",
+                "productCode": "DCL-K",
+                "quantity": 1,
+                "unitAmount": 60000,
+                "taxRate": 5,
+                "taxAmount": 3000,
+                "totalAmount": 63000
+            }
+        ]
+    }
+}
+```
+
 <a name="lineItems"></a>
 ##lineItems
+
+|Element                |Type                               |Required   | Description|
+|---                    |---                                |---        |---            |
+|description            |string<br/>`length<=50`            |           |This is a description of the item(s) being purchased.|
 
 
 
