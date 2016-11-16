@@ -2141,6 +2141,9 @@ This is how you submit an Authorization request.
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are 3D Secure details.
         + profile (object, optional) - These are some details about the customer.
+            - firstName:John (string, optional) - This is the customer’s first name.
+            - lastName:Smith (string, optional) - This is the customer's last name.
+            - email:jsmith@email.com (string, optional) - This is the customer's email address.
         + billingDetails (object, optional) - These are the billing details for the request.
         + shippingDetails (object, optional) - These are the shipping details for the request.
         + recurring:INITIAL (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
