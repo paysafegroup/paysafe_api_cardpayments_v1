@@ -2130,6 +2130,11 @@ This is how you submit an Authorization request.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
         + card (object, required) - These are the details of the card used for the request.
+            - cardNum (string, required)1111222233334444 - This is the card number used for the request.
+            - cardExpiry (object, required) - This is the card's expiry date.
+            - cvv (string, optional)123 - This is the 3- or 4-digit security code that appears on the card following the card number.
+            - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.|
         + settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are 3D Secure details.
