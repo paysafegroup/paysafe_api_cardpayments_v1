@@ -2151,7 +2151,22 @@ This is how you submit an Authorization request.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.
         + billingDetails (object, optional) - These are the billing details for the request.
+            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
+            - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
+            - city:Toronto (string, optional) - This is the city in the billing address. 
+            - state:ON (string, optional) - This is the state or province in the billing address. 
+            - country:CA (string, optional) - This is the country in the billing address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
+            - phone:555-9999 (string, optional) - This is the customer's telephone number.
         + shippingDetails (object, optional) - These are the shipping details for the request.
+            - carrier:CAD (enum, optional) - This is the shipment carrier.
+            - shipMethod:T (enum, optional) - This is the shipment method.
+            - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
+            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+            - city:Toronto (string, optional) - This is the city in the shipping address. 
+            - state:ON (string, optional) - This is the state or province in the shipping address. 
+            - country:CA (string, optional) - This is the country in the shipping address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         + recurring:INITIAL (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
             - INITIAL
             - RECURRING
@@ -2159,9 +2174,21 @@ This is how you submit an Authorization request.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
         + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+            - finanacingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
+            - plan:112 (string, required) - This is the plan number for this financing transaction.
+            - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
+            - term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
         + description:Video purchase (string, optional) - This is a description of the transaction, provided by the merchant.
         + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+            - recipientDateOfBirth.day:24 (number, optional) - This is the recipient's day of birth.
+            - recipientDateOfBirth.month:10 (number, optional) - This is the recipient's month of birth. 
+            - recipientDateOfBirth.year:1991 (number, optional) - The is the recipient's year of birth.
+            - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+            - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
+            - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID. 
 
 
     + Headers
