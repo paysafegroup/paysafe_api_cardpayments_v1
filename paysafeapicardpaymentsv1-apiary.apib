@@ -2136,7 +2136,7 @@ This is how you submit an Authorization request.
                 - year:2020 (number, required) - This is the card expiry year.
             - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
             - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
-            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.|
+            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
         + settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are 3D Secure details.
@@ -2162,7 +2162,7 @@ This is how you submit an Authorization request.
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
-            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+            - street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
             - city:Toronto (string, optional) - This is the city in the shipping address. 
             - state:ON (string, optional) - This is the state or province in the shipping address. 
             - country:CA (string, optional) - This is the country in the shipping address. 
@@ -2233,7 +2233,7 @@ This is how you submit an Authorization request.
               "shippingDetails":{
                 "carrier":"UPS",
                 "shipMethod":"N",
-                "street":"100 Queen Street West",
+                "street":"102 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
                 "country":"CA",
@@ -2344,7 +2344,7 @@ This is how you submit an Authorization request.
               "shippingDetails":{
                 "carrier":"UPS",
                 "shipMethod":" N",
-                "street":"100 Queen Street West",
+                "street":"102 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
                 "country":"CA",
@@ -2374,12 +2374,43 @@ This is how you submit an Authorization request that includes the Settlement. To
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
         + card (object, required) - These are the details of the card used for the request.
+            - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
+            - cardExpiry (object, required) - This is the card's expiry date.
+                - month:12 (number, required) - This is the card expiry month.
+                - year:2020 (number, required) - This is the card expiry year.
+            - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+            - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.            
         + settleWithAuth:true (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are 3D Secure details.
+            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+            - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
+            - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
+            - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.        
         + profile (object, optional) - These are some details about the customer.
+            - firstName:John (string, optional) - This is the customer’s first name.
+            - lastName:Smith (string, optional) - This is the customer's last name.
+            - email:jsmith@email.com (string, optional) - This is the customer's email address.
         + billingDetails (object, optional) - These are the billing details for the request.
+            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
+            - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
+            - city:Toronto (string, optional) - This is the city in the billing address. 
+            - state:ON (string, optional) - This is the state or province in the billing address. 
+            - country:CA (string, optional) - This is the country in the billing address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
+            - phone:555-9999 (string, optional) - This is the customer's telephone number.
         + shippingDetails (object, optional) - These are the shipping details for the request.
+            - carrier:CAD (enum, optional) - This is the shipment carrier.
+            - shipMethod:T (enum, optional) - This is the shipment method.
+            - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
+            - street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+            - city:Toronto (string, optional) - This is the city in the shipping address. 
+            - state:ON (string, optional) - This is the state or province in the shipping address. 
+            - country:CA (string, optional) - This is the country in the shipping address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         + recurring:INITIAL (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
             - INITIAL
             - RECURRING
@@ -2387,9 +2418,21 @@ This is how you submit an Authorization request that includes the Settlement. To
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + keywords (array, optional) - This value can be any text the merchant wants to use, e.g., as a tag to identify the transaction or the product purchased at their site.
         + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+            - finanacingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
+            - plan:112 (string, required) - This is the plan number for this financing transaction.
+            - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
+            - term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
         + description:Video purchase (string, optional) - This is a description of the transaction, provided by the merchant.
         + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+            - recipientDateOfBirth.day:24 (number, optional) - This is the recipient's day of birth.
+            - recipientDateOfBirth.month:10 (number, optional) - This is the recipient's month of birth. 
+            - recipientDateOfBirth.year:1991 (number, optional) - The is the recipient's year of birth.
+            - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+            - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
+            - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
 
 
     + Headers
@@ -2434,7 +2477,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               "shippingDetails":{
                 "carrier":"UPS",
                 "shipMethod":"N",
-                "street":"100 Queen Street West",
+                "street":"102 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
                 "country":"CA",
@@ -2545,7 +2588,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               "shippingDetails":{
                 "carrier":"UPS",
                 "shipMethod":" N",
-                "street":"100 Queen Street West",
+                "street":"102 Queen Street West",
                 "city":"Toronto",
                 "state":"ON",
                 "country":"CA",
@@ -2577,18 +2620,46 @@ If you use a payment token, you can submit the request without extra parameters 
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
         + card (object, required) - This is the payment token that represents the card used for the request.
+            - paymentToken:LTEyMzYzMjQ3ODg (string, required) - This represents the card used for the request.
         + settleWithAuth:true (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:true (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + description:Video purchase (string, optional) - This is a description of the transaction, provided by the merchant.
         + authentication (object, optional) - These are 3D Secure details.
+            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+            - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
+            - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
+            - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.            
         + shippingDetails (object, optional) - These are the shipping details for the request.
+            - carrier:CAD (enum, optional) - This is the shipment carrier.
+            - shipMethod:T (enum, optional) - This is the shipment method.
+            - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
+            - street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+            - city:Toronto (string, optional) - This is the city in the shipping address. 
+            - state:ON (string, optional) - This is the state or province in the shipping address. 
+            - country:CA (string, optional) - This is the country in the shipping address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         + recurring:INITIAL (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
             - INITIAL
             - RECURRING
         + merchantDescriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         + accordD (object, optional) - These are parameters for financing plans supported for certain merchant configurations.
+            - finanacingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
+            - plan:112 (string, required) - This is the plan number for this financing transaction.
+            - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
+            - term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
+        + visaAdditionalAuthData (object, optional) - This allows additional data to be included with a request using Visa as a payment method.
+            - recipientDateOfBirth.day:24 (number, optional) - This is the recipient's day of birth.
+            - recipientDateOfBirth.month:10 (number, optional) - This is the recipient's month of birth. 
+            - recipientDateOfBirth.year:1991 (number, optional) - The is the recipient's year of birth.
+            - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+            - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
+            - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
 
 
     + Headers
