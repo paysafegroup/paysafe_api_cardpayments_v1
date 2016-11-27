@@ -248,7 +248,7 @@ By default the card processing system will check for duplicate transactions. Pri
 
 **Purchase Message Sequence**
 
-![](http://admin:1234neu!@p368327.webspaceconfig.de/fileadmin/flarecontent/devcentre/Content/Resources/Images/Purchase_Message_Sequence.png)
+![](https://developer.paysafe.com/fileadmin/flarecontent/devcentre/Content/Resources/Images/Purchase_Message_Sequence.png)
 
 ## Process an Authorization Followed by a Settlement
 
@@ -330,7 +330,7 @@ curl -X POST https://api.test.paysafe.com/cardpayments/v1/accounts/89987201/auth
 
 **Authorization and Settlement Message Sequence**
 
-![](http://admin:1234neu!@p368327.webspaceconfig.de/fileadmin/flarecontent/devcentre/Content/Resources/Images/Settlement_Message_Sequence.png)
+![](https://developer.paysafe.com/fileadmin/flarecontent/devcentre/Content/Resources/Images/Settlement_Message_Sequence.png)
 
 **Process a Settlement**
 
@@ -3126,7 +3126,7 @@ This is how you look up an Authorization request using the ID returned in the re
                 "cvvVerification": "MATCH"
             }        
         
-## Get Authorization Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/auths?merchantRefNum=merchant-ABC-123&limit=2]
+## Get Authorization Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up an Authorization request using the merchant reference number used in the original request.
 
@@ -3521,14 +3521,15 @@ This is how you look up an Authorization Reversal request using the ID returned 
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/voidauths?merchantRefNum=merchant-ABC-123-voidauths]
+## Get Authorization Reversal Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limt={limit}]
 
 This is how you look up an Authorization Reversal request using the merchant reference number used in the original request.
 
 + Parameters
     
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:`merchant-ABC-123-voidauth` (string, required) - This is the *merchantRefNum* used in the Authorization Reversal request. 
+    + merchantRefNum:`merchant-ABC-123-voidauth` (string, required) - This is the *merchantRefNum* used in the Authorization Reversal request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     
 + Request Get Authorization Reversal (application/json)
 
@@ -3775,7 +3776,7 @@ This is how you look up a Settlement request using the ID returned in the respon
                 "availableToRefund": 50
             }
         
-## Get Settlement Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/settlements?merchantRefNum=merchantRef_2014_04_01_03]
+## Get Settlement Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Settlement using the merchant reference number used in the original request.
 
@@ -3783,6 +3784,7 @@ This is how you look up a Settlement using the merchant reference number used in
 
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:merchantRef_2016_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     
 + Request Get Settlement (application/json)
 
@@ -4019,7 +4021,7 @@ This is how you look up a Refund request using the ID returned in the response t
                 "amount": 1000
             }
 
-## Get Refund Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/refunds?merchantRefNum=merchantRef_2014_04_01_03]
+## Get Refund Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Refund using the merchant reference number used in the original request.
 
@@ -4027,6 +4029,7 @@ This is how you look up a Refund using the merchant reference number used in the
 
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     
 + Request Get Refund (application/json)
 
@@ -4509,7 +4512,7 @@ This is how you look up a Verification request using the ID returned in the resp
               "status":"COMPLETED"
             }
 
-## Get Verification Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/verifications?merchantRefNum=merchant-ABC-444&limit=2]
+## Get Verification Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Verification request using the merchant reference number used in the original request.
 
@@ -4944,7 +4947,7 @@ This is how you look up an Original Credit request using the ID returned in the 
               "status":"PENDING"
             }
 
-## Get Original Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum=merchantRef_2014_04_01_03]
+## Get Original Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up an Original Credit using the merchant reference number used in the original request.
 
@@ -4952,6 +4955,7 @@ This is how you look up an Original Credit using the merchant reference number u
 
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     
 + Request Get Original Credit (application/json)
 
@@ -5366,7 +5370,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
               "status":"PENDING"
             }
 
-## Get Standalone Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03]
+## Get Standalone Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
 
@@ -5374,6 +5378,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
 
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     
 + Request Get Standalone Credit (application/json)
 
