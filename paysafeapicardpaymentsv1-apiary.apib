@@ -578,13 +578,11 @@ The Paysafe Test environment can be used to test websites or applications withou
 |term               |number<br/>`max=99`        |               |This is the number of payments, in months, for equal payment transactions.|
 
 ```apib
-{
     "accordD":{
         "financingType":"DEFERRED_PAYMENT",
         "plan":"123",
         "gracePeriod":"12"
     }
-}
 ```
 
 <a name="acquirerdataobject"></a>
@@ -598,12 +596,10 @@ This is additional information about the card acquirer required when you are per
 |code               |enum                       |Yes            |This is the code for your card acquirer. <ul><li>CRX &nsash; Credorax</li></ul>|
 
 ```apib
-{
     "acquirerData":{
         "authId":"f06bccd6-de90-4b73-b10f-30266763bc60",
         "code":"CRX"
     }
-}
 ```
 
 <a name="acquirerresponseobject"></a>
@@ -653,7 +649,6 @@ These are raw results returned by the acquirer.
 |mid                |string     |This is the acquirer MID that was sent to the clearing house.|
 
 ```apib
-{
   "acquirerResponses":{
     "code":"CRX",
     "responseCode":"0",
@@ -682,7 +677,6 @@ These are raw results returned by the acquirer.
 |signatureStatus    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
 
 ```apib
-{
   "authentication":{
     "eci":5,
     "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
@@ -691,7 +685,6 @@ These are raw results returned by the acquirer.
     "threeDResult":"Y",
     "signatureStatus":"Y"
   }
-}
 ```
 
 <a name="authorizationobject"></a>
@@ -785,7 +778,6 @@ These are raw results returned by the acquirer.
 |phone              |string<br/>`length<=40`          |This is the customer's telephone number.|
 
 ```apib
-{
   "billingDetails":{
     "street":"100 Queen Street West",
     "city":"Toronto",
@@ -793,7 +785,6 @@ These are raw results returned by the acquirer.
     "country":"CA",
     "zip":"M5H 2N2"
   }
-}
 ```
 
 <a name="cardobject"></a>
@@ -818,7 +809,6 @@ When providing card information, merchants can provide either card details or a 
 |track2             |string                     |           |This is Track 2 information read from the card's magnetic stripe.|
 
 ```apib
-{
     "card": {
         "cardNum": "4111111111111111",
         "cardExpiry": {
@@ -826,7 +816,6 @@ When providing card information, merchants can provide either card details or a 
             "year": 2019
         }
     }
-}
 ```
 
 <a name="cardexpiryobject"></a>
@@ -838,12 +827,10 @@ When providing card information, merchants can provide either card details or a 
 |year                    |number<br/>`length=4`  |Required                  |This is the card expiry year.|
 
 ```apib
-{
     "cardExpiry":{
         "month": "12",
         "year": "2020"
     }
-}
 ```
 
 <a name="errorobject"></a>
@@ -856,7 +843,6 @@ When providing card information, merchants can provide either card details or a 
 |links              |link array     |One or more rel/href pairs, where rel is "errorinfo", and href is the Developer Center URL containing a description of the error.|
 
 ```apib
-{  
    "error":{  
       "code":"5270",
       "message":"The credentials provided with the request do not have permission to access the data requested.",
@@ -870,7 +856,6 @@ When providing card information, merchants can provide either card details or a 
          }
       ]
    }
-}
 ```
 
 <a name="level2level3object"></a>
@@ -895,7 +880,6 @@ merchants who provide more detailed information when processing card-not-present
 | lineItems             |[lineItems](#lineitemsobject)      |           |This is more detailed information about the items that are being purchased.| 
 
 ```apib
-{
     "level2Level3": {
         "localTaxAmount": 15000,
         "nationalTaxAmount": 0,
@@ -925,7 +909,6 @@ merchants who provide more detailed information when processing card-not-present
             }
         ]
     }
-}
 ```
 
 <a name="lineitemsobject"></a>
@@ -942,7 +925,6 @@ merchants who provide more detailed information when processing card-not-present
 |totalAmount            |number<br/>`length<=99999999999`   |           |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 
 ```apib
-{
     "lineItems": {
         "description": "Disney Cruise Line",
         "productCode": "DCL",
@@ -952,7 +934,6 @@ merchants who provide more detailed information when processing card-not-present
         "taxAmount": 24000,
         "totalAmount": 504000
     }
-}
 ```
 
 <a name="linksobject"></a>
@@ -964,14 +945,12 @@ merchants who provide more detailed information when processing card-not-present
 |href       |string        |Required    |This is the URI of the resource.|
 
 ```apib
-{
     "links": [
         {
         "rel": "self",
         "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
         }
-        ],
-}
+        ]
 ```
 
 <a name="merchantdescriptorobject"></a>
@@ -982,12 +961,10 @@ merchants who provide more detailed information when processing card-not-present
 |phone              |string <br/>`length<=13`   |           |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
 
 ```apib
-{
     "merchantDescriptor":{
         "dynamicDescriptor":"OnlineStore",
         "phone":"12345678"
   }
-}
 ```
 
 <a name="originalcreditsobject"></a>
@@ -1051,13 +1028,11 @@ merchants who provide more detailed information when processing card-not-present
 |email              |string <br/>`length<=255`  |           |This is the customer's email address. |
 
 ```apib
-{    
     "profile": {
         "firstName": "Joe",
         "lastName": "Smith",
         "email": "Joe.Smith@canada.com"
     }
-}
 ```
 
 <a name="refundsobject"></a>
@@ -1119,7 +1094,6 @@ merchants who provide more detailed information when processing card-not-present
 |country            |enum                       |           |See [Country Codes](#countrycodes). |
 
 ```apib
-{
   "shippingDetails":{
     "carrier":"UPS",
     "shipMethod":"N",
@@ -1129,7 +1103,6 @@ merchants who provide more detailed information when processing card-not-present
     "country":"CA",
     "zip":"M5H 2N2"
   }
-}
 ```
 
 <a name="standalonecreditsobject"></a>
@@ -1253,7 +1226,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 
 
 ```apib
-{
     "visaAdditionalAuthData": {
         "recipientDateOfBirth": {
             "day": 29,
@@ -1264,7 +1236,6 @@ The recipient is deemed to be the person or party who has the contractual relati
         "recipientLastName": "Smith",
         "recipientAccountNumber": "ABC1234567890"
     }
-}
 ```
 
 # Error Summary
