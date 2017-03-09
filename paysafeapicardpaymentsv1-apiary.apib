@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.test.paysafe.com/cardpayments/v1/
+HOST: https://api.test.paysafe.com/cardpayments/
 
 # Paysafe Card Payments API 
 
@@ -578,10 +578,12 @@ The Paysafe Test environment can be used to test websites or applications withou
 |term               |number<br/>`max=99`        |               |This is the number of payments, in months, for equal payment transactions.|
 
 ```apib
+    {
     "accordD":{
         "financingType":"DEFERRED_PAYMENT",
         "plan":"123",
         "gracePeriod":"12"
+    }
     }
 ```
 
@@ -596,9 +598,11 @@ This is additional information about the card acquirer required when you are per
 |code               |enum                       |Yes            |This is the code for your card acquirer. <ul><li>CRX &nsash; Credorax</li></ul>|
 
 ```apib
+    {
     "acquirerData":{
         "authId":"f06bccd6-de90-4b73-b10f-30266763bc60",
         "code":"CRX"
+    }
     }
 ```
 
@@ -649,6 +653,7 @@ These are raw results returned by the acquirer.
 |mid                |string     |This is the acquirer MID that was sent to the clearing house.|
 
 ```apib
+  {
   "acquirerResponses":{
     "code":"CRX",
     "responseCode":"0",
@@ -661,7 +666,8 @@ These are raw results returned by the acquirer.
     "txnDateTime":"11/11/2013 at 12:16:19 EST",
     "responseReasonCode":"00",
     "cvv2Result":"M"
-}
+  }
+  }
 ```
 
 <a name="authenticationobject"></a>
@@ -677,6 +683,7 @@ These are raw results returned by the acquirer.
 |signatureStatus    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
 
 ```apib
+  {
   "authentication":{
     "eci":5,
     "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
@@ -684,6 +691,7 @@ These are raw results returned by the acquirer.
     "threeDEnrollment":"Y",
     "threeDResult":"Y",
     "signatureStatus":"Y"
+  }
   }
 ```
 
@@ -778,12 +786,14 @@ These are raw results returned by the acquirer.
 |phone              |string<br/>`length<=40`          |This is the customer's telephone number.|
 
 ```apib
+  {
   "billingDetails":{
     "street":"100 Queen Street West",
     "city":"Toronto",
     "state":"ON",
     "country":"CA",
     "zip":"M5H 2N2"
+  }
   }
 ```
 
@@ -809,12 +819,14 @@ When providing card information, merchants can provide either card details or a 
 |track2             |string                     |           |This is Track 2 information read from the card's magnetic stripe.|
 
 ```apib
+    {
     "card": {
         "cardNum": "4111111111111111",
         "cardExpiry": {
             "month": 2,
             "year": 2019
         }
+    }
     }
 ```
 
@@ -827,9 +839,11 @@ When providing card information, merchants can provide either card details or a 
 |year                    |number<br/>`length=4`  |Required                  |This is the card expiry year.|
 
 ```apib
+    {
     "cardExpiry":{
         "month": "12",
         "year": "2020"
+    }
     }
 ```
 
@@ -843,6 +857,7 @@ When providing card information, merchants can provide either card details or a 
 |links              |link array     |One or more rel/href pairs, where rel is "errorinfo", and href is the Developer Center URL containing a description of the error.|
 
 ```apib
+   {
    "error":{  
       "code":"5270",
       "message":"The credentials provided with the request do not have permission to access the data requested.",
@@ -855,6 +870,7 @@ When providing card information, merchants can provide either card details or a 
             "href":"https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/card-errors/#ErrorCode5270"
          }
       ]
+   }
    }
 ```
 
@@ -880,6 +896,7 @@ merchants who provide more detailed information when processing card-not-present
 | lineItems             |[lineItems](#lineitemsobject)      |           |This is more detailed information about the items that are being purchased.| 
 
 ```apib
+    {
     "level2Level3": {
         "localTaxAmount": 15000,
         "nationalTaxAmount": 0,
@@ -909,6 +926,7 @@ merchants who provide more detailed information when processing card-not-present
             }
         ]
     }
+    }
 ```
 
 <a name="lineitemsobject"></a>
@@ -925,6 +943,7 @@ merchants who provide more detailed information when processing card-not-present
 |totalAmount            |number<br/>`length<=99999999999`   |           |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 
 ```apib
+    {
     "lineItems": {
         "description": "Disney Cruise Line",
         "productCode": "DCL",
@@ -933,6 +952,7 @@ merchants who provide more detailed information when processing card-not-present
         "taxRate": 5,
         "taxAmount": 24000,
         "totalAmount": 504000
+    }
     }
 ```
 
@@ -945,12 +965,14 @@ merchants who provide more detailed information when processing card-not-present
 |href       |string        |Required    |This is the URI of the resource.|
 
 ```apib
+    {
     "links": [
         {
         "rel": "self",
         "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
         }
         ]
+        }
 ```
 
 <a name="merchantdescriptorobject"></a>
@@ -961,9 +983,11 @@ merchants who provide more detailed information when processing card-not-present
 |phone              |string <br/>`length<=13`   |           |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
 
 ```apib
+    {
     "merchantDescriptor":{
         "dynamicDescriptor":"OnlineStore",
         "phone":"12345678"
+  }
   }
 ```
 
@@ -1028,10 +1052,12 @@ merchants who provide more detailed information when processing card-not-present
 |email              |string <br/>`length<=255`  |           |This is the customer's email address. |
 
 ```apib
+    {
     "profile": {
         "firstName": "Joe",
         "lastName": "Smith",
         "email": "Joe.Smith@canada.com"
+    }
     }
 ```
 
@@ -1094,6 +1120,7 @@ merchants who provide more detailed information when processing card-not-present
 |country            |enum                       |           |See [Country Codes](#countrycodes). |
 
 ```apib
+  {
   "shippingDetails":{
     "carrier":"UPS",
     "shipMethod":"N",
@@ -1102,6 +1129,7 @@ merchants who provide more detailed information when processing card-not-present
     "state":"ON",
     "country":"CA",
     "zip":"M5H 2N2"
+  }
   }
 ```
 
@@ -1226,6 +1254,7 @@ The recipient is deemed to be the person or party who has the contractual relati
 
 
 ```apib
+    {
     "visaAdditionalAuthData": {
         "recipientDateOfBirth": {
             "day": 29,
@@ -1235,6 +1264,7 @@ The recipient is deemed to be the person or party who has the contractual relati
         "recipientZip": "CB24 9AD",
         "recipientLastName": "Smith",
         "recipientAccountNumber": "ABC1234567890"
+    }
     }
 ```
 
@@ -1276,6 +1306,7 @@ The recipient is deemed to be the person or party who has the contractual relati
 |401                |5279           |The authentication credentials are invalid.|
 |401                |5280           |The required authentication credentials were not provided.|
 |405                |5281           |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
+|400                |5501           |The profile does not have an active credit card. |
 |400                |5502           |Either the payment token is invalid or the corresponding profile or bank account is not active.|
 
 ## Authorization Errors
@@ -1385,10 +1416,22 @@ When you are ready to test your example, you can choose between the Production a
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
 
+## Verify the Service is Accessible [GET /monitor]
+
+This call returns a status of READY if the API is available.
+
++ Response 200 (application/json)
+
+  + Body
+    
+            {
+                "status" : "READY"
+            }
+
 # Authorizations [/auths]
 <a name="auths"></a>
 
-## Authorization [POST /accounts/{ACCOUNT_ID}/auths]
+## Authorization [POST /v1/accounts/{ACCOUNT_ID}/auths]
 
 This is how you submit an Authorization request.
 
@@ -1689,7 +1732,7 @@ This is how you submit an Authorization request.
               "status":"COMPLETED"
               }        
 
-## Authorization with Settlement [POST /accounts/{ACCOUNT_ID}/auths]
+## Authorization with Settlement [POST /v1/accounts/{ACCOUNT_ID}/auths]
 
 This is how you submit an Authorization request that includes the Settlement. To settle the Authorization in the same request, just set the *settleWithAuth* parameter to *true*.
 
@@ -1991,7 +2034,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               "status":"COMPLETED"
               }        
 
-## Authorization with a Payment Token [POST /accounts/{ACCOUNT_ID}/auths]
+## Authorization with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/auths]
 
 This is how you submit an Authorization request using a payment token. The payment token is created using the [Paysafe Customer Vault API](http://paysafegroup.github.io/paysafe_api_customervault_v1/#/introduction/overview).
 
@@ -2019,7 +2062,15 @@ If you use a payment token, you can submit the request without extra parameters 
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
-            - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.            
+            - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.
+        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
+            - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
+            - city:Toronto (string, optional) - This is the city in the billing address. 
+            - state:ON (string, optional) - This is the state or province in the billing address. 
+            - country:CA (string, optional) - This is the country in the billing address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
+            - phone:555-9999 (string, optional) - This is the customer's telephone number.
         + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
@@ -2191,8 +2242,12 @@ If you use a payment token, you can submit the request without extra parameters 
                 }
                 },
               "billingDetails":{
-                   "zip":"M5H 2N2"
-                },
+                "street":"100 Queen Street West",
+                "city":"Toronto",
+                "state":"ON",
+                "country":"CA",
+                "zip":"M5H 2N2"
+              },
               "customerIp": "204.91.0.12",
               "description":"Video purchase",
               "authCode":"1234567890",
@@ -2200,13 +2255,6 @@ If you use a payment token, you can submit the request without extra parameters 
                 "firstName":"Joe",
                 "lastName":"Smith",
                 "email":"Joe.Smith@canada.com"
-                },
-              "billingDetails":{
-                "street":"100 Queen Street West",
-                "city":"Toronto",
-                "state":"ON",
-                "country":"CA",
-                "zip":"M5H 2N2"
                 },
               "txnTime":"2016-12-14T15:12:18Z",
               "currencyCode":"USD",
@@ -2216,7 +2264,7 @@ If you use a payment token, you can submit the request without extra parameters 
             }        
 
         
-## Get Authorization [GET /accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
+## Get Authorization [GET /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
 
 This is how you look up an Authorization request using the ID returned in the response to the original request.
 
@@ -2365,7 +2413,7 @@ This is how you look up an Authorization request using the ID returned in the re
                 "cvvVerification": "MATCH"
             }        
         
-## Get Authorization Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up an Authorization request using the merchant reference number used in the original request.
 
@@ -2572,7 +2620,7 @@ This is how you look up an Authorization request using the merchant reference nu
               ]
             }
         
-## Complete an Authorization [PUT /accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
+## Complete an Authorization [PUT /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
 
 This is how you complete an Authorization request with the status of Held.
 
@@ -2635,7 +2683,7 @@ This is how you complete an Authorization request with the status of Held.
 # Authorization Reversals [/voidauths]
 <a name="voidauths"></a>
 
-## Reverse an Authorization [POST /accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/voidauths]
+## Reverse an Authorization [POST /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/voidauths]
 
 This is how you submit an Authorization Reversal request. You can reverse an Authorization only if it has not yet been settled. 
 
@@ -2704,7 +2752,7 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal [GET /accounts/{ACCOUNT_ID}/voidauths/{VOID_AUTH_ID}]
+## Get Authorization Reversal [GET /v1/accounts/{ACCOUNT_ID}/voidauths/{VOID_AUTH_ID}]
 
 This is how you look up an Authorization Reversal request using the ID returned in the response to the original request.
 
@@ -2760,7 +2808,7 @@ This is how you look up an Authorization Reversal request using the ID returned 
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limt={limit}]
+## Get Authorization Reversal Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limt={limit}]
 
 This is how you look up an Authorization Reversal request using the merchant reference number used in the original request.
 
@@ -2833,7 +2881,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
 # Settlements [/settlements]
 <a name="settlements"></a>
 
-## Settlement [POST /accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/settlements]
+## Settlement [POST /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/settlements]
 
 This is how you submit a Settlement request.
 
@@ -2906,7 +2954,7 @@ This is how you submit a Settlement request.
             "availableToRefund": 50
             }
         
-## Cancel a Settlement [PUT /accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]
+## Cancel a Settlement [PUT /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]
 
 This is how you submit a Cancel Settlement request.
 
@@ -2956,7 +3004,7 @@ This is how you submit a Cancel Settlement request.
                 "status": "CANCELLED"
             }
         
-## Get Settlement [GET /accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]      
+## Get Settlement [GET /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]      
 
 This is how you look up a Settlement request using the ID returned in the response to the original request.
     
@@ -3015,7 +3063,7 @@ This is how you look up a Settlement request using the ID returned in the respon
                 "availableToRefund": 50
             }
         
-## Get Settlement Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Settlement using the merchant reference number used in the original request.
 
@@ -3094,7 +3142,7 @@ This is how you look up a Settlement using the merchant reference number used in
 # Refunds [/refunds]
 <a name="refunds"></a>
 
-## Refund [POST /accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}/refunds]
+## Refund [POST /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}/refunds]
 
 This is how you submit a Refund request. 
 
@@ -3155,7 +3203,7 @@ This is how you submit a Refund request.
                 "amount": 1000
             }
         
-## Cancel a Refund [PUT /accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]
+## Cancel a Refund [PUT /v1/accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]
 
 This is how you submit a Cancel Refund request.
 
@@ -3205,7 +3253,7 @@ This is how you submit a Cancel Refund request.
                 "status": "CANCELLED"
             }        
 
-## Get Refund [GET /accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]      
+## Get Refund [GET /v1/accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]      
 
 This is how you look up a Refund request using the ID returned in the response to the original request.
 
@@ -3260,7 +3308,7 @@ This is how you look up a Refund request using the ID returned in the response t
                 "amount": 1000
             }
 
-## Get Refund Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Refund Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Refund using the merchant reference number used in the original request.
 
@@ -3335,7 +3383,7 @@ This is how you look up a Refund using the merchant reference number used in the
 # Verifications [/verifications]
 <a name="verifications"></a>
 
-## Verification [POST /accounts/{ACCOUNT_ID}/verifications]
+## Verification [POST /v1/accounts/{ACCOUNT_ID}/verifications]
 
 This is how you submit a Verification request. This example verifies a card and associated billing details.
 
@@ -3493,7 +3541,7 @@ This is how you submit a Verification request. This example verifies a card and 
               "status":"COMPLETED"
             }
 
-## Verification with a Payment Token [POST /accounts/{ACCOUNT_ID}/verifications]
+## Verification with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/verifications]
 
 This is how you submit a Verification request using a payment token. The payment token is created using the [Paysafe Customer Vault API](http://paysafegroup.github.io/paysafe_api_customervault_v1/#/introduction/overview).
 
@@ -3527,6 +3575,14 @@ If you use a payment token, you can submit the request without extra parameters 
             - state:ON (string, optional) - This is the state or province in the shipping address. 
             - country:CA (string, optional) - This is the country in the shipping address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.            
+        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
+            - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
+            - city:Toronto (string, optional) - This is the city in the billing address. 
+            - state:ON (string, optional) - This is the state or province in the billing address. 
+            - country:CA (string, optional) - This is the country in the billing address. 
+            - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
+            - phone:555-9999 (string, optional) - This is the customer's telephone number.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
         + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
         + merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
@@ -3645,7 +3701,7 @@ If you use a payment token, you can submit the request without extra parameters 
               "status":"COMPLETED"
             }
 
-## Get Verification [GET /accounts/{ACCOUNT_ID}/verifications/{VERIFICATION_ID}]
+## Get Verification [GET /v1/accounts/{ACCOUNT_ID}/verifications/{VERIFICATION_ID}]
 
 This is how you look up a Verification request using the ID returned in the response to the original request.
 
@@ -3751,7 +3807,7 @@ This is how you look up a Verification request using the ID returned in the resp
               "status":"COMPLETED"
             }
 
-## Get Verification Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Verification Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Verification request using the merchant reference number used in the original request.
 
@@ -3888,7 +3944,7 @@ Merchants with the following merchant category codes (MCCs) can process Original
  * 8999
 
 
-## Original Credit [POST /accounts/{ACCOUNT_ID}/originalcredits]
+## Original Credit [POST /v1/accounts/{ACCOUNT_ID}/originalcredits]
 
 This is how you submit an Original Credit request.
 
@@ -4039,7 +4095,7 @@ This is how you submit an Original Credit request.
               "status":"PENDING"
             }        
 
-## Cancel an Original Credit [PUT /accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
+## Cancel an Original Credit [PUT /v1/accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
 
 This is how you submit a Cancel Original Credit request.
 
@@ -4088,7 +4144,7 @@ This is how you submit a Cancel Original Credit request.
                 "status": "CANCELLED"
             }        
 
-## Get Original Credit [GET /accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
+## Get Original Credit [GET /v1/accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
 
 This is how you look up an Original Credit request using the ID returned in the response to the original request.
 
@@ -4186,7 +4242,7 @@ This is how you look up an Original Credit request using the ID returned in the 
               "status":"PENDING"
             }
 
-## Get Original Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up an Original Credit using the merchant reference number used in the original request.
 
@@ -4306,7 +4362,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
 **Note:** If your merchant category code (MCC) is listed as able to process Original Credits to issue a credit that does not correspond to a previous Authorization/Settlement, then you must not use Standalone Credits.
 
-## Standalone Credit [POST /accounts/{ACCOUNT_ID}/standalonecredits]
+## Standalone Credit [POST /v1/accounts/{ACCOUNT_ID}/standalonecredits]
 
 This is how you submit a Standalone Credit request.
 
@@ -4459,7 +4515,7 @@ This is how you submit a Standalone Credit request.
               "status":"PENDING"
             }        
 
-## Cancel a Standalone Credit [PUT /accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
+## Cancel a Standalone Credit [PUT /v1/accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
 
 This is how you submit a Cancel Standalone Credit request.
 
@@ -4510,7 +4566,7 @@ This is how you submit a Cancel Standalone Credit request.
             }        
 
 
-## Get Standalone Credit [GET /accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
+## Get Standalone Credit [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
 
 This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
 
@@ -4609,7 +4665,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
               "status":"PENDING"
             }
 
-## Get Standalone Credit Using Merchant Reference Number [GET /accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}]
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
 
