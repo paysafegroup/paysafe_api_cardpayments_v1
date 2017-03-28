@@ -25,7 +25,7 @@ and provide you with an API key. Your API key looks something like this:
  * Username – MerchantXYZ
  * Password – B-tst1-0-51ed39e4-312d02345d3f123120881dff9bb4020a89e8ac44cdfdcecd702151182fdc952272661d290ab2e5849e31bb03deede7e
 
-Note this is not the same as your Merchant Back Office username and password.
+Note that this is not the same as your Merchant Back Office username and password.
 
 The case-sensitive API key is sent using HTTP Basic Authentication. To use HTTP Basic Authentication, you must send the API key credentials using the Authorization header with every request. The Authorization header is constructed as follows:
  1. The Key Username and Key Password are combined into a string separated by a colon, e.g.,“Key Username:Key Password”.
@@ -133,7 +133,7 @@ The Paysafe Test environment can be used to test websites or applications withou
 <a name="currencycodes"></a>
 ## Currency Codes
 
-**Note:**
+**Note**
  * The table below lists the currencies in which transaction requests are processed, but note that they may be settled in a different currency. 
  * Not all currencies are supported by all banks. Contact your account manager for more information about which currencies are supported for your merchant account.
 
@@ -892,7 +892,7 @@ merchants who provide more detailed information when processing card-not-present
 | dutyAmount            |number<br/>`length<=99999999999`   |           | This is the duty associated with the import of the purchased goods. |
 | destinationZip        |number<br/>`length<=10`            |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
 | destinationCountry    |number<br/>`length=2`              |           | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
-| shipFromZip           |number<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped |
+| shipFromZip           |number<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped. |
 | lineItems             |[lineItems](#lineitemsobject)      |           |This is more detailed information about the items that are being purchased.| 
 
 ```apib
@@ -1416,7 +1416,7 @@ When you are ready to test your example, you can choose between the Production a
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
 
-## Verify the Service is Accessible [GET /monitor]
+## Verify That the Service Is Accessible [GET /monitor]
 
 This call returns a status of READY if the API is available.
 
@@ -1459,8 +1459,8 @@ This is how you submit an Authorization request.
         + settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -1496,7 +1496,7 @@ This is how you submit an Authorization request.
             - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
             - phone:`888-9999` (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         + accordD (object, optional) - These are parameters for [financing plans](accorddobject) supported for certain merchant configurations.
-            - finanacingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
+            - financingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
             - plan:112 (string, required) - This is the plan number for this financing transaction.
             - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
             - term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
@@ -1514,9 +1514,9 @@ This is how you submit an Authorization request.
             - nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
             - freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
             - dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
-            - destinationZip:90210 (number, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
-            - destinationCountry:US (number, optional) - This is the country to which the goods are being shipped.
-            - shipFromZip:90211 (number, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
+            - destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+            - destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
+            - shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
             - lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
                 - description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
                 - productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
@@ -1566,6 +1566,10 @@ This is how you submit an Authorization request.
                 "zip":"M5H 2N2"
               },
               "customerIp":"204.91.0.12",
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "description":"Video purchase"
             }
     
@@ -1581,7 +1585,7 @@ This is how you submit an Authorization request.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
         + settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-        + availableToSettle:10098 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + availableToSettle:10098 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
             - type:VI (enum, required) - This is the type of card used for the request.
@@ -1590,8 +1594,8 @@ This is how you submit an Authorization request.
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -1723,6 +1727,10 @@ This is how you submit an Authorization request.
                 "country":"CA",
                 "zip":"M5H 2N2"
               },
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "customerIp":"204.91.0.12",
               "description":"Video purchase",
               "txnTime":"2016-12-14T15:12:18Z",
@@ -1756,8 +1764,8 @@ This is how you submit an Authorization request that includes the Settlement. To
         + settleWithAuth:true (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -1802,7 +1810,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - recipientDateOfBirth.day:24 (number, optional) - This is the recipient's day of birth.
             - recipientDateOfBirth.month:10 (number, optional) - This is the recipient's month of birth. 
             - recipientDateOfBirth.year:1991 (number, optional) - The is the recipient's year of birth.
-            - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+            - recipientZip:`M5M 5M5` (string, optional) - This is the recipient‘s postcode.
             - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
             - recipientAccountNumber:`ABC1234567890` (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
         + level2level3 (object, optional) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object).
@@ -1811,9 +1819,9 @@ This is how you submit an Authorization request that includes the Settlement. To
             - nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
             - freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
             - dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
-            - destinationZip:90210 (number, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
-            - destinationCountry:US (number, optional) - This is the country to which the goods are being shipped.
-            - shipFromZip:90211 (number, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
+            - destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+            - destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
+            - shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
             - lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
                 - description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
                 - productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
@@ -1871,6 +1879,10 @@ This is how you submit an Authorization request that includes the Settlement. To
                 "country":"CA",
                 "zip":"M5H 2N2"
               },
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "customerIp":"204.91.0.12",
               "description":"Video purchase"
             }
@@ -1887,7 +1899,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10099 (number, required) - This is the amount of the request, in minor units.
         + settleWithAuth:true (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-        + availableToSettle:0 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + availableToSettle:0 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
             - type:VI (enum, required) - This is the type of card used for the request.
@@ -1896,8 +1908,8 @@ This is how you submit an Authorization request that includes the Settlement. To
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.            
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -2025,6 +2037,10 @@ This is how you submit an Authorization request that includes the Settlement. To
                 "country":"CA",
                 "zip":"M5H 2N2"
               },
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "customerIp":"204.91.0.12",
               "description":"Video purchase",
               "txnTime":"2016-12-14T15:12:18Z",
@@ -2036,9 +2052,11 @@ This is how you submit an Authorization request that includes the Settlement. To
 
 ## Authorization with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/auths]
 
-This is how you submit an Authorization request using a payment token. The payment token is created using the [Paysafe Customer Vault API](http://paysafegroup.github.io/paysafe_api_customervault_v1/#/introduction/overview).
+This is how you submit an Authorization request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault along with the payment token.
 
-If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. These details are stored with the payment token.
+You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
+
+**Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
         
 + Parameters
     
@@ -2057,8 +2075,8 @@ If you use a payment token, you can submit the request without extra parameters 
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + description:Video purchase (string, optional) - This is a description of the transaction, provided by the merchant.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -2098,6 +2116,23 @@ If you use a payment token, you can submit the request without extra parameters 
             - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
             - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
             - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
+        + level2level3 (object, optional) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object).
+            - exemptLocalTax:true (boolean, optional) - This indicates whether or not local tax is exempted for the request. 
+            - localTaxAmount:1500 (number, optional) - This is the local sales tax applied to the purchase.
+            - nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
+            - freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
+            - dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
+            - destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+            - destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
+            - shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
+            - lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
+                - description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
+                - productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
+                - quantity:4 (number, optional) - This is the quantity of the item.
+                - unitAmount:120000 (number, optional) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting. 
+                - taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
+                - taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
+                - totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units.            
 
 
     + Headers
@@ -2106,16 +2141,23 @@ If you use a payment token, you can submit the request without extra parameters 
             
     + Body
     
-                        {
-                            "merchantRefNum": "merchant ABC-444",
-                            "amount": 10098,
-                            "card": {
-                                "paymentToken": "LTEyMzYzMjQ3ODg"
-                            },
-                            "settleWithAuth": false,
-                            "customerIp": "204.91.0.12",
-                            "description": "Video purchase"
-                        }
+            {
+                "merchantRefNum": "merchant ABC-444",
+                "amount": 10098,
+                "card": {
+                    "paymentToken": "LTEyMzYzMjQ3ODg"
+                },
+                "settleWithAuth": false,
+                "customerIp": "204.91.0.12",
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "description": "Video purchase"
+            }
     
 + Response 200 (application/json)
 
@@ -2135,12 +2177,12 @@ If you use a payment token, you can submit the request without extra parameters 
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.
         + settleWithAuth:false (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-        + availableToSettle:10098 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + availableToSettle:10098 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
             - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
-            - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, required) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
             - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.                        
@@ -2255,7 +2297,11 @@ If you use a payment token, you can submit the request without extra parameters 
                 "firstName":"Joe",
                 "lastName":"Smith",
                 "email":"Joe.Smith@canada.com"
-                },
+              },
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "txnTime":"2016-12-14T15:12:18Z",
               "currencyCode":"USD",
               "avsResponse":"NOT_PROCESSED",
@@ -2296,12 +2342,12 @@ This is how you look up an Authorization request using the ID returned in the re
             - cardExpiry (object, required)
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.
-        + settleWithAuth:true (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-        + availableToSettle:0 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + settleWithAuth:true (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+        + availableToSettle:0 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
         + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -2408,6 +2454,10 @@ This is how you look up an Authorization request using the ID returned in the re
                     "country": "CA",
                     "zip": "M5H2N2"
                 },
+                "merchantDescriptor":{
+                    "dynamicDescriptor": "Online Store",
+                    "phone": "888-9999"
+                },
                 "currencyCode": "CAD",
                 "avsResponse": "MATCH",
                 "cvvVerification": "MATCH"
@@ -2450,11 +2500,11 @@ This is how you look up an Authorization request using the merchant reference nu
                         - month:12 (number, required) - This is the month the card expires.
                         - year:2020 (number, required) - This is the year the card expires.
                 + settleWithAuth:true (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-                + availableToSettle:0 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+                + availableToSettle:0 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
                 + preAuth:false (boolean, optional) - This indicates whether the Authorization request should be sent as a Pre-Authorization.
                 + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-                    - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-                    - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+                    - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+                    - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
                     - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
                     - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
                     - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -2569,6 +2619,10 @@ This is how you look up an Authorization request using the merchant reference nu
                     "country":"CA",
                     "zip":"M5H2N2"
                   },
+                  "merchantDescriptor":{
+                    "dynamicDescriptor": "Online Store",
+                    "phone": "888-9999"
+                  },
                   "txnTime":"2016-03-10T13:06:20Z",
                   "currencyCode":"CAD",
                   "avsResponse":"MATCH",
@@ -2610,6 +2664,10 @@ This is how you look up an Authorization request using the merchant reference nu
                     "state":"ON",
                     "country":"CA",
                     "zip":"M5H2N2"
+                  },
+                  "merchantDescriptor":{
+                    "dynamicDescriptor": "Online Store",
+                    "phone": "888-9999"
                   },
                   "txnTime":"2016-03-10T13:06:50Z",
                   "currencyCode":"CAD",
@@ -2661,7 +2719,7 @@ This is how you complete an Authorization request with the status of Held.
             - CANCELLED – The request has been fully reversed.
         + amount:100 (number, required) - This is the amount of the request, in minor units. 
         + settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-        + availableToSettle:100 (number, optional) - This is the amount of of the Authorization remaining to settle, in minor units.
+        + availableToSettle:100 (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
     
     + Body
     
@@ -2696,7 +2754,7 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
         
     + Attributes
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + amount:898 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
+        + amount:898 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be reversed.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         
     
@@ -2894,7 +2952,7 @@ This is how you submit a Settlement request.
         
     + Attributes
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + amount:50 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
+        + amount:50 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be settled. 
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         
     + Headers
@@ -2927,7 +2985,7 @@ This is how you submit a Settlement request.
             - FAILED – The transaction failed due to either an error or being declined.
             - CANCELLED – The transaction request has been cancelled.
         + amount:50 (number, required) - This is the amount of the request, in minor units.
-        + availableToRefund:50 (number, optional) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
+        + availableToRefund:50 (number, required) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
         + childAccountNum:1000203692 (string, optional) - This is child merchant account number. It is returned only if the transaction was processed via a master account.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + riskReasonCode (array, optional) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
@@ -3038,7 +3096,7 @@ This is how you look up a Settlement request using the ID returned in the respon
             - FAILED – The transaction failed due to either an error or being declined.
             - CANCELLED – The transaction request has been cancelled.
         + amount:50 (number, required) - This is the amount of the request, in minor units.
-        + availableToRefund:50 (number, optional) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
+        + availableToRefund:50 (number, required) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
         + childAccountNum:1000203692 (string, optional) - This is child merchant account number. It is returned only if the transaction was processed via a master account.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + riskReasonCode (array, optional) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
@@ -3101,7 +3159,7 @@ This is how you look up a Settlement using the merchant reference number used in
                     - FAILED – The transaction failed due to either an error or being declined.
                     - CANCELLED – The transaction request has been cancelled.
                 + amount:50 (number, required) - This is the amount of the request, in minor units.
-                + availableToRefund:50 (number, optional) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
+                + availableToRefund:50 (number, required) - This is the amount of of the Authorization remaining to Refund, in minor units. For example, US $10.99 would be 1099.
                 + childAccountNum:1000203692 (string, optional) - This is child merchant account number. It is returned only if the transaction was processed via a master account.
                 + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
                 + riskReasonCode (array, optional) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
@@ -3155,7 +3213,7 @@ This is how you submit a Refund request.
         
     + Attributes
         + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + amount:1000 (number, required) - This is the amount of the request, in minor units For example, to process US $10.99, this value should be 1099.
+        + amount:1000 (number, optional) - This is the amount of the request, in minor units If this value is not provided, the remaining amount on the settlement will be refunded.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         
     + Headers
@@ -3416,7 +3474,11 @@ This is how you submit a Verification request. This example verifies a card and 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.        
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
+        + dupCheck:false (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
+        + merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.        
 
 
     + Headers
@@ -3448,6 +3510,10 @@ This is how you submit a Verification request. This example verifies a card and 
                     "zip": "M5H2N2"
                 },
                 "customerIp": "204.91.0.12",
+                "merchantDescriptor":{
+                    "dynamicDescriptor": "Online Store",
+                    "phone": "888-9999"
+                },
                 "description": "This is a verification transaction"
             }            
 
@@ -3498,7 +3564,11 @@ This is how you submit a Verification request. This example verifies a card and 
             - COMPLETED – The transaction has been completed. 
             - FAILED – The transaction failed due to either an error or being declined.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
+        + merchantDescriptor (object, required) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.        
         + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
+        + dupCheck:false (boolean, optional) - This validates that this request is not a duplicate.
         
     + Body
     
@@ -3533,6 +3603,10 @@ This is how you submit a Verification request. This example verifies a card and 
                 "zip":"M5H 2N2"
               },
               "customerIp":"204.91.0.12",
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "description":"Verification transaction",
               "txnTime":"2013-12-14T15:12:18Z",
               "currencyCode":"USD",
@@ -3543,9 +3617,11 @@ This is how you submit a Verification request. This example verifies a card and 
 
 ## Verification with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/verifications]
 
-This is how you submit a Verification request using a payment token. The payment token is created using the [Paysafe Customer Vault API](http://paysafegroup.github.io/paysafe_api_customervault_v1/#/introduction/overview).
+This is how you submit a Verification request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provieded, these details are stored in the Customer Vault with the payment token.
 
-If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. These details are stored with the payment token.
+You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
+
+**Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
         
 + Parameters
 
@@ -3560,8 +3636,8 @@ If you use a payment token, you can submit the request without extra parameters 
             - paymentToken:LTEyMzYzMjQ3ODg (string, required) - This represents the card used for the request.
             - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
         + authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-            - eci:5 (number, optional) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, optional) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+            - eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+            - cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
             - xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
@@ -3607,6 +3683,13 @@ If you use a payment token, you can submit the request without extra parameters 
                     "cvv": "123"
                 },
                 "customerIp": "204.91.0.12",
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
                 "description": "Verification transaction"
             }            
 
@@ -3622,23 +3705,23 @@ If you use a payment token, you can submit the request without extra parameters 
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
             - type:VI (enum, required) - This is the type of card used for the request.
-            - lastDigits:1111 (number, required) - This is the last four digits of the card used for the request.
+            - lastDigits:`1111` (number, required) - This is the last four digits of the card used for the request.
             - cardExpiry (object, required)
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.
-        + authCode:026189  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
+        + authCode:`026189`  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
         + profile (object, optional) - These are some [details about the customer](#profileobject).
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
         + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
-            - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
+            - street:`100` Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
             - state:ON (string, optional) - This is the state or province in the billing address. 
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
-            - phone:555-9999 (string, optional) - This is the customer's telephone number.
+            - phone:`555-9999` (string, optional) - This is the customer's telephone number.
         + txnTime:`2013-12-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
         + currencyCode:USD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
         + avsResponse:MATCH (enum, optional) - This is the AVS response from the card issuer.
@@ -3659,6 +3742,9 @@ If you use a payment token, you can submit the request without extra parameters 
             - FAILED – The transaction failed due to either an error or being declined.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
         + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
+        + merchantDescriptor (object, required) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         
     + Body
     
@@ -3693,6 +3779,10 @@ If you use a payment token, you can submit the request without extra parameters 
                 "zip":"M5H 2N2"
               },
               "customerIp":"204.91.0.12",
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+              },
               "description":"Verification transaction",
               "txnTime":"2013-12-14T15:12:18Z",
               "currencyCode":"USD",
@@ -3765,6 +3855,9 @@ This is how you look up a Verification request using the ID returned in the resp
             - FAILED – The transaction failed due to either an error or being declined.
         + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
         + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
+        + merchantDescriptor (object, required) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
+            - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+            - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         
     + Body
     
@@ -3799,6 +3892,10 @@ This is how you look up a Verification request using the ID returned in the resp
                 "zip":"M5H 2N2"
               },
               "customerIp":"204.91.0.12",
+              "merchantDescriptor":{
+                "dynamicDescriptor": "Online Store",
+                "phone": "888-9999"
+                },
               "description":"Verification transaction",
               "txnTime":"2013-12-14T15:12:18Z",
               "currencyCode":"USD",
@@ -3875,6 +3972,9 @@ This is how you look up a Verification request using the merchant reference numb
                     - FAILED – The transaction failed due to either an error or being declined.
                 + customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
                 + description:Verification transaction (string, optional) - This is a description of the transaction, provided by the merchant.
+                + merchantDescriptor (object, required) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
+                    - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+                    - phone:888-9999 (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
         
     + Body
         
@@ -3917,6 +4017,10 @@ This is how you look up a Verification request using the merchant reference numb
                     "zip":"M5H 2N2"
                   },
                   "customerIp":"204.91.0.12",
+                  "merchantDescriptor":{
+                    "dynamicDescriptor": "Online Store",
+                    "phone": "888-9999"
+                    },
                   "description":"This is a test transaction",
                   "txnTime":"2013-12-14T15:12:18Z",
                   "currencyCode":"USD",
@@ -4043,7 +4147,7 @@ This is how you submit an Original Credit request.
         + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
         + description:Refund without receipt (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-        + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+        + currencyCode:USD (string, required) - This is the currency of the merchant account.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
             - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
             - COMPLETED – The transaction has been completed. 
@@ -4190,7 +4294,7 @@ This is how you look up an Original Credit request using the ID returned in the 
         + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
         + description:Winning payment from Loto (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-        + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+        + currencyCode:USD (string, required) - This is the currency of the merchant account.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
             - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
             - COMPLETED – The transaction has been completed. 
@@ -4293,7 +4397,7 @@ This is how you look up an Original Credit using the merchant reference number u
                 + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
                 + description:Winning payment from Loto (string, optional) - This is a description of the transaction, provided by the merchant.
                 + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-                + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+                + currencyCode:USD (string, required) - This is the currency of the merchant account.
                 + status:COMPLETED (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
                     - COMPLETED – The transaction has been completed. 
@@ -4463,7 +4567,7 @@ This is how you submit a Standalone Credit request.
         + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
         + description:Refund without receipt (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-        + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+        + currencyCode:USD (string, required) - This is the currency of the merchant account.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
             - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
             - COMPLETED – The transaction has been completed. 
@@ -4613,7 +4717,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
         + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
         + description:Refund without receipt (string, optional) - This is a description of the transaction, provided by the merchant.
         + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-        + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+        + currencyCode:USD (string, required) - This is the currency of the merchant account.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
             - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
             - COMPLETED – The transaction has been completed. 
@@ -4716,7 +4820,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                 + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
                 + description:Refund without receipt (string, optional) - This is a description of the transaction, provided by the merchant.
                 + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-                + currencyCode:USD (string, optional) - This is the currency of the merchant account.
+                + currencyCode:USD (string, required) - This is the currency of the merchant account.
                 + status:COMPLETED (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
                     - COMPLETED – The transaction has been completed. 
