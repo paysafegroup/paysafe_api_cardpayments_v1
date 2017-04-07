@@ -62,6 +62,18 @@ For example:
 `https://api.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
 
 
+# Pagination
+<a name="pagination"></a>
+
+In the case where an API GET request returns multiple results, Paysafe returns the first 10 records by default and uses HATEOAS links to provide page navigation. In addition to the default behavior, it is also possible to control the number of results and starting point by passing in query parameters as follows:
+
+|    Name       | Description   |
+|---            |---            |
+| limit         | This is the total number of records to return. Max = 50. Default = 10. |
+| offset        | This is the starting position, where 0 is the first record. Default = 0. |
+| startDate     | This is the start date in UTC. Default = 30 days before the *endDate*.|
+| endDate       | This is the end date in UTC. Default = current date and time. |
+
 # Global Invalid Characters
 
 You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
@@ -595,7 +607,7 @@ This is additional information about the card acquirer required when you are per
 |Element            |Type                       |Required       |Description                        |
 |---                |---                        |---            |---       |
 |authId             |string<br/>`length<=36`    |Yes            |This is the ID returned in the response to a previous successful Authorization or Settlement request.|
-|code               |enum                       |Yes            |This is the code for your card acquirer. <ul><li>CRX &nsash; Credorax</li></ul>|
+|code               |string</br>`length<=10`    |Yes            |This is the code for your card acquirer.|
 
 ```apib
     {
@@ -2056,7 +2068,7 @@ This is how you submit an Authorization request using a payment token. If you us
 
 You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
 
-**Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
+**Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li></ul>
         
 + Parameters
     
@@ -2463,15 +2475,18 @@ This is how you look up an Authorization request using the ID returned in the re
                 "cvvVerification": "MATCH"
             }        
         
-## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up an Authorization request using the merchant reference number used in the original request.
 
 + Parameters
 
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
-    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the *merchantRefNum* returned in the response to the Authorization request.
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
 
 + Request Get Authorization (application/json)
 
@@ -2485,8 +2500,14 @@ This is how you look up an Authorization request using the merchant reference nu
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + auths (array, required) - This array lists Authorizations processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
@@ -2531,7 +2552,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     - country:CA (string, optional) - This is the country in the shipping address. 
                     - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
                 + authCode:100008  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
-                + txnTime:`2016-05-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + currencyCode:CAD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
                 + avsResponse:MATCH (enum, optional) - This is the AVS response from the card issuer.
                     - MATCH
@@ -2582,23 +2603,27 @@ This is how you look up an Authorization request using the merchant reference nu
               "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
                     },
                     {
                         "rel": "next",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
-                    }    
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }  
               ],
               "auths":[
                 {
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e3058030-1a0c-4b8a-b7f7-ceb79157df3f"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths/e3058030-1a0c-4b8a-b7f7-ceb79157df3f"
                     }
                   ],
                   "id":"e3058030-1a0c-4b8a-b7f7-ceb79157df3f",
-                  "merchantRefNum":"merchantRef_2016_03_10_01",
+                  "merchantRefNum":"merchant-ABC-123",
                   "amount":5,
                   "settleWithAuth": false,
                   "availableToSettle":0,
@@ -2623,7 +2648,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     "dynamicDescriptor": "Online Store",
                     "phone": "888-9999"
                   },
-                  "txnTime":"2016-03-10T13:06:20Z",
+                  "txnTime":"2017-02-10T13:06:20Z",
                   "currencyCode":"CAD",
                   "avsResponse":"MATCH",
                   "cvvVerification":"MATCH",
@@ -2640,11 +2665,11 @@ This is how you look up an Authorization request using the merchant reference nu
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6d1b087f-da60-4ae1-a901-fafb39704e63"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths/6d1b087f-da60-4ae1-a901-fafb39704e63"
                     }
                   ],
                   "id":"6d1b087f-da60-4ae1-a901-fafb39704e63",
-                  "merchantRefNum":"merchantRef_2016_03_10_01",
+                  "merchantRefNum":"merchant-ABC-123",
                   "amount":100,
                   "settleWithAuth": false,
                   "availableToSettle":100,
@@ -2669,7 +2694,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     "dynamicDescriptor": "Online Store",
                     "phone": "888-9999"
                   },
-                  "txnTime":"2016-03-10T13:06:50Z",
+                  "txnTime":"2017-02-10T13:06:50Z",
                   "currencyCode":"CAD",
                   "avsResponse":"MATCH",
                   "cvvVerification":"MATCH",
@@ -2866,15 +2891,18 @@ This is how you look up an Authorization Reversal request using the ID returned 
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limt={limit}]
+## Get Authorization Reversal Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up an Authorization Reversal request using the merchant reference number used in the original request.
 
 + Parameters
     
     + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:`merchant-ABC-123-voidauth` (string, required) - This is the *merchantRefNum* used in the Authorization Reversal request.
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
     
 + Request Get Authorization Reversal (application/json)
 
@@ -2888,15 +2916,21 @@ This is how you look up an Authorization Reversal request using the merchant ref
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)            
         + voidAuths (array, required) - This array lists Authorization Reversals processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-                + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
                 + amount:898 (number, required) - This is the amount of the request, in minor units.
-                + txnTime:`2016-03-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + status:COMPLETED (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
                     - COMPLETED – The transaction has been completed. 
@@ -2916,7 +2950,15 @@ This is how you look up an Authorization Reversal request using the merchant ref
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths?merchantRefNum=merchant-ABC-123-voidauths&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
                     }
                 ],
                 "voidAuths": [
@@ -2924,13 +2966,13 @@ This is how you look up an Authorization Reversal request using the merchant ref
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
                             }
                         ],
                         "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
-                        "merchantRefNum":"merchant ABC-123-voidauths",
+                        "merchantRefNum":"merchant-ABC-123",
                         "amount":898,
-                        "txnTime":"2016-03-14T15:12:18Z",
+                        "txnTime":"2017-02-07T14:22:33Z",
                         "status":"COMPLETED"
                     }
                 ]
@@ -3121,15 +3163,18 @@ This is how you look up a Settlement request using the ID returned in the respon
                 "availableToRefund": 50
             }
         
-## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Settlement using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:merchantRef_2016_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
     
 + Request Get Settlement (application/json)
 
@@ -3143,14 +3188,20 @@ This is how you look up a Settlement using the merchant reference number used in
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchant-ABC-123-settlements&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + settlements (array, required) - This array lists Settlements processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. 
-                + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-                + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + status:PENDING (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response.
                     - PENDING – Our system has received the request but it has not yet been batched.
@@ -3173,22 +3224,30 @@ This is how you look up a Settlement using the merchant reference number used in
     
               {
               "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
-                }
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    } 
               ],
               "settlements":[
                 {
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                     }
                   ],
                   "id":"00ec4b4f-f601-4430-8fb6-f90271cf9291",
-                  "merchantRefNum":"merchantRef_2016_04_01_03",
-                  "txnTime":"2016-04-01T18:04:22Z",
+                  "merchantRefNum":"merchant-ABC-123",
+                  "txnTime":"2017-02-10T13:06:50Z",
                   "status":"PENDING",
                   "amount":50,
                   "availableToRefund":50
@@ -3366,15 +3425,18 @@ This is how you look up a Refund request using the ID returned in the response t
                 "amount": 1000
             }
 
-## Get Refund Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Refund Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Refund using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
     
 + Request Get Refund (application/json)
 
@@ -3388,14 +3450,20 @@ This is how you look up a Refund using the merchant reference number used in the
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + refunds (array, required) - This array lists refunds processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response. 
-                + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-                + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + status:PENDING (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response.
                     - PENDING – Our system has received the request but it has not yet been batched.
@@ -3416,22 +3484,30 @@ This is how you look up a Refund using the merchant reference number used in the
     
               {
               "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
-                }
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
               ],
               "refunds":[
                 {
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/00ec4b4f-f601-4430-8fb6-f90271cf9291"
                     }
                   ],
                   "id":"410a51a2-73e7-4a59-bab7-3cce49a25ff6",
-                  "merchantRefNum":"merchantABC-444-refund",
-                  "txnTime":"2016-04-11T14:04:36Z",
+                  "merchantRefNum":"merchant-ABC-123",
+                  "txnTime":"2017-02-10T13:06:20Z",
                   "status":"PENDING",
                   "amount":1000
                 }
@@ -3904,15 +3980,18 @@ This is how you look up a Verification request using the ID returned in the resp
               "status":"COMPLETED"
             }
 
-## Get Verification Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Verification Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Verification request using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:`merchant-ABC-444` (string, required) - This is the *merchantRefNum* used in the Verification request. 
-    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50. 
+    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
     
 + Request Get Verification (application/json)
 
@@ -3926,13 +4005,19 @@ This is how you look up a Verification request using the merchant reference numb
         
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + verifications (array, required) - This array lists Verifications processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-                + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
                 + card (object, required) - These are the details of the [card](#cardobject) used for the request.
                     - type:VI (enum, required) - This is the type of card used for the request.
                     - lastDigits:1111 (number, required) - This is the last four digits of the card used for the request.
@@ -3952,7 +4037,7 @@ This is how you look up a Verification request using the merchant reference numb
                     - country:CA (string, optional) - This is the country in the billing address. 
                     - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
                     - phone:555-9999 (string, optional) - This is the customer's telephone number.
-                + txnTime:`2013-12-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + currencyCode:USD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
                 + avsResponse:MATCH (enum, optional) - This is the AVS response from the card issuer.
                     - MATCH
@@ -3980,21 +4065,29 @@ This is how you look up a Verification request using the merchant reference numb
         
             {
               "links":[
-                {
-                  "rel":"self",
-                  "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications?merchantRefNum=merchant-ABC-444&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
-                }
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
               ],
               "verifications":[
                 {
                   "links":[
                     {
                       "rel":"self",
-                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                      "href":"https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                     }
                   ],
                   "id":"e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
-                  "merchantRefNum":"merchant-ABC-444",
+                  "merchantRefNum":"merchant-ABC-123",
                   "card":{
                     "type":"VI",
                     "lastDigits":"1111",
@@ -4022,7 +4115,7 @@ This is how you look up a Verification request using the merchant reference numb
                     "phone": "888-9999"
                     },
                   "description":"This is a test transaction",
-                  "txnTime":"2013-12-14T15:12:18Z",
+                  "txnTime":"2017-02-07T14:22:33Z",
                   "currencyCode":"USD",
                   "avsResponse":"MATCH",
                   "cvvVerification":"MATCH",
@@ -4346,15 +4439,18 @@ This is how you look up an Original Credit request using the ID returned in the 
               "status":"PENDING"
             }
 
-## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up an Original Credit using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
     
 + Request Get Original Credit (application/json)
 
@@ -4368,13 +4464,19 @@ This is how you look up an Original Credit using the merchant reference number u
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + originalcredits (array, required) - This array lists Original Credits processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
-                + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
                 + amount:10098 (number, required) - This is the amount of the request, in minor units.
                 + card (object, required) - These are the details of the [card](#cardobject) used for the request.
                     - type:VI (enum, required) - This is the type of card used for the request.
@@ -4396,7 +4498,7 @@ This is how you look up an Original Credit using the merchant reference number u
                     - phone:555-9999 (string, optional) - This is the customer's telephone number.
                 + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
                 + description:Winning payment from Loto (string, optional) - This is a description of the transaction, provided by the merchant.
-                + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + currencyCode:USD (string, required) - This is the currency of the merchant account.
                 + status:COMPLETED (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
@@ -4416,19 +4518,27 @@ This is how you look up an Original Credit using the merchant reference number u
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
-                    }
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    } 
                 ],
                 "originalcredits": [
                     {
                         "links": [
                             {
                                 "rel": "self",
-                                "href": " https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                                "href": " https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                             }
                         ],
                         "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
-                        "merchantRefNum": "merchantRef_2014_04_01_03",
+                        "merchantRefNum": "merchant-ABC-123",
                         "amount": 10098,
                         "card": {
                             "type": "VI",
@@ -4452,7 +4562,7 @@ This is how you look up an Original Credit using the merchant reference number u
                         },
                         "customerIp": "204.91.0.12",
                         "description": "Winning payment from Loto",
-                        "txnTime": "2014-05-14T15:12:18Z",
+                        "txnTime": "2017-02-10T13:06:20Z",
                         "currencyCode": "USD",
                         "status": "COMPLETED"
                     }
@@ -4769,15 +4879,18 @@ This is how you look up a Standalone Credit request using the ID returned in the
               "status":"PENDING"
             }
 
-## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}]
+## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:merchantRef_2014_04_01_03 (string, required) - This is the *merchantRefNum* used in the request.
+    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
+    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
     
 + Request Get Standalone Credit (application/json)
 
@@ -4791,13 +4904,19 @@ This is how you look up a Standalone Credit using the merchant reference number 
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z` (string) - This is the URI of the resource.
+                + rel:self (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:next (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+            + (object)
+                + rel:previous (string, required)
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
         + standalonecredits (array, required) - This array lists Standalone Credits processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
-                + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+                + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
                 + amount:10098 (number, required) - This is the amount of the request, in minor units.
                 + card (object, required) - These are the details of the [card](#cardobject) used for the request.
                     - type:VI (enum, required) - This is the type of card used for the request.
@@ -4819,7 +4938,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                     - phone:555-9999 (string, optional) - This is the customer's telephone number.
                 + customerIp:204.91.0.12 (string, optional) - This is the customer's IP address.
                 + description:Refund without receipt (string, optional) - This is a description of the transaction, provided by the merchant.
-                + txnTime:`2014-05-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
+                + txnTime:`2017-02-07T14:22:33Z` (string, required) - This is the date and time the transaction was processed.
                 + currencyCode:USD (string, required) - This is the currency of the merchant account.
                 + status:COMPLETED (enum, required) - This is the status of the transaction request.
                     - RECEIVED – Our system has received the request and is waiting for the downstream processor’s response. 
@@ -4839,7 +4958,15 @@ This is how you look up a Standalone Credit using the merchant reference number 
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits?merchantRefNum=merchantRef_2014_04_01_03&limit=10&offset=0&startDate=2014-01-10T13:01:50Z&endDate=2014-06-20T13:06:50Z"
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "next",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    },
+                    {
+                        "rel": "previous",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
                     }
                 ],
                 "standalonecredits": [
@@ -4847,11 +4974,11 @@ This is how you look up a Standalone Credit using the merchant reference number 
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                                "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
                             }
                         ],
                         "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
-                        "merchantRefNum": "merchantRef_2014_04_01_03",
+                        "merchantRefNum": "merchant-ABC-123",
                         "amount": 10098,
                         "card": {
                             "type": "VI",
@@ -4875,7 +5002,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                         },
                         "customerIp": "204.91.0.12",
                         "description": "Refund without receipt",
-                        "txnTime": "2014-05-14T15:12:18Z",
+                        "txnTime": "2017-02-10T13:06:50Z",
                         "currencyCode": "USD",
                         "status": "COMPLETED"
                     }
