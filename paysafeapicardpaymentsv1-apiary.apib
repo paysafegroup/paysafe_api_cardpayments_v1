@@ -2093,7 +2093,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
             - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request. If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -3727,7 +3727,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - state:ON (string, optional) - This is the state or province in the shipping address. 
             - country:CA (string, optional) - This is the country in the shipping address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.            
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request. If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
