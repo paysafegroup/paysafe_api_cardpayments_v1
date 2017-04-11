@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api.test.paysafe.com/cardpayments/
 
-# Paysafe Card Payments AP
+# Paysafe Card Payments API
 
 # Release Notes
 
@@ -742,6 +742,7 @@ These are raw results returned by the acquirer.
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use Split Pament functionality when authorizing with settlement.|
 
 ```apib
 {
@@ -1110,6 +1111,8 @@ merchants who provide more detailed information when processing card-not-present
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The Settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use Split Pament functionality when authorizing with settlement.|
+
 
 ```apib
 {
@@ -1130,6 +1133,29 @@ merchants who provide more detailed information when processing card-not-present
 |city               |string<br/>`length<=40`    |           |This is the city in which the recipient resides.|
 |state              |string                     |           |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
 |country            |enum                       |           |See [Country Codes](#countrycodes). |
+
+```apib
+  {
+  "shippingDetails":{
+    "carrier":"UPS",
+    "shipMethod":"N",
+    "street":"100 Queen Street West",
+    "city":"Toronto",
+    "state":"ON",
+    "country":"CA",
+    "zip":"M5H 2N2"
+  }
+  }
+```
+
+<a name="splitpayobject"></a>
+## splitpay
+
+|Element            |Type    |Required |Description |
+|---                |---     |---      |---        |
+|linkedaccount      |string  |Yes      |This is the ID of the linked account.
+|amount             |number  |         |The amount to transfer to the linked account in minor currency units. Either this or percent must be specified.|
+|percent            |number  |         |This is the percentage of the total transaction amount to transfer to the linked account, to two decimal places. The total percentage to all linked accounts cannot exceed 100%. Either this or amount must be specified.|
 
 ```apib
   {
@@ -1842,7 +1868,10 @@ This is how you submit an Authorization request that includes the Settlement. To
                 - taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
                 - taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
                 - totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. 
-
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account. This must have either a percent or amount, but not both.
+            - percent:5 (number, optional) - The percentage of the total transaction amount to transfer to the linked account, to two decimal places. The total percentage to all linked accounts cannot exceed 100%. Either this or amount must be specfied, but not both.
+            - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. Either this or percent must be specfied, but not both.
 
     + Headers
     
@@ -1996,6 +2025,10 @@ This is how you submit an Authorization request that includes the Settlement. To
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account.
+            - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+            - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.
     
     + Body
     
@@ -2429,7 +2462,10 @@ This is how you look up an Authorization request using the ID returned in the re
             - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
             - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
             - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.        
-    
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account.
+            - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+            - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.    
     + Body
     
             {
@@ -2595,7 +2631,10 @@ This is how you look up an Authorization request using the merchant reference nu
                     - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
                     - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
                     - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.        
-    
+                + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+                    - linkedAccount:123124124 (string, required) - The ID of the linked account.
+                    - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+                    - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.
     
     + Body
 
@@ -2996,7 +3035,10 @@ This is how you submit a Settlement request.
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:50 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be settled. 
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-        
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account. This must have either a percent or amount, but not both.
+            - percent:5 (number, optional) - The percentage of the total transaction amount to transfer to the linked account, to two decimal places. The total percentage to all linked accounts cannot exceed 100%. Either this or amount must be specfied, but not both.
+            - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. Either this or percent must be specfied, but not both.        
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
@@ -3036,7 +3078,11 @@ This is how you submit a Settlement request.
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
-        
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account.
+            - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+            - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.        
+            
     + Body
     
             {
@@ -3147,6 +3193,10 @@ This is how you look up a Settlement request using the ID returned in the respon
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.        
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account.
+            - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+            - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.            
             
     + Body
 
@@ -3219,7 +3269,11 @@ This is how you look up a Settlement using the merchant reference number used in
                     - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
                     - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
                     - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.        
-        
+        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+            - linkedAccount:123124124 (string, required) - The ID of the linked account.
+            - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
+            - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the total transaction amount multiplied by the percentage and divided by 100.   
+       
     + Body
     
               {
@@ -3745,7 +3799,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - plan:112 (string, required) - This is the plan number for this financing transaction.
             - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
             - term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.        
-        
+
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
