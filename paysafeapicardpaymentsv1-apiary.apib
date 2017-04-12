@@ -2066,7 +2066,7 @@ This is how you submit an Authorization request that includes the Settlement. To
 
 This is how you submit an Authorization request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault along with the payment token.
 
-You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
+You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
 
 **Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li></ul>
         
@@ -3695,7 +3695,7 @@ This is how you submit a Verification request. This example verifies a card and 
 
 This is how you submit a Verification request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provieded, these details are stored in the Customer Vault with the payment token.
 
-You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://paysafegroup.github.io/paysafe_api_customervault_v1/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
+You can use either of two payment token types:<ul><li>The permanent, reusable paymeddednt token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
 
 **Note**<ul><li>If you use a payment token that does **not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
         
@@ -4882,6 +4882,21 @@ This is how you look up a Standalone Credit request using the ID returned in the
 ## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
+
+
+<br>
+<br>
+<br>
+<a name="footer">
+<h1>Legal and Community</h1>
+<ul class="footer-menu">
+<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
+<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
+<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
+<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
+</ul>
 
 + Parameters
 
