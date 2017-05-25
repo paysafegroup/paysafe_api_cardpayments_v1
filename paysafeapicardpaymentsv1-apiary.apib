@@ -4127,9 +4127,9 @@ This is how you look up a Verification request using the merchant reference numb
 # Original Credits [/originalcredits]
 <a name="originalcredits"></a>
 
-Original Credits allow certain merchants to issue winnings as credits to cardholders, without requiring a previous Authorization/Settlement. 
+Original Credits allow merchants with specific merchant category codes (MCCs) to issue winnings as credits to cardholders, without requiring a previous Authorization/Settlement. 
 
-Merchants with the following merchant category codes (MCCs) can process Original Credits:
+Merchants with the following MCCs can process Original Credits:
  * 4829
  * 6012
  * 6051
@@ -4140,6 +4140,7 @@ Merchants with the following merchant category codes (MCCs) can process Original
  * 7995
  * 8999
 
+By default, test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
 ## Original Credit [POST /v1/accounts/{ACCOUNT_ID}/originalcredits]
 
@@ -4154,14 +4155,16 @@ This is how you submit an Original Credit request.
     + Attributes
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-        + card (object, required) - These are the details of the [card](#cardobject) used for the request.
-            - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
-            - cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-                - month:12 (number, required) - This is the card expiry month.
-                - year:2020 (number, required) - This is the card expiry year.
-            - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
-            - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
-            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
+        + One Of
+            + card:`CqFJr3F52kWAJxD` (string, required) - This is a payment token. If this is provided, no other card information is necessary
+            + card (object, required) - These are the details of the [card](#cardobject) used for the request.
+                - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
+                - cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+                    - month:12 (number, required) - This is the card expiry month.
+                    - year:2020 (number, required) - This is the card expiry year.
+                - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+                - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
         + profile (object, optional) - These are some [details about the customer](#profileobject). This is required **only when** you are using Credorax (CRX) as your acquirer for Original Credits.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
@@ -4574,7 +4577,10 @@ This is how you look up an Original Credit using the merchant reference number u
 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
 
-**Note:** If your merchant category code (MCC) is listed as able to process Original Credits to issue a credit that does not correspond to a previous Authorization/Settlement, then you must not use Standalone Credits.
+**Note:** If your merchant category code (MCC) is listed as able to process Original Credits, you must not use Standalone Credits.
+
+By default, test accounts do not support Standalone Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
+
 
 ## Standalone Credit [POST /v1/accounts/{ACCOUNT_ID}/standalonecredits]
 
@@ -4589,14 +4595,16 @@ This is how you submit a Standalone Credit request.
     + Attributes
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-        + card (object, required) - These are the details of the [card](#cardobject) used for the request.
-            - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
-            - cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-                - month:12 (number, required) - This is the card expiry month.
-                - year:2020 (number, required) - This is the card expiry year.
-            - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
-            - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
-            - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.            
+        + One Of
+            + card:`CqFJr3F52kWAJxD` (string, required) - This is a payment token. If this is provided, no other card information is necessary
+            + card (object, required) - These are the details of the [card](#cardobject) used for the request.
+                - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
+                - cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+                    - month:12 (number, required) - This is the card expiry month.
+                    - year:2020 (number, required) - This is the card expiry year.
+                - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                - track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+                - track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.            
         + profile (object, optional) - These are some [details about the customer](#profileobject).
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
