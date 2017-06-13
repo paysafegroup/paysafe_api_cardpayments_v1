@@ -1507,7 +1507,7 @@ This is how you submit an Authorization request.
         + merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
             - dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
             - phone:`888-9999` (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
-        + accordD (object, optional) - These are parameters for [financing plans](accorddobject) supported for certain merchant configurations.
+        + accordD (object, optional) - These are parameters for [financing plans](#accorddobject) supported for certain merchant configurations.
             - financingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
             - plan:112 (string, required) - This is the plan number for this financing transaction.
             - gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
