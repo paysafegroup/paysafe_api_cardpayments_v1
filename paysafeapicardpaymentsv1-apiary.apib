@@ -582,12 +582,12 @@ The Paysafe Test environment can be used to test websites or applications withou
 
 <a name="accorddobject"></a>
 ## accordD
-|Element            |Type                       |Required       |Description                        |
-|---                |---                        |---            |---       |
-|financingType      |enum                       |Yes            |This is the type of financing offered.<ul><li>DEFERRED_PAYMENT &ndash; Deferred payment financing</li><li>EQUAL_PAYMENT &ndash; Equal payment financing</li></ul>|
-|plan               |string<br/>`length<=3`     |Yes            |This is the plan number for this financing transaction.|
-|gracePeriod        |number<br/>`max=99`        |               |This is the grace period, in months, associated with deferred payment transactions.|
-|term               |number<br/>`max=99`        |               |This is the number of payments, in months, for equal payment transactions.|
+|Element            |Type                       |Description                        |
+|---                |---                        |---       |
+|financingType      |enum                       |This is the type of financing offered.<ul><li>DEFERRED_PAYMENT &ndash; Deferred payment financing</li><li>EQUAL_PAYMENT &ndash; Equal payment financing</li></ul>|
+|plan               |string<br/>`length<=3`     |This is the plan number for this financing transaction.|
+|gracePeriod        |number<br/>`max=99`        |This is the grace period, in months, associated with deferred payment transactions.|
+|term               |number<br/>`max=99`        |This is the number of payments, in months, for equal payment transactions.|
 
 ```apib
     {
@@ -814,21 +814,21 @@ These are raw results returned by the acquirer.
 
 When providing card information, merchants can provide either card details or a payment token for a customer already created in the system.
 
-|Element            |Type                       |Required   |Description                        |
-|---                |---                        |---                                    |---                                |
-|paymentToken       |string <br/>`length<=80`   |Yes        |If the payment token is provided, no other card information is necessary. |
+|Element            |Type                       |Description                        |
+|---                |---                        |---                                |
+|paymentToken       |string <br/>`length<=80`   |If the payment token is provided, no other card information is necessary. |
 
 **OR**
 
-|Element            |Type                       |Required   |Description                        |
-|---                |---                        |---        |---                                |
-|cardNum            |string <br/>`length=8-20`  |Yes        |This is the card number used for the request. |
-|type               |enum                       |           |This is the type of card used for the request, returned in the response. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DC &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; MasterCard</li><li>MD &ndash; Maestro</li><li>SF &ndash; Swiff</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
-|lastDigits         |string<br/>`length=4`      |           |This is the last four digits of the card used for the request.|
-|cardExpiry         |[cardExpiry](#cardexpiryobject)|Yes    |This is the card's expiry date.|
-|cvv                |string<br/>`length=3-4`    |           |This is the 3- or 4-digit security code that appears on the card following the card number.|
-|track1             |string                     |           |This is Track 1 information read from the card's magnetic stripe.|
-|track2             |string                     |           |This is Track 2 information read from the card's magnetic stripe.|
+|Element            |Type                       |Description                        |
+|---                |---                        |---                                |
+|cardNum            |string <br/>`length=8-20`  |This is the card number used for the request. |
+|type               |enum                       |This is the type of card used for the request, returned in the response. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DC &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; MasterCard</li><li>MD &ndash; Maestro</li><li>SF &ndash; Swiff</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
+|lastDigits         |string<br/>`length=4`      |This is the last four digits of the card used for the request.|
+|cardExpiry         |[cardExpiry](#cardexpiryobject)|This is the card's expiry date.|
+|cvv                |string<br/>`length=3-4`    |This is the 3- or 4-digit security code that appears on the card following the card number.|
+|track1             |string                     |This is Track 1 information read from the card's magnetic stripe.|
+|track2             |string                     |This is Track 2 information read from the card's magnetic stripe.|
 
 ```apib
     {
@@ -845,10 +845,10 @@ When providing card information, merchants can provide either card details or a 
 <a name="cardexpiryobject"></a>
 ## cardExpiry
 
-|Element                 |Type                   |Required                  |Description|
-|---                     |---                    |---                       |---|
-|month                   |number<br/>`length=2`  |Required                  |This is the card expiry month. |
-|year                    |number<br/>`length=4`  |Required                  |This is the card expiry year.|
+|Element                 |Type                   |Description|
+|---                     |---                    |---|
+|month                   |number<br/>`length=2`  |This is the card expiry month. |
+|year                    |number<br/>`length=4`  |This is the card expiry year.|
 
 ```apib
     {
@@ -895,17 +895,17 @@ merchants who provide more detailed information when processing card-not-present
  * The BIN of the credit card used for the transaction must be eligible – typically, these are government-issued credit cards.
 
 
-|Element                |Type                               |Required   | Description|
-|---                    |---                                |---        |---            |
-| exemptLocalTax        |boolean                            |           | This indicates whether or not local tax is exempted for the request. If set to true, then the localTaxAmount parameter will be ignored.<br/>**Note:** This value defaults to *false*. |
-| localTaxAmount        |integer<br/>`length<=99999999999`  |           | This is the local sales tax applied to the purchase.|
-| nationalTaxAmount     |number<br/>`length<=99999999999`   |           | This is the national tax included in the transaction amount. |
-| freightAmount         |number<br/>`length<=99999999999`   |           | This is the freight or shipping portion of the total transaction amount. |
-| dutyAmount            |number<br/>`length<=99999999999`   |           | This is the duty associated with the import of the purchased goods. |
-| destinationZip        |number<br/>`length<=10`            |           | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
-| destinationCountry    |number<br/>`length=2`              |           | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
-| shipFromZip           |number<br/>`length<=10`            |           | This is the postal/zip code of the address from which the purchased goods are being shipped. |
-| lineItems             |[lineItems](#lineitemsobject)      |           |This is more detailed information about the items that are being purchased.| 
+|Element                |Type                               | Description|
+|---                    |---                                |---            |
+| exemptLocalTax        |boolean                            | This indicates whether or not local tax is exempted for the request. If set to true, then the localTaxAmount parameter will be ignored.<br/>**Note:** This value defaults to *false*. |
+| localTaxAmount        |integer<br/>`length<=99999999999`  | This is the local sales tax applied to the purchase.|
+| nationalTaxAmount     |number<br/>`length<=99999999999`   | This is the national tax included in the transaction amount. |
+| freightAmount         |number<br/>`length<=99999999999`   | This is the freight or shipping portion of the total transaction amount. |
+| dutyAmount            |number<br/>`length<=99999999999`   | This is the duty associated with the import of the purchased goods. |
+| destinationZip        |number<br/>`length<=10`            | This is the postal/zip code of the address to which the purchased goods will be delivered. This field can be identical to the shipFromZip if the customer is present and takes immediate possession of the goods. |
+| destinationCountry    |number<br/>`length=2`              | This is the country to which the goods are being shipped. See [Country Codes](#countrycodes). |
+| shipFromZip           |number<br/>`length<=10`            | This is the postal/zip code of the address from which the purchased goods are being shipped. |
+| lineItems             |[lineItems](#lineitemsobject)      | This is more detailed information about the items that are being purchased.| 
 
 ```apib
     {
@@ -944,15 +944,15 @@ merchants who provide more detailed information when processing card-not-present
 <a name="lineitemsobject"></a>
 ##lineItems
 
-|Element                |Type                               |Required   | Description|
-|---                    |---                                |---        |---            |
-|description            |string<br/>`length<=50`            |           |This is a description of the item(s) being purchased.|
-|productCode            |string<br/>`length<=12`            |           |This is a merchant-defined description code of the item being purchased.|
-|quantity               |number<br/>`length<=99999999999`<br/>`max 4 decimals` |  |This is the quantity of the item.|
-|unitAmount             |number<br/>`length<=99999999999`   |           |This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.|
-|taxRate                |number<br/>`length<=100`<br/>`max 2 decimals`    |   |This is the tax rate used to calculate the tax amount. For example, if the tax rate is 10.5%, this value should be 10.5.|
-|taxAmount              |number<br/>`length<=99999999999`   |           |This is the amount of any value-added taxes that can be associated with the purchased item, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
-|totalAmount            |number<br/>`length<=99999999999`   |           |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
+|Element                |Type                               | Description|
+|---                    |---                                |---            |
+|description            |string<br/>`length<=50`            |This is a description of the item(s) being purchased.|
+|productCode            |string<br/>`length<=12`            |This is a merchant-defined description code of the item being purchased.|
+|quantity               |number<br/>`length<=99999999999`<br/>`max 4 decimals` |This is the quantity of the item.|
+|unitAmount             |number<br/>`length<=99999999999`   |This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.|
+|taxRate                |number<br/>`length<=100`<br/>`max 2 decimals`    |This is the tax rate used to calculate the tax amount. For example, if the tax rate is 10.5%, this value should be 10.5.|
+|taxAmount              |number<br/>`length<=99999999999`   |This is the amount of any value-added taxes that can be associated with the purchased item, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
+|totalAmount            |number<br/>`length<=99999999999`   |This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. The currency will be based on the account setting. **Note:** Our system will not validate the accuracy of this value. The merchant's application must calculate this value correctly.|
 
 ```apib
     {
@@ -971,10 +971,10 @@ merchants who provide more detailed information when processing card-not-present
 <a name="linksobject"></a>
 ## links
 
-|Element    |Type          |Required    |Description|
-|---        |---           |---         |---|
-|rel        |string        |Required    |This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.|
-|href       |string        |Required    |This is the URI of the resource.|
+|Element    |Type          |Description|
+|---        |---           |---|
+|rel        |string        |This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.|
+|href       |string        |This is the URI of the resource.|
 
 ```apib
     {
@@ -989,10 +989,10 @@ merchants who provide more detailed information when processing card-not-present
 
 <a name="merchantdescriptorobject"></a>
 ## merchantDescriptor
-|Element            |Type                       |Required   |Description                        |
-|---                |---                        |---        |---                                |
-|dynamicDescriptor  |string <br/>`length<=20`   |Yes        |This is a merchant descriptor that will be displayed on a customer’s card statement.|
-|phone              |string <br/>`length<=13`   |           |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
+|Element            |Type                       |Description                        |
+|---                |---                        |---                                |
+|dynamicDescriptor  |string <br/>`length<=20`   |This is a merchant descriptor that will be displayed on a customer’s card statement.|
+|phone              |string <br/>`length<=13`   |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
 
 ```apib
     {
@@ -1057,11 +1057,11 @@ merchants who provide more detailed information when processing card-not-present
 
 <a name="profileobject"></a>
 ## profile
-|Element            |Type                       |Required   |Description    |
-|---                |---                        |---        |---                                |
-|firstName          |string <br/>`length<=80`   |           |This is the customer’s first name. |
-|lastName           |string <br/>`length<=80`   |           |This is the customer's last name.  |
-|email              |string <br/>`length<=255`  |           |This is the customer's email address. |
+|Element            |Type                       |Description    |
+|---                |---                        |---                                |
+|firstName          |string <br/>`length<=80`   |This is the customer’s first name. |
+|lastName           |string <br/>`length<=80`   |This is the customer's last name.  |
+|email              |string <br/>`length<=255`  |This is the customer's email address. |
 
 ```apib
     {
@@ -1121,21 +1121,23 @@ merchants who provide more detailed information when processing card-not-present
 <a name="shippingdetailsobject"></a>
 ## shippingDetails
 
-|Element            |Type                       |Required   |Description |
-|---                |---                        |---        |---        |
-|carrier            |enum                       |           |This is the shipment carrier. Possible values are:<ul><li>APC &ndash; APC Overnight</li><li>APS &ndash; Anpost</li><li>CAD &ndash; Canada Postal Service</li><li>DHL &ndash; DHL</li><li>FEX &ndash; Fedex</li><li>RML &ndash; Royal Mail</li><li>UPS &ndash; United Parcel Service</li><li>USPS &ndash; United States Postal Service</li><li>CLK &ndash; CityLink</li><li>EMS &ndash; EMS (US Postal Service)</li><li>NEX &ndash; Nexworldwide</li><li>OTHER</li></ul>|
-|shipMethod         |enum                       |           |This is the method of shipment. Possible values are:<ul><li>N &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
-|recipientName      |string<br/>`length<=255`   |           |This is the name of the person receiving the goods.|
-|street             |string<br/>`length<=50`    |           |This is the recipient's street address.|
-|city               |string<br/>`length<=40`    |           |This is the city in which the recipient resides.|
-|state              |string                     |           |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
-|country            |enum                       |           |See [Country Codes](#countrycodes). |
+|Element            |Type                       |Description |
+|---                |---                        |---        |
+|carrier            |enum                       |This is the shipment carrier. Possible values are:<ul><li>APC &ndash; APC Overnight</li><li>APS &ndash; Anpost</li><li>CAD &ndash; Canada Postal Service</li><li>DHL &ndash; DHL</li><li>FEX &ndash; Fedex</li><li>RML &ndash; Royal Mail</li><li>UPS &ndash; United Parcel Service</li><li>USPS &ndash; United States Postal Service</li><li>CLK &ndash; CityLink</li><li>EMS &ndash; EMS (US Postal Service)</li><li>NEX &ndash; Nexworldwide</li><li>OTHER</li></ul>|
+|shipMethod         |enum                       |This is the method of shipment. Possible values are:<ul><li>N &ndash; Next Day/Overnight</li><li>T &ndash; Two-Day Service</li><li>C &ndash; Lowest Cost</li><li>O &ndash; Other</li></ul>|
+|recipientName      |string<br/>`length<=255`   |This is the name of the person receiving the goods.|
+|street             |string<br/>`length<=50`    |This is the recipient's street address.|
+|city               |string<br/>`length<=40`    |This is the city in which the recipient resides.|
+|state              |string                     |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
+|country            |enum                       |See [Country Codes](#countrycodes). |
+|zip                |string<br/>`length<=10`    |This is the recipient's postal/zip code. |
 
 ```apib
   {
   "shippingDetails":{
     "carrier":"UPS",
     "shipMethod":"N",
+    "recipientName":"Jane Smith",
     "street":"100 Queen Street West",
     "city":"Toronto",
     "state":"ON",
@@ -1253,16 +1255,16 @@ merchants who provide more detailed information when processing card-not-present
 
 The recipient is deemed to be the person or party who has the contractual relationship with the merchant/financial institution. This may be different from the cardholder, e.g., in the case of a parent topping up a child's savings account. Therefore, the fields should not be collected on the same page as cardholder information, but instead be passed in the background from the merchant’s records.
 
-**Note:** Include *recipientDateOfBirth* elements if your Merchant Category Code is 6012 and your registered trading address is in the United Kingdom. If you have any questions, contact your account manager. All fields are optional, however scheme fines may apply if data is consistently not supplied and chargebacks persist.
+**Note:** Include *recipientDateOfBirth* elements if your Merchant Category Code is 6012 and your registered trading address is in the United Kingdom. If you have any questions, contact your account manager. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist.
 
-|Element                    |Type                       |Required   |Description                        |
-|---                        |---                        |---        |---                                |
-|recipientDateOfBirth.day   |number<br/>`length=2`      |           |This is the recipient's day of birth. |
-|recipientDateOfBirth.month |number<br/>`length=2`      |           |This is the recipient's month of birth.|
-|recipientDateOfBirth.year  |number<br/>`length=4`      |           |The is the recipient's year of birth.|
-|recipientZip               |string<br/>`length<=10`    |           |This is the recipient‘s postcode.<br/>**Note:** The last 3 characters are not sent to the banking network.|
-|recipientLastName          |string<br/>`length<=255`   |           |This is the recipient‘s last name.<br/>**Note:** Only the first 6 characters are sent to the banking network.|
-|recipientAccountNumber     |string<br/>`length<=25`    |           |This is the recipient‘s account number, e.g., a loan agreement number or customer ID. In the case where the recipient account is a prepaid card, the card number may be sent in full.<br/>**Note:** Only the first 6 and last 4 characters are sent to the banking network and will be masked accordingly within the back office and any other reports, to comply with PCI regulations.|
+|Element                    |Type                       |Description                        |
+|---                        |---                        |---                                |
+|recipientDateOfBirth.day   |number<br/>`length=2`      |This is the recipient's day of birth. |
+|recipientDateOfBirth.month |number<br/>`length=2`      |This is the recipient's month of birth.|
+|recipientDateOfBirth.year  |number<br/>`length=4`      |The is the recipient's year of birth.|
+|recipientZip               |string<br/>`length<=10`    |This is the recipient‘s postcode.<br/>**Note:** The last 3 characters are not sent to the banking network.|
+|recipientLastName          |string<br/>`length<=255`   |This is the recipient‘s last name.<br/>**Note:** Only the first 6 characters are sent to the banking network.|
+|recipientAccountNumber     |string<br/>`length<=25`    |This is the recipient‘s account number, e.g., a loan agreement number or customer ID. In the case where the recipient account is a prepaid card, the card number may be sent in full.<br/>**Note:** Only the first 6 and last 4 characters are sent to the banking network and will be masked accordingly within the back office and any other reports, to comply with PCI regulations.|
 
 
 ```apib
@@ -1481,7 +1483,7 @@ This is how you submit an Authorization request.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -1489,7 +1491,7 @@ This is how you submit an Authorization request.
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -1591,8 +1593,8 @@ This is how you submit an Authorization request.
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -1617,7 +1619,7 @@ This is how you submit an Authorization request.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -1625,7 +1627,7 @@ This is how you submit an Authorization request.
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -1767,7 +1769,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + amount:10098 (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
             - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
-            - cardExpiry (object, required) - This is the card's expiry date.
+            - cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
                 - month:12 (number, required) - This is the card expiry month.
                 - year:2020 (number, required) - This is the card expiry year.
             - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
@@ -1786,7 +1788,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -1794,7 +1796,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:`555-9999` (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -1905,8 +1907,8 @@ This is how you submit an Authorization request that includes the Settlement. To
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10099 (number, required) - This is the amount of the request, in minor units.
@@ -1931,7 +1933,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.                
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -1939,7 +1941,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -2093,7 +2095,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
             - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request. If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject). If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -2101,7 +2103,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -2177,8 +2179,8 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string, required) - This is the URI of the resource.
         + id:`a02e52c7-c991-4418-966a-b62989cb0eae` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -2202,7 +2204,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -2210,7 +2212,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -2343,8 +2345,8 @@ This is how you look up an Authorization request using the ID returned in the re
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/14d380a4-e934-4cc8-b49e-a90cc082faa0` (string, required) - This is the URI of the resource.
         + id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
         + merchantRefNum:`merchantRef_2016_05_07_002` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:500 (number, required) - This is the amount of the request, in minor units.
@@ -2368,7 +2370,7 @@ This is how you look up an Authorization request using the ID returned in the re
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -2376,7 +2378,7 @@ This is how you look up an Authorization request using the ID returned in the re
             - country:CA (string, optional) - This is the country in the billing address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
             - phone:555-9999 (string, optional) - This is the customer's telephone number.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -2534,7 +2536,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     - firstName:John (string, optional) - This is the customer’s first name.
                     - lastName:Smith (string, optional) - This is the customer's last name.
                     - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-                + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+                + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
                     - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
                     - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
                     - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -2542,7 +2544,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     - country:CA (string, optional) - This is the country in the billing address. 
                     - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
                     - phone:555-9999 (string, optional) - This is the customer's telephone number.
-                + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+                + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
                     - carrier:CAD (enum, optional) - This is the shipment carrier.
                     - shipMethod:T (enum, optional) - This is the shipment method.
                     - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -2732,8 +2734,8 @@ This is how you complete an Authorization request with the status of Held.
     
        + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:COMPLETED (enum, required) - This is the status of the transaction request.
@@ -2800,8 +2802,8 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:898 (number, required) - This is the amount of the request, in minor units.
@@ -2856,8 +2858,8 @@ This is how you look up an Authorization Reversal request using the ID returned 
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:898 (number, required) - This is the amount of the request, in minor units.
@@ -3014,8 +3016,8 @@ This is how you submit a Settlement request.
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3084,8 +3086,8 @@ This is how you submit a Cancel Settlement request.
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -3125,8 +3127,8 @@ This is how you look up a Settlement request using the ID returned in the respon
         
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3291,8 +3293,8 @@ This is how you submit a Refund request.
     + Attributes
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.e
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.e
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3350,8 +3352,8 @@ This is how you submit a Cancel Refund request.
     + Attributes
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response.
         + txnTime:`2016-04-09T20:07:20Z` (string, required) - This is the date and time the transaction was processed.
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
@@ -3390,8 +3392,8 @@ This is how you look up a Refund request using the ID returned in the response t
     + Attributes
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + txnTime:`2016-04-11T14:04:36Z` (string, required) - This is the date and time the transaction was processed.
@@ -3531,7 +3533,7 @@ This is how you submit a Verification request. This example verifies a card and 
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
             - cardNum:4111111111111111 (string, required) - This is the card number used for the request.
-            - cardExpiry (object, required)
+            - cardExpiry (object, required)  - This is the card's [expiry date](#cardexpiryobject).
                 - month:12 (number, required) - This is the card expiry month.
                 - year:2020 (number, required) - This is the card expiry year.
             - cvv:123 (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
@@ -3541,7 +3543,7 @@ This is how you submit a Verification request. This example verifies a card and 
             - firstName:Joe (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:Joe.Smith@canada.com (string, optional) - This is the customer's email address.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -3598,8 +3600,8 @@ This is how you submit a Verification request. This example verifies a card and 
     + Attributes
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
@@ -3613,7 +3615,7 @@ This is how you submit a Verification request. This example verifies a card and 
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -3718,7 +3720,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
             - threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
             - signatureStatusY (enum, optional) - This is the 3D Secure signature verification result value.
-        + shippingDetails (object, optional) - These are the [shipping details](#shippingdetailsobject) for the request.
+        + shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
             - carrier:CAD (enum, optional) - This is the shipment carrier.
             - shipMethod:T (enum, optional) - This is the shipment method.
             - recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
@@ -3727,7 +3729,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - state:ON (string, optional) - This is the state or province in the shipping address. 
             - country:CA (string, optional) - This is the country in the shipping address. 
             - zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.            
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request. If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject). If you use a payment token that has address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -3775,8 +3777,8 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
@@ -3790,7 +3792,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:`100` Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -3888,8 +3890,8 @@ This is how you look up a Verification request using the ID returned in the resp
     
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
         + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + card (object, required) - These are the details of the [card](#cardobject) used for the request.
@@ -3903,7 +3905,7 @@ This is how you look up a Verification request using the ID returned in the resp
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4029,7 +4031,7 @@ This is how you look up a Verification request using the merchant reference numb
                     - firstName:John (string, optional) - This is the customer’s first name.
                     - lastName:Smith (string, optional) - This is the customer's last name.
                     - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-                + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+                + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
                     - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
                     - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
                     - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4169,7 +4171,7 @@ This is how you submit an Original Credit request.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4232,7 +4234,7 @@ This is how you submit an Original Credit request.
             - cardExpiry (object, required)
                 - month:12 (number, required) - This is the month the card expires.
                 - year:2020 (number, required) - This is the year the card expires.
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4379,7 +4381,7 @@ This is how you look up an Original Credit request using the ID returned in the 
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.                        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4491,7 +4493,7 @@ This is how you look up an Original Credit using the merchant reference number u
                     - firstName:John (string, optional) - This is the customer’s first name.
                     - lastName:Smith (string, optional) - This is the customer's last name.
                     - email:jsmith@email.com (string, optional) - This is the customer's email address.                
-                + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+                + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
                     - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
                     - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
                     - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4609,7 +4611,7 @@ This is how you submit a Standalone Credit request.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.            
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4659,8 +4661,8 @@ This is how you submit a Standalone Credit request.
     + Attributes
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalone/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalone/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4674,7 +4676,7 @@ This is how you submit a Standalone Credit request.
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.                        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4809,8 +4811,8 @@ This is how you look up a Standalone Credit request using the ID returned in the
         
         + links (array, required) - This is an array of [links](#linksobject).
             + (object)
-                + rel:self (string) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string) - This is the URI of the resource.
+                + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+                + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
         + id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. 
         + merchantRefNum:`merchantRef_2014_04_01_03` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         + amount:10098 (number, required) - This is the amount of the request, in minor units.
@@ -4824,7 +4826,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
             - firstName:John (string, optional) - This is the customer’s first name.
             - lastName:Smith (string, optional) - This is the customer's last name.
             - email:jsmith@email.com (string, optional) - This is the customer's email address.                        
-        + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+        + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
             - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
             - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
             - city:Toronto (string, optional) - This is the city in the billing address. 
@@ -4951,7 +4953,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
                     - firstName:John (string, optional) - This is the customer’s first name.
                     - lastName:Smith (string, optional) - This is the customer's last name.
                     - email:jsmith@email.com (string, optional) - This is the customer's email address.                        
-                + billingDetails (object, optional) - These are the [billing details](#billingdetailsobject) for the request.
+                + billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
                     - street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
                     - street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
                     - city:Toronto (string, optional) - This is the city in the billing address. 
