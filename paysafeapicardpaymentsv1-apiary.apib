@@ -13,7 +13,7 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 Connect your application directly with our payment engine to process a full suite of methods that are REST-based – designed to be easy to understand and use. Ultimate control puts you in the driver’s seat.
 * Choose an efficient, lightweight, and fast integration method to access our API.
-* Implement a wide variety of REST-based API requests – including Purchases, Refunds, and Authorization Reversals.
+* Implement a wide variety of REST-based API requests – including Purchases, Refunds, and Void  Authorizations.
 * Obtain output in JSON format – it’s easy to parse in a large variety of Web and mobile applications.
 * Use any language or platform to make requests through standard HTTP protocols.
 
@@ -50,7 +50,7 @@ In order to test your integration with Paysafe, use the following Test URL:
 
 For example:
 
-`https://api.test.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
+`https://api.test.paysafe.com/cardpayments/v1/accounts/{account_id}`
 
 ## Production URL
 In order to process live requests with Paysafe, use the following Production URL:
@@ -59,7 +59,7 @@ In order to process live requests with Paysafe, use the following Production URL
 
 For example:
 
-`https://api.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`
+`https://api.paysafe.com/cardpayments/v1/accounts/{account_id}`
 
 
 # Pagination
@@ -97,7 +97,7 @@ The Card Payments API allows merchants to process credit card transactions using
 The following request types are supported:
 
   * [Authorizations](#auths)
-  * [Authorization Reversals](#voidauths)
+  * [Void Authorizations](#voidauths)
   * [Settlements](#settlements)
   * [Refunds](#refunds)
   * [Verifications](#verifications)
@@ -106,31 +106,31 @@ The following request types are supported:
   
 **API Endpoint**
 
-`https://api.paysafe.com/cardpayments/v1/accounts/{ACCOUNT_ID}`  
+`https://api.paysafe.com/cardpayments/v1/accounts/{account_id}`
 
 **Resource Patterns**
 
 |Endpoint URL                                   |Description                            |Action |
 |---                                            |---                                    |---    |
 |/auths                                         |Submit an Authorization or Purchase    |POST   |
-|/auths/{AUTH_ID}                               |Look Up an Authorization               |GET    |
-|/auths/{AUTH_ID}                               |Update an Authorization                |PUT    |
-|/auths/{AUTH_ID}/voidauths                     |Reverse an Authorization               |POST   |
-|/voidauths/{VOID_AUTH_ID}                      |Look Up an Authorization Reversal      |GET    |
-|/auths/{AUTH_ID}/settlements                   |Settle an Authorization                |POST   |
-|/settlements/{SETTLEMENT_ID}                   |Look Up a Settlement                   |GET    |
-|/settlements/{SETTLEMENT_ID}                   |Cancel a Settlement                    |PUT    |
-|/settlements/{SETTLEMENT_ID}/refunds           |Submit a Refund                        |POST   |
-|/refunds/{REFUND_ID}                           |Look Up a Refund                       |GET    |
-|/refunds/{REFUND_ID}                           |Cancel a Refund                        |PUT    |
+|/auths/{auth_id}                               |Look Up an Authorization               |GET    |
+|/auths/{auth_id}                               |Update an Authorization                |PUT    |
+|/auths/{auth_id}/voidauths                     |Void (Reverse) an Authorization        |POST   |
+|/voidauths/{void_auth_id}                      |Look Up a Void Authorization           |GET    |
+|/auths/{auth_id}/settlements                   |Settle an Authorization                |POST   |
+|/settlements/{settlement_id}                   |Look Up a Settlement                   |GET    |
+|/settlements/{settlement_id}                   |Cancel a Settlement                    |PUT    |
+|/settlements/{settlement_id}/refunds           |Submit a Refund                        |POST   |
+|/refunds/{refund_id}                           |Look Up a Refund                       |GET    |
+|/refunds/{refund_id}                           |Cancel a Refund                        |PUT    |
 |/verifications                                 |Verify a Card                          |POST   |
-|/verifications/{VERIFICATION_ID}               |Look Up a Verification                 |GET    |
+|/verifications/{verification_id}               |Look Up a Verification                 |GET    |
 |/originalcredits                               |Submit an Original Credit              |POST   |
-|/originalcredits/{ORIGINAL_CREDIT_ID}          |Look Up an Original Credit             |GET    |
-|/originalcredits/{ORIGINAL_CREDIT_ID}          |Cancel an Original Credit              |PUT    |
+|/originalcredits/{original_credit_id}          |Look Up an Original Credit             |GET    |
+|/originalcredits/{original_credit_id}          |Cancel an Original Credit              |PUT    |
 |/standalonecredits                             |Submit a Standalone Credit             |POST   |
-|/standalonecredits/{STANDALONE_CREDIT_ID}      |Look Up a Standalone Credit            |GET    |
-|/standalonecredits/{STANDALONE_CREDIT_ID}      |Cancel a Standalone Credit             |PUT    |
+|/standalonecredits/{standalone_credit_id}      |Look Up a Standalone Credit            |GET    |
+|/standalonecredits/{standalone_credit_id}      |Cancel a Standalone Credit             |PUT    |
 
 
 # Getting Started
@@ -138,7 +138,7 @@ The following request types are supported:
 Click [here](https://developer.paysafe.com/en/rest-api/cards/using-the-api/scenarios/) for details of some common scenarios for making Card payments. 
 # Testing Instructions
 
-The Paysafe Test environment can be used to test websites or applications without actually running transactions through the payment processing engine. It is important to make sure that your systems are working correctly before going into a live environment. Click [here](https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/testing-instructions/) for details of using the test environment.
+The Paysafe Test environment can be used to test websites or applications without actually running transactions through the payment processing engine. It is important to make sure that your systems are working correctly before going into a live environment. Click [here](https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/testing-instructions/) for details of using the Test environment.
 
 # ISO Standards
 
@@ -1090,7 +1090,7 @@ merchants who provide more detailed information when processing card-not-present
 
 ```apib
 {
-    "merchantRefNum":"REFUND_ID:1231",
+    "merchantRefNum":"refund_id:1231",
     "amount":10098
 }
 ```
@@ -1375,13 +1375,13 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3053           |The bank has requested that you retrieve the card from the cardholder &ndash; please call the acquirer.|
 |402                |3054           |The transaction was declined due to suspected fraud.|
 
-## Authorization Reversal Errors
+## Void Authorization Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
 |400                |3500           |The confirmation number included in this request could not be found.|
 |402                |3501           |The requested Authorization Reversal amount exceeds the remaining Authorization amount.|
 |402                |3502           |You cannot process an Authorization Reversal transaction against an Authorization that has been settled.|
-|402                |3503           |The Authorization Reversal transaction is not supported for the card type used for the Authorization you are attempting to reverse.|
+|402                |3503           |The Authorization Reversal transaction is not supported for the card type used for the Authorization you are attempting to void.|
 |402                |3504           |The external processing gateway for which your merchant account is configured does not support partial Authorization Reversals.|
 |500                |3505           |The Authorization Reversal could not be completed.|
 |402                |3506           |The reversal amount exceeds the remaining amount of the Authorization.|
@@ -1419,10 +1419,10 @@ The recipient is deemed to be the person or party who has the contractual relati
 # Using the example API calls (Console Window)
 To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right hand pane. 
 Using the Console window you can update the headers, the request body, and parts of the API endpoint. 
-For example, for many requests you must update the endpoint to include your account ID, which you do by selecting **URI Parameters** and then updating the **ACCOUNT_ID** value. 
+For example, for many requests you must update the endpoint to include your account ID, which you do by selecting **URI Parameters** and then updating the **account_id** value. 
 (To get your account ID, log into the Paysafe Back Office, choose **Accounts** and look in the *Account* column).
 You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64
-version of your API key. To get your API key, log into the test version of the Merchant Back Office and choose **Settings > API Key**. 
+version of your API key. To get your API key, log into the Test version of the Merchant Back Office and choose **Settings > API Key**. 
 Click *View Base 64 Encoded* and copy the key to your clipboard. Paste the key after the word Basic to replace the text YOUR-BASE64-ENCODED-API-KEY.
 When you are ready to test your example, you can choose between the Production and Mock server environment:
 * Production server – This calls the resource on Paysafe's Test system. 
@@ -1445,13 +1445,13 @@ This call returns a status of READY if the API is available.
 # Authorizations [/auths]
 <a name="auths"></a>
 
-## Authorization [POST /v1/accounts/{ACCOUNT_ID}/auths]
+## Authorization [POST /v1/accounts/{account_id}/auths]
 
 This is how you submit an Authorization request.
 
 + Parameters
     
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization (application/json)
 
@@ -1754,13 +1754,13 @@ This is how you submit an Authorization request.
               "status":"COMPLETED"
               }        
 
-## Authorization with Settlement [POST /v1/accounts/{ACCOUNT_ID}/auths]
+## Authorization with Settlement [POST /v1/accounts/{account_id}/auths]
 
 This is how you submit an Authorization request that includes the Settlement. To settle the Authorization in the same request, just set the *settleWithAuth* parameter to *true*.
 
 + Parameters
     
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization (application/json)
         
@@ -2064,7 +2064,7 @@ This is how you submit an Authorization request that includes the Settlement. To
               "status":"COMPLETED"
               }        
 
-## Authorization with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/auths]
+## Authorization with a Payment Token [POST /v1/accounts/{account_id}/auths]
 
 This is how you submit an Authorization request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault along with the payment token.
 
@@ -2074,7 +2074,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         
 + Parameters
     
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization with Payment Token (application/json)
         
@@ -2324,14 +2324,14 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
             }        
 
         
-## Get Authorization [GET /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
+## Get Authorization [GET /v1/accounts/{account_id}/auths/{auth_id}]
 
 This is how you look up an Authorization request using the ID returned in the response to the original request.
 
 + Parameters
     
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + AUTH_ID:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + auth_id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
         
 + Request Get Authorization (application/json)   
 
@@ -2477,13 +2477,13 @@ This is how you look up an Authorization request using the ID returned in the re
                 "cvvVerification": "MATCH"
             }        
         
-## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up an Authorization request using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
@@ -2705,13 +2705,13 @@ This is how you look up an Authorization request using the merchant reference nu
               ]
             }
         
-## Complete an Authorization [PUT /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}]
+## Complete an Authorization [PUT /v1/accounts/{account_id}/auths/{auth_id}]
 
 This is how you complete an Authorization request with the status of Held.
 
 + Parameters
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + AUTH_ID:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + auth_id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
 
 + Request Complete Authorization (application/json)
     
@@ -2765,23 +2765,23 @@ This is how you complete an Authorization request with the status of Held.
                 "availableToSettle": 100
              }
 
-# Authorization Reversals [/voidauths]
+# Void Authorizations [/voidauths]
 <a name="voidauths"></a>
 
-## Reverse an Authorization [POST /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/voidauths]
+## Void an Authorization [POST /v1/accounts/{account_id}/auths/{auth_id}/voidauths]
 
-This is how you submit an Authorization Reversal request. You can reverse an Authorization only if it has not yet been settled. 
+This is how you submit a Void Authorization request. You can void an Authorization only if it has not yet been settled. 
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number. 
-    + AUTH_ID:`ef8e4da6-68c1-40fb-ba43-d735148b1a7f` (string, required) - This is the Authorization ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number. 
+    + auth_id:`ef8e4da6-68c1-40fb-ba43-d735148b1a7f` (string, required) - This is the Authorization ID returned in the response.
 
-+ Request Authorization Reversal (application/json)
++ Request Void Authorization (application/json)
         
     + Attributes
         + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + amount:898 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be reversed.
+        + amount:898 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be voided.
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
         
     
@@ -2837,16 +2837,16 @@ This is how you submit an Authorization Reversal request. You can reverse an Aut
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal [GET /v1/accounts/{ACCOUNT_ID}/voidauths/{VOID_AUTH_ID}]
+## Get Void Authorization [GET /v1/accounts/{account_id}/voidauths/{void_auth_id}]
 
-This is how you look up an Authorization Reversal request using the ID returned in the response to the original request.
+This is how you look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + VOID_AUTH_ID:`d1fb46ee-2736-4ef5-a724-f263ace75373e` (string, required) - This is the ID returned in the response to the Authorization Reversal request. 
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + void_auth_id:`d1fb46ee-2736-4ef5-a724-f263ace75373e` (string, required) - This is the ID returned in the response to the Void Authorization request. 
     
-+ Request Get Authorization Reversal (application/json)
++ Request Get Void Authorization (application/json)
 
     + Headers
     
@@ -2893,20 +2893,20 @@ This is how you look up an Authorization Reversal request using the ID returned 
               "status":"COMPLETED"
             }
         
-## Get Authorization Reversal Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Void Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
-This is how you look up an Authorization Reversal request using the merchant reference number used in the original request.
+This is how you look up a Void Authorization request using the merchant reference number used in the original request.
 
 + Parameters
     
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
     
-+ Request Get Authorization Reversal (application/json)
++ Request Get Void Authorization (application/json)
 
     + Headers
     
@@ -2926,7 +2926,7 @@ This is how you look up an Authorization Reversal request using the merchant ref
             + (object)
                 + rel:previous (string, required)
                 + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)            
-        + voidAuths (array, required) - This array lists Authorization Reversals processed using this merchant reference number.
+        + voidAuths (array, required) - This array lists Void Authorization processed using this merchant reference number.
             + (object)
                 + links (array, required) - This is an array of links.
                 + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
@@ -2983,14 +2983,14 @@ This is how you look up an Authorization Reversal request using the merchant ref
 # Settlements [/settlements]
 <a name="settlements"></a>
 
-## Settlement [POST /v1/accounts/{ACCOUNT_ID}/auths/{AUTH_ID}/settlements]
+## Settlement [POST /v1/accounts/{account_id}/auths/{auth_id}/settlements]
 
 This is how you submit a Settlement request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + AUTH_ID:`e3058030-1a0c-4b8a-b7f7-ceb79157df3f` (string, required) - This is the ID returned in the response to the Authorization request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + auth_id:`e3058030-1a0c-4b8a-b7f7-ceb79157df3f` (string, required) - This is the ID returned in the response to the Authorization request.
 
 + Request Settlement (application/json)
         
@@ -3056,14 +3056,14 @@ This is how you submit a Settlement request.
             "availableToRefund": 50
             }
         
-## Cancel a Settlement [PUT /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]
+## Cancel a Settlement [PUT /v1/accounts/{account_id}/settlements/{settlement_id}]
 
 This is how you submit a Cancel Settlement request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + SETTLEMENT_ID:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
 
 + Request Cancel Settlement (application/json)
         
@@ -3106,14 +3106,14 @@ This is how you submit a Cancel Settlement request.
                 "status": "CANCELLED"
             }
         
-## Get Settlement [GET /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}]      
+## Get Settlement [GET /v1/accounts/{account_id}/settlements/{settlement_id}]      
 
 This is how you look up a Settlement request using the ID returned in the response to the original request.
     
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + SETTLEMENT_ID:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Settlement ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + settlement_id:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Settlement ID returned in the response.
 
 + Request Get Settlement (application/json)
 
@@ -3165,13 +3165,13 @@ This is how you look up a Settlement request using the ID returned in the respon
                 "availableToRefund": 50
             }
         
-## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{account_id}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Settlement using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
@@ -3261,14 +3261,14 @@ This is how you look up a Settlement using the merchant reference number used in
 # Refunds [/refunds]
 <a name="refunds"></a>
 
-## Refund [POST /v1/accounts/{ACCOUNT_ID}/settlements/{SETTLEMENT_ID}/refunds]
+## Refund [POST /v1/accounts/{account_id}/settlements/{settlement_id}/refunds]
 
 This is how you submit a Refund request. 
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + SETTLEMENT_ID:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
 
 + Request Refund (application/json)
         
@@ -3322,14 +3322,14 @@ This is how you submit a Refund request.
                 "amount": 1000
             }
         
-## Cancel a Refund [PUT /v1/accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]
+## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
 
 This is how you submit a Cancel Refund request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + REFUND_ID:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response to the Refund request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + refund_id:`410a51a2-73e7-4a59-bab7-3cce49a25ff6` (string, required) - This is the ID returned in the response to the Refund request.
 
 + Request Cancel Refund (application/json)
         
@@ -3372,14 +3372,14 @@ This is how you submit a Cancel Refund request.
                 "status": "CANCELLED"
             }        
 
-## Get Refund [GET /v1/accounts/{ACCOUNT_ID}/refunds/{REFUND_ID}]      
+## Get Refund [GET /v1/accounts/{account_id}/refunds/{refund_id}]      
 
 This is how you look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + REFUND_ID:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Refund ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + refund_id:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Refund ID returned in the response.
     
 + Request Get Refund (application/json)
 
@@ -3427,13 +3427,13 @@ This is how you look up a Refund request using the ID returned in the response t
                 "amount": 1000
             }
 
-## Get Refund Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Refund Using Merchant Reference Number [GET /v1/accounts/{account_id}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Refund using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
@@ -3519,13 +3519,13 @@ This is how you look up a Refund using the merchant reference number used in the
 # Verifications [/verifications]
 <a name="verifications"></a>
 
-## Verification [POST /v1/accounts/{ACCOUNT_ID}/verifications]
+## Verification [POST /v1/accounts/{account_id}/verifications]
 
 This is how you submit a Verification request. This example verifies a card and associated billing details.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Verification (application/json)
 
@@ -3693,7 +3693,7 @@ This is how you submit a Verification request. This example verifies a card and 
               "status":"COMPLETED"
             }
 
-## Verification with a Payment Token [POST /v1/accounts/{ACCOUNT_ID}/verifications]
+## Verification with a Payment Token [POST /v1/accounts/{account_id}/verifications]
 
 This is how you submit a Verification request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault with the payment token.
 
@@ -3703,7 +3703,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
     
 
 + Request Verification with Payment Token (application/json)
@@ -3869,14 +3869,14 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
               "status":"COMPLETED"
             }
 
-## Get Verification [GET /v1/accounts/{ACCOUNT_ID}/verifications/{VERIFICATION_ID}]
+## Get Verification [GET /v1/accounts/{account_id}/verifications/{verification_id}]
 
 This is how you look up a Verification request using the ID returned in the response to the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + VERIFICATION_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Verification ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + verification_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Verification ID returned in the response.
         
 + Request Get Verification (application/json)   
 
@@ -3982,13 +3982,13 @@ This is how you look up a Verification request using the ID returned in the resp
               "status":"COMPLETED"
             }
 
-## Get Verification Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Verification Using Merchant Reference Number [GET /v1/accounts/{account_id}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Verification request using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
@@ -4142,15 +4142,15 @@ Merchants with the following MCCs can process Original Credits:
  * 7995
  * 8999
 
-By default, test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
+By default, Test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
-## Original Credit [POST /v1/accounts/{ACCOUNT_ID}/originalcredits]
+## Original Credit [POST /v1/accounts/{account_id}/originalcredits]
 
 This is how you submit an Original Credit request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Original Credit (application/json)
 
@@ -4297,14 +4297,14 @@ This is how you submit an Original Credit request.
               "status":"PENDING"
             }        
 
-## Cancel an Original Credit [PUT /v1/accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
+## Cancel an Original Credit [PUT /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 
 This is how you submit a Cancel Original Credit request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + ORIGINAL_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Original Credit request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + original_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Original Credit request.
 
 + Request Cancel Original Credit (application/json)
 
@@ -4346,14 +4346,14 @@ This is how you submit a Cancel Original Credit request.
                 "status": "CANCELLED"
             }        
 
-## Get Original Credit [GET /v1/accounts/{ACCOUNT_ID}/originalcredits/{ORIGINAL_CREDIT_ID}]
+## Get Original Credit [GET /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 
 This is how you look up an Original Credit request using the ID returned in the response to the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + ORIGINAL_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the Original Credit ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + original_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the Original Credit ID returned in the response.
     
 + Request Get Original Credit (application/json)
 
@@ -4444,13 +4444,13 @@ This is how you look up an Original Credit request using the ID returned in the 
               "status":"PENDING"
             }
 
-## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up an Original Credit using the merchant reference number used in the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
@@ -4581,16 +4581,16 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
 **Note:** If your merchant category code (MCC) is listed as able to process Original Credits, you must not use Standalone Credits.
 
-By default, test accounts do not support Standalone Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
+By default, Test accounts do not support Standalone Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
 
-## Standalone Credit [POST /v1/accounts/{ACCOUNT_ID}/standalonecredits]
+## Standalone Credit [POST /v1/accounts/{account_id}/standalonecredits]
 
 This is how you submit a Standalone Credit request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Standalone Credit (application/json)
 
@@ -4739,14 +4739,14 @@ This is how you submit a Standalone Credit request.
               "status":"PENDING"
             }        
 
-## Cancel a Standalone Credit [PUT /v1/accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
+## Cancel a Standalone Credit [PUT /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
 
 This is how you submit a Cancel Standalone Credit request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + STANDALONE_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Standalone Credit request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Standalone Credit request.
 
 + Request Cancel Standalone Credit (application/json)
         
@@ -4790,14 +4790,14 @@ This is how you submit a Cancel Standalone Credit request.
             }        
 
 
-## Get Standalone Credit [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits/{STANDALONE_CREDIT_ID}]
+## Get Standalone Credit [GET /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
 
 This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.
-    + STANDALONE_CREDIT_ID:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Standalone Credit ID returned in the response.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Standalone Credit ID returned in the response.
     
 + Request Get Standalone Credit (application/json)
 
@@ -4889,7 +4889,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
               "status":"PENDING"
             }
 
-## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{ACCOUNT_ID}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
 
@@ -4910,7 +4910,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
 
 + Parameters
 
-    + ACCOUNT_ID:123456789 (string, required) - This is the merchant account number.    
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
