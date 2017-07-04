@@ -3695,11 +3695,13 @@ This is how you submit a Verification request. This example verifies a card and 
 
 ## Verification with a Payment Token [POST /v1/accounts/{account_id}/verifications]
 
-This is how you submit a Verification request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault with the payment token.
+This is how you submit a Verification request using a payment token. 
+
+When you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault with the payment token. 
 
 You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
 
-**Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.
+**Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li><li>If you intend to use the Customer Vault API to [convert a single-use payment token into a permanent payment token](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/profiles/create-a-profile-using-a-single-use-token), you should verify the token using this Card Payments API request before proceeding with the conversion.</li></ul>
         
 + Parameters
 
