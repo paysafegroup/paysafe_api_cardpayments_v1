@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api.test.paysafe.com/cardpayments/
 
-# Paysafe Card Payments API
+# Paysafe Card Payments API 
 
 # Release Notes
 
@@ -17,8 +17,8 @@ Connect your application directly with our payment engine to process a full suit
 * Obtain output in JSON format – it’s easy to parse in a large variety of Web and mobile applications.
 * Use any language or platform to make requests through standard HTTP protocols.
 
-<a name="apikey" title="Authentication"></a>
-# Authentication
+# Authentication 
+<a name="Authentication" title="Authentication"></a>
 
 In order for you to use the Paysafe REST API, Paysafe must first set you up on their system
 and provide you with an API key. Your API key looks something like this:
@@ -41,7 +41,7 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 
 **Note:** Your Production API key will be different from your Test API key. Contact your account manager for details. You must keep your API keys safe and ensure that it is used appropriately for your needs.
 
-# URLs
+# URLs 
 
 ##  Test URL
 In order to test your integration with Paysafe, use the following Test URL:
@@ -61,8 +61,9 @@ For example:
 
 `https://api.paysafe.com/cardpayments/v1/accounts/{account_id}`
 
-<a name="pagination" title="Pagination"></a>
+
 # Pagination
+<a name="pagination" title="pagination"></a>
 
 In the case where an API GET request returns multiple results, Paysafe returns the first 10 records by default and uses HATEOAS links to provide page navigation. In addition to the default behavior, it is also possible to control the number of results and starting point by passing in query parameters as follows:
 
@@ -73,7 +74,6 @@ In the case where an API GET request returns multiple results, Paysafe returns t
 | startDate     | This is the start date in UTC. Default = 30 days before the *endDate*.|
 | endDate       | This is the end date in UTC. Default = current date and time. |
 
-<a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
 # Global Invalid Characters
 
 You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
@@ -90,7 +90,7 @@ You must not include any of the characters in the following table as values in a
 | ]               | 5D        | Closing bracket                    |
 | \               | 5C        | Backslash                          |
 
-# API
+# API 
 
 The Card Payments API allows merchants to process credit card transactions using the REST protocol. The protocol uses JSON for all requests and responses.
 
@@ -132,22 +132,22 @@ The following request types are supported:
 |/standalonecredits/{standalone_credit_id}      |Look Up a Standalone Credit            |GET    |
 |/standalonecredits/{standalone_credit_id}      |Cancel a Standalone Credit             |PUT    |
 
+
 # Getting Started
 
-Click [here for details](https://developer.paysafe.com/en/rest-api/cards/using-the-api/scenarios/) of some common scenarios for making Card payments.
+Click [here for details](https://developer.paysafe.com/en/rest-api/cards/using-the-api/scenarios/) of some common scenarios for making Card payments. 
 
 # Testing Instructions
 
 The Paysafe Test environment can be used to test websites or applications without actually running transactions through the payment processing engine. It is important to make sure that your systems are working correctly before going into a live environment. Click [here for details](https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/testing-instructions/) about using the Test environment.
 
-<a name="isostandards" title="ISO Standards"></a>
 # ISO Standards
 
 <a name="currencycodes" title="Currency Codes"></a>
 ## Currency Codes
 
 **Note**
- * The table below lists the currencies in which transaction requests are processed, but note that they may be settled in a different currency.
+ * The table below lists the currencies in which transaction requests are processed, but note that they may be settled in a different currency. 
  * Not all currencies are supported by all banks. Contact your account manager for more information about which currencies are supported for your merchant account.
 
 |Currency |Code |
@@ -323,6 +323,7 @@ The Paysafe Test environment can be used to test websites or applications withou
 |West Virginia          |WV     |
 |Wisconsin              |WI     |
 |Wyoming                |WY     |
+
 
 <a name="countrycodes" title="Country Codes"></a>
 ## Country Codes
@@ -580,7 +581,7 @@ The Paysafe Test environment can be used to test websites or applications withou
 
 # Complex JSON Objects
 
-<a name="accorddobject" title="AccordD Object"></a>
+<a name="accorddobject" title="Accord Object"></a>
 ## accordD
 |Element            |Type                       |Description                        |
 |---                |---                        |---       |
@@ -707,7 +708,7 @@ These are raw results returned by the acquirer.
   }
 ```
 
-<a name="authorizationobject" title="auths Object"></a>
+<a name="authorizationobject"></a>
 ## auths
 
 |Element            |Type                                   |Description                        |
@@ -784,7 +785,7 @@ These are raw results returned by the acquirer.
 ```
 
 
-<a name="billingdetailsobject" title="billingDetails Object"></a>
+<a name="billingdetailsobject"></a>
 ## billingDetails
 |Element            |Type                             |Description                        |
 |---                |---                              |---                                |
@@ -808,7 +809,7 @@ These are raw results returned by the acquirer.
   }
 ```
 
-<a name="cardobject" title="card Object"></a>
+<a name="cardobject"></a>
 ## card
 
 When providing card information, merchants can provide either card details or a payment token for a customer already created in the system.
@@ -841,7 +842,7 @@ When providing card information, merchants can provide either card details or a 
     }
 ```
 
-<a name="cardexpiryobject" title="cardExpiry Object"></a>
+<a name="cardexpiryobject"></a>
 ## cardExpiry
 
 |Element                 |Type                   |Description|
@@ -858,7 +859,7 @@ When providing card information, merchants can provide either card details or a 
     }
 ```
 
-<a name="errorobject" title="error Object"></a>
+<a name="errorobject"></a>
 ## error
 |Element            |Type       |Description                        |
 |---                |---        |---                                |
@@ -885,7 +886,7 @@ When providing card information, merchants can provide either card details or a 
    }
 ```
 
-<a name="level2level3object" title="level2level3 Object"></a>
+<a name="level2level3object"></a>
 ## level2level3
 
 Level 2 and Level 3 (L2/L3) credit card processing refers to certain B2B card transactions for which the merchant might be eligible for lower credit card interchange rates. The lower rates may be available for 
@@ -940,7 +941,7 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
-<a name="lineitemsobject" title="lineItems Object"></a>
+<a name="lineitemsobject"></a>
 ##lineItems
 
 |Element                |Type                               | Description|
@@ -967,7 +968,7 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
-<a name="linksobject" title="links Object"></a>
+<a name="linksobject"></a>
 ## links
 
 |Element    |Type          |Description|
@@ -986,7 +987,7 @@ merchants who provide more detailed information when processing card-not-present
         }
 ```
 
-<a name="merchantdescriptorobject" title="merchantDescriptor Object"></a>
+<a name="merchantdescriptorobject"></a>
 ## merchantDescriptor
 |Element            |Type                       |Description                        |
 |---                |---                        |---                                |
@@ -1002,7 +1003,7 @@ merchants who provide more detailed information when processing card-not-present
   }
 ```
 
-<a name="originalcreditsobject" title="originalcredits Object"></a>
+<a name="originalcreditsobject"></a>
 ## originalcredits
 
 |Element            |Type                                   |Description                        |
@@ -1054,7 +1055,7 @@ merchants who provide more detailed information when processing card-not-present
 }    
 ```
 
-<a name="profileobject" title="profile Object"></a>
+<a name="profileobject"></a>
 ## profile
 |Element            |Type                       |Description    |
 |---                |---                        |---                                |
@@ -1072,7 +1073,7 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
-<a name="refundsobject" title="refunds Object"></a>
+<a name="refundsobject"></a>
 ## refunds
 |Element            |Type                                   |Description                        |
 |---                |---                                    |---                                |
@@ -1094,7 +1095,7 @@ merchants who provide more detailed information when processing card-not-present
 }
 ```
 
-<a name="settlementsobject" title="settlements Object"></a>
+<a name="settlementsobject"></a>
 ## settlements
 |Element            |Type                                   |Description                        |
 |---                |---                                    |---                                |
@@ -1117,7 +1118,7 @@ merchants who provide more detailed information when processing card-not-present
 }
 ```
 
-<a name="shippingdetailsobject" title="shippingDetails Object"></a>
+<a name="shippingdetailsobject"></a>
 ## shippingDetails
 
 |Element            |Type                       |Description |
@@ -1146,7 +1147,7 @@ merchants who provide more detailed information when processing card-not-present
   }
 ```
 
-<a name="standalonecreditsobject" title="standalonecredits Object"></a>
+<a name="standalonecreditsobject"></a>
 ## standalonecredits
 
 |Element            |Type                                   |Description                        |
@@ -1197,7 +1198,7 @@ merchants who provide more detailed information when processing card-not-present
 }    
 ```
 
-<a name="verificationsobject" title="verifications Object"></a>
+<a name="verificationsobject"></a>
 ## verifications
 
 |Element            |Type                                   |Description                        |
@@ -1249,7 +1250,7 @@ merchants who provide more detailed information when processing card-not-present
 }    
 ```
 
-<a name="visaadditionalauthdataobject" title="visaAdditionalAuthData Object"></a>
+<a name="visaadditionalauthdataobject"></a>
 ## visaAdditionalAuthData
 
 The recipient is deemed to be the person or party who has the contractual relationship with the merchant/financial institution. This may be different from the cardholder, e.g., in the case of a parent topping up a child's savings account. Therefore, the fields should not be collected on the same page as cardholder information, but instead be passed in the background from the merchant’s records.
@@ -1283,7 +1284,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 
 # Error Summary
 
-<a name="commonerrors" title="Common Errors"></a>
 ## Common Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
@@ -1323,7 +1323,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 |400                |5501           |The profile does not have an active credit card. |
 |400                |5502           |Either the payment token is invalid or the corresponding profile or bank account is not active.|
 
-<a name="autherrors" title="Authorization Errors"></a>
 ## Authorization Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
@@ -1376,7 +1375,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3053           |The bank has requested that you retrieve the card from the cardholder &ndash; please call the acquirer.|
 |402                |3054           |The transaction was declined due to suspected fraud.|
 
-<a name="voidautherrors" title="Void Authorization Errors"></a>
 ## Void Authorization Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
@@ -1388,7 +1386,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 |500                |3505           |The Authorization Reversal could not be completed.|
 |402                |3506           |The reversal amount exceeds the remaining amount of the Authorization.|
 
-<a name="settlementerrors" title="Settlement Errors"></a>
 ## Settlement Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
@@ -1400,7 +1397,6 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3205           |The Authorization you are attempting to settle has expired.|
 |402                |3206           |The external processing gateway has rejected the transaction.|
 
-<a name="refunderrors" title="Refund Errors"></a>
 ## Refund Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
@@ -1421,42 +1417,40 @@ The recipient is deemed to be the person or party who has the contractual relati
 
 
 # Using the example API calls (Console Window)
-To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right hand pane.
-Using the Console window you can update the headers, the request body, and parts of the API endpoint.
-For example, for many requests you must update the endpoint to include your account ID, which you do by selecting **URI Parameters** and then updating the **account_id** value.
+To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right hand pane. 
+Using the Console window you can update the headers, the request body, and parts of the API endpoint. 
+For example, for many requests you must update the endpoint to include your account ID, which you do by selecting **URI Parameters** and then updating the **account_id** value. 
 (To get your account ID, log into the Paysafe Back Office, choose **Accounts** and look in the *Account* column).
 You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64
-version of your API key. To get your API key, log into the Test version of the Merchant Back Office and choose **Settings > API Key**.
+version of your API key. To get your API key, log into the Test version of the Merchant Back Office and choose **Settings > API Key**. 
 Click *View Base 64 Encoded* and copy the key to your clipboard. Paste the key after the word Basic to replace the text YOUR-BASE64-ENCODED-API-KEY.
 When you are ready to test your example, you can choose between the Production and Mock server environment:
-* Production server – This calls the resource on Paysafe's Test system.
+* Production server – This calls the resource on Paysafe's Test system. 
 * Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
 
 ## Verify That the Service Is Accessible [GET /monitor]
-<a name="verifyservice" title="Verify Service"></a>
 
 This call returns a status of READY if the API is available.
 
 + Response 200 (application/json)
 
   + Body
-
+    
             {
                 "status" : "READY"
             }
 
 # Authorizations [/auths]
-<a name="auths" title="Authorizations"></a>
+<a name="auths"></a>
 
 ## Authorization [POST /v1/accounts/{account_id}/auths]
-<a name="authrequest" title="Authorization Request"></a>
 
 This is how you submit an Authorization request.
 
 + Parameters
-
+    
     + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization (application/json)
@@ -1467,7 +1461,7 @@ This is how you submit an Authorization request.
         + Include No Settle
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
@@ -1483,12 +1477,11 @@ This is how you submit an Authorization request.
         + Include Purchase Response Base
 
 ## Authorization with Settlement [POST /v1/accounts/{account_id}/auths]
-<a name="authsettlement" title="Authorization with Settlement"></a>
 
 This is how you submit an Authorization request that includes the Settlement. To settle the Authorization in the same request, just set the *settleWithAuth* parameter to *true*.
 
 + Parameters
-
+    
     + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization with Settlment (application/json)
@@ -1499,7 +1492,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + Include Settle
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
     
 + Response 200 (application/json)
@@ -1514,7 +1507,6 @@ This is how you submit an Authorization request that includes the Settlement. To
         + Include Purchase Response Base
 
 ## Authorization with a Payment Token [POST /v1/accounts/{account_id}/auths]
-<a name="authtoken" title="Authorization with Payment Token"></a>
 
 This is how you submit an Authorization request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault along with the payment token.
 
@@ -1523,7 +1515,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
 **Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li></ul>
         
 + Parameters
-
+    
     + account_id:123456789 (string, required) - This is the merchant account number.
 
 + Request Authorization with Payment Token (application/json)
@@ -1534,7 +1526,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include No Settle
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
     
 + Response 200 (application/json)
@@ -1549,21 +1541,20 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include Purchase Response Base
 
 ## Get Authorization [GET /v1/accounts/{account_id}/auths/{auth_id}]
-<a name="getauth" title="Look Up an Authorization"></a>
 
 This is how you look up an Authorization request using the ID returned in the response to the original request.
 
 + Parameters
-
+    
     + account_id:123456789 (string, required) - This is the merchant account number.
     + auth_id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
-
-+ Request Get Authorization (application/json)
+        
++ Request Get Authorization (application/json)   
 
     + Headers
-
+            
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -1574,9 +1565,8 @@ This is how you look up an Authorization request using the ID returned in the re
         + Include Settle
         + Include Available Settle None
         + Include Purchase Response Base
-
+        
 ## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getauthmerchantrefnum" title="Look Up an Authorization Using a Merchant Reference Number"></a>
 
 This is how you look up an Authorization request using the merchant reference number used in the original request.
 
@@ -1587,23 +1577,22 @@ This is how you look up an Authorization request using the merchant reference nu
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
-    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
 
 + Request Get Authorization (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
-
+    
         + Include Links Auth Get Reference
         + Include Auth Get Array
-
+        
 ## Complete an Authorization [PUT /v1/accounts/{account_id}/auths/{auth_id}]
-<a name="completeauth" title="Complete an Authorization"></a>
 
 This is how you complete an Authorization request with the status of Held.
 
@@ -1612,12 +1601,12 @@ This is how you complete an Authorization request with the status of Held.
     + auth_id:`5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the Authorization ID returned in the response.
 
 + Request Complete Authorization (application/json)
-
+    
     + Attributes
         + status:COMPLETED (enum, required) - This is the status to which you want to change the Authorization (COMPLETED or CANCELLED).
 
     + Headers
-
+            
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -1625,12 +1614,11 @@ This is how you complete an Authorization request with the status of Held.
     + Attributes
         + Include Links Auth
         + Include Completion Response
-
+    
 # Void Authorizations [/voidauths]
-<a name="voidauths" title="Void Authorizations"></a>
+<a name="voidauths"></a>
 
 ## Void an Authorization [POST /v1/accounts/{account_id}/auths/{auth_id}/voidauths]
-<a name="voidanauth" title="Void an Authorization"></a>
 
 This is how you submit a Void Authorization request. You can void an Authorization only if it has not yet been settled. 
 
@@ -1647,17 +1635,16 @@ This is how you submit a Void Authorization request. You can void an Authorizati
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
         + Include Links Auth Void
         + Include Auth Void Response
-
+        
 ## Get Void Authorization [GET /v1/accounts/{account_id}/voidauths/{void_auth_id}]
-<a name="getvoidauth" title="Look Up a Void Authorization"></a>
 
 This is how you look up a Void Authorization request using the ID returned in the response to the original request.
 
@@ -1665,50 +1652,48 @@ This is how you look up a Void Authorization request using the ID returned in th
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + void_auth_id:`d1fb46ee-2736-4ef5-a724-f263ace75373e` (string, required) - This is the ID returned in the response to the Void Authorization request. 
-
+    
 + Request Get Void Authorization (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
         + Include Links Auth Void
         + Include Auth Void Response
-
+        
 ## Get Void Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getvoidauthmerchantrefnum" title="Look Up a Void Authorization Using a Merchant Reference Number"></a>
 
 This is how you look up a Void Authorization request using the merchant reference number used in the original request.
 
 + Parameters
-
+    
     + account_id:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
-    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
+    
 + Request Get Void Authorization (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
         + Include Links Auth Void Get Reference
         + Include Auth Void Get Array
-
+    
 # Settlements [/settlements]
-<a name="settlements" title="Settlements"></a>
+<a name="settlements"></a>
 
 ## Settlement [POST /v1/accounts/{account_id}/auths/{auth_id}/settlements]
-<a name="settlementrequest" title="Settlement Request"></a>
 
 This is how you submit a Settlement request.
 
@@ -1723,17 +1708,16 @@ This is how you submit a Settlement request.
         + Include Settlement
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
-        + Include Links Settlement
+        + Include Links Settlement        
         + Include Settlement Response
-
+        
 ## Cancel a Settlement [PUT /v1/accounts/{account_id}/settlements/{settlement_id}]
-<a name="cancelsettlement" title="Cancel a Settlement"></a>
 
 This is how you submit a Cancel Settlement request.
 
@@ -1743,25 +1727,24 @@ This is how you submit a Cancel Settlement request.
     + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
 
 + Request Cancel Settlement (application/json)
-
+        
     + Attributes
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
         + Include Links Settlement
         + Include Settlement Cancel Response
-
-## Get Settlement [GET /v1/accounts/{account_id}/settlements/{settlement_id}]
-<a name="getsettlement" title="Look Up a Settlement"></a>
+        
+## Get Settlement [GET /v1/accounts/{account_id}/settlements/{settlement_id}]      
 
 This is how you look up a Settlement request using the ID returned in the response to the original request.
-
+    
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
@@ -1770,9 +1753,9 @@ This is how you look up a Settlement request using the ID returned in the respon
 + Request Get Settlement (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
@@ -1780,25 +1763,24 @@ This is how you look up a Settlement request using the ID returned in the respon
         + Include Settlement Response
 
 ## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{account_id}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
 
 This is how you look up a Settlement using the merchant reference number used in the original request.
 
 + Parameters
 
-    + account_id:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    
 + Request Get Settlement (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -1807,12 +1789,11 @@ This is how you look up a Settlement using the merchant reference number used in
 
 
 # Refunds [/refunds]
-<a name="refunds" title="Refunds"></a>
+<a name="refunds"></a>
 
 ## Refund [POST /v1/accounts/{account_id}/settlements/{settlement_id}/refunds]
-<a name="refund request" title="Refund Request"></a>
 
-This is how you submit a Refund request.
+This is how you submit a Refund request. 
 
 + Parameters
 
@@ -1820,22 +1801,21 @@ This is how you submit a Refund request.
     + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
 
 + Request Refund (application/json)
-
+        
     + Attributes
         + Include Refund
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
         + Include Links Refund
         + Include Refund Response
-
+        
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
-<a name="cancelrefund" title="Cancel a Refund"></a>
 
 This is how you submit a Cancel Refund request.
 
@@ -1845,13 +1825,13 @@ This is how you submit a Cancel Refund request.
     + refund_id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response to the Refund request.
 
 + Request Cancel Refund (application/json)
-
+        
     + Attributes
-
+    
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -1860,8 +1840,7 @@ This is how you submit a Cancel Refund request.
         + Include Links Refund
         + Include Refund Cancel Response
 
-## Get Refund [GET /v1/accounts/{account_id}/refunds/{refund_id}]
-<a name="getrefund" title="Look Up a Refund"></a>
+## Get Refund [GET /v1/accounts/{account_id}/refunds/{refund_id}]      
 
 This is how you look up a Refund request using the ID returned in the response to the original request.
 
@@ -1869,11 +1848,11 @@ This is how you look up a Refund request using the ID returned in the response t
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + refund_id:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Refund ID returned in the response.
-
+    
 + Request Get Refund (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -1883,25 +1862,24 @@ This is how you look up a Refund request using the ID returned in the response t
         + Include Refund Response
 
 ## Get Refund Using Merchant Reference Number [GET /v1/accounts/{account_id}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
 
 This is how you look up a Refund using the merchant reference number used in the original request.
 
 + Parameters
 
-    + account_id:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
-    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.    
+    
 + Request Get Refund (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -1909,10 +1887,9 @@ This is how you look up a Refund using the merchant reference number used in the
         + Include Refund Get Array
 
 # Verifications [/verifications]
-<a name="verifications" title="Verifications"></a>
+<a name="verifications"></a>
 
 ## Verification [POST /v1/accounts/{account_id}/verifications]
-<a name="verificationrequest" title="Verification Request"></a>
 
 This is how you submit a Verification request. This example verifies a card and associated billing details.
 
@@ -1927,7 +1904,7 @@ This is how you submit a Verification request. This example verifies a card and 
         + Include Verification Base
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -1937,9 +1914,8 @@ This is how you submit a Verification request. This example verifies a card and 
         + Include Verification Response
 
 ## Verification with a Payment Token [POST /v1/accounts/{account_id}/verifications]
-<a name="verificationtoken" title="Verification with Payment Token"></a>
 
-This is how you submit a Verification request using a payment token.
+This is how you submit a Verification request using a payment token. 
 
 When you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault with the payment token. 
 
@@ -1950,6 +1926,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
+    
 
 + Request Verification with Payment Token (application/json)
 
@@ -1958,7 +1935,7 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include Verification Base Token
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -1968,7 +1945,6 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include Verification Response Token
 
 ## Get Verification [GET /v1/accounts/{account_id}/verifications/{verification_id}]
-<a name="getverification" title="Look Up a Verification"></a>
 
 This is how you look up a Verification request using the ID returned in the response to the original request.
 
@@ -1976,13 +1952,13 @@ This is how you look up a Verification request using the ID returned in the resp
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + verification_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Verification ID returned in the response.
-
-+ Request Get Verification (application/json)
+        
++ Request Get Verification (application/json)   
 
     + Headers
-
+            
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -1990,25 +1966,24 @@ This is how you look up a Verification request using the ID returned in the resp
         + Include Verification Response
 
 ## Get Verification Using Merchant Reference Number [GET /v1/accounts/{account_id}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getverificationmerchantrefnum" title="Look Up a Verification Using a Merchant Reference Number"></a>
 
 This is how you look up a Verification request using the merchant reference number used in the original request.
 
 + Parameters
 
-    + account_id:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    
 + Request Get Verification (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
 + Response 200 (application/json)
 
     + Attributes
@@ -2016,7 +1991,7 @@ This is how you look up a Verification request using the merchant reference numb
         + Include Verification Get Array
 
 # Original Credits [/originalcredits]
-<a name="originalcredits" title="Original Credits"></a>
+<a name="originalcredits"></a>
 
 Original Credits allow merchants with specific merchant category codes (MCCs) to issue winnings as credits to cardholders, without requiring a previous Authorization/Settlement. 
 
@@ -2031,10 +2006,9 @@ Merchants with the following MCCs can process Original Credits:
  * 7995
  * 8999
 
-By default, Test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/).
+By default, Test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
 ## Original Credit [POST /v1/accounts/{account_id}/originalcredits]
-<a name="originalcreditrequest" title="Original Credit Request"></a>
 
 This is how you submit an Original Credit request.
 
@@ -2047,9 +2021,9 @@ This is how you submit an Original Credit request.
     + Attributes
         + Include Card
         + Include Original Credit Base
-
+        
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2059,7 +2033,6 @@ This is how you submit an Original Credit request.
         + Include Original Credit Response
 
 ## Original Credit with a Payment Token [POST /v1/accounts/{account_id}/originalcredits]
-<a name="originalcredittoken" title="Original Credit with Payment Token"></a>
 
 This is how you submit an Original Credit request using a payment token.
 
@@ -2074,9 +2047,9 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
     + Attributes
         + Include Card Token
         + Include Original Credit Base Token
-
+        
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2086,7 +2059,6 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include Original Credit Response
 
 ## Cancel an Original Credit [PUT /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
-<a name="canceloriginalcredit" title="Cancel an Original Credit"></a>
 
 This is how you submit a Cancel Original Credit request.
 
@@ -2099,9 +2071,9 @@ This is how you submit a Cancel Original Credit request.
 
     + Attributes
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
-
+        
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2111,7 +2083,6 @@ This is how you submit a Cancel Original Credit request.
         + Include Original Credit Cancel Response
 
 ## Get Original Credit [GET /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
-<a name="getoriginalcredit" title="Look Up an Original Credit"></a>
 
 This is how you look up an Original Credit request using the ID returned in the response to the original request.
 
@@ -2119,13 +2090,13 @@ This is how you look up an Original Credit request using the ID returned in the 
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + original_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the Original Credit ID returned in the response.
-
+    
 + Request Get Original Credit (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -2133,25 +2104,24 @@ This is how you look up an Original Credit request using the ID returned in the 
         + Include Original Credit Response
 
 ## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getoriginalcreditmerchantrefnum" title="Look Up an Original Credit Using a Merchant Reference Number"></a>
 
 This is how you look up an Original Credit using the merchant reference number used in the original request.
 
 + Parameters
 
-    + account_id:123456789 (string, required) - This is the merchant account number.
+    + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    
 + Request Get Original Credit (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -2159,7 +2129,7 @@ This is how you look up an Original Credit using the merchant reference number u
         + Include Original Credit Get Array
 
 # Standalone Credits [/standalonecredits]
-<a name="standalonecredits" title="Standalone Credits"></a>
+<a name="standalonecredits"></a>
 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
 
@@ -2167,8 +2137,8 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
 By default, Test accounts do not support Standalone Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
+
 ## Standalone Credit [POST /v1/accounts/{account_id}/standalonecredits]
-<a name="standalonecreditrequest" title="Standalone Credit Request"></a>
 
 This is how you submit a Standalone Credit request.
 
@@ -2183,7 +2153,7 @@ This is how you submit a Standalone Credit request.
         + Include Standalone Credit Base
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2193,7 +2163,6 @@ This is how you submit a Standalone Credit request.
         + Include Standalone Credit Response
 
 ## Standalone Credit with a Payment Token [POST /v1/accounts/{account_id}/standalonecredits]
-<a name="standalonecredittoken" title="Standalone Credit with Payment Token"></a>
 
 This is how you submit a Standalone Credit request using a payment token.
 
@@ -2208,9 +2177,9 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
     + Attributes
         + Include Card Token
         + Include Standalone Credit Base Token
-
+        
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2220,7 +2189,6 @@ You can use either of two payment token types:<ul><li>The permanent, reusable pa
         + Include Standalone Credit Response
 
 ## Cancel a Standalone Credit [PUT /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
-<a name="cancelstandalonecredit" title="Cancel a Standalone Credit"></a>
 
 This is how you submit a Cancel Standalone Credit request.
 
@@ -2230,13 +2198,13 @@ This is how you submit a Cancel Standalone Credit request.
     + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Standalone Credit request.
 
 + Request Cancel Standalone Credit (application/json)
-
+        
     + Attributes
-
+    
         + status:CANCELLED (enum, required) - This is the status of the transaction request.
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2246,7 +2214,6 @@ This is how you submit a Cancel Standalone Credit request.
         + Include Standalone Credit Cancel Response
 
 ## Get Standalone Credit [GET /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
-<a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
 
 This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
 
@@ -2254,13 +2221,13 @@ This is how you look up a Standalone Credit request using the ID returned in the
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Standalone Credit ID returned in the response.
-
+    
 + Request Get Standalone Credit (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
@@ -2268,9 +2235,9 @@ This is how you look up a Standalone Credit request using the ID returned in the
         + Include Standalone Credit Response
 
 ## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
+
 
 <br>
 <br>
@@ -2294,13 +2261,13 @@ This is how you look up a Standalone Credit using the merchant reference number 
     + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
-
+    
 + Request Get Standalone Credit (application/json)
 
     + Headers
-
+    
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+            
 + Response 200 (application/json)
 
     + Attributes
