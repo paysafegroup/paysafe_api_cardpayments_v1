@@ -1868,7 +1868,7 @@ This is how you submit an Authorization request that includes the Settlement. To
                 - taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
                 - taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
                 - totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units. 
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account. This must have either a percent or amount, but not both.
             - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
@@ -2025,7 +2025,7 @@ This is how you submit an Authorization request that includes the Settlement. To
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account.
             - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
@@ -2462,7 +2462,7 @@ This is how you look up an Authorization request using the ID returned in the re
             - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
             - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
             - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.        
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account.
             - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an amount was specified in the request.
             - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - an amount equivalent to the percentage of the total.    
@@ -2631,7 +2631,7 @@ This is how you look up an Authorization request using the merchant reference nu
                     - recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
                     - recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
                     - recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.        
-                + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+                + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
                     - linkedAccount:123124124 (string, required) - The ID of the linked account.
                     - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
                     - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
@@ -3035,7 +3035,7 @@ This is how you submit a Settlement request.
         + merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
         + amount:50 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be settled. 
         + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account. This must have either a percent or amount, but not both.
             - percent:5 (number, optional) - The percentage of the total transaction amount to transfer to the linked account, to two decimal places. The total percentage to all linked accounts cannot exceed 100%. Either this or amount must be specfied, but not both.
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. Either this or percent must be specfied, but not both.        
@@ -3078,7 +3078,7 @@ This is how you submit a Settlement request.
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account.
             - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
@@ -3193,7 +3193,7 @@ This is how you look up a Settlement request using the ID returned in the respon
             - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
             - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
             - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.        
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account.
             - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
@@ -3269,7 +3269,7 @@ This is how you look up a Settlement using the merchant reference number used in
                     - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
                     - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
                     - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.        
-        + splitpay (object, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+        + splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
             - linkedAccount:123124124 (string, required) - The ID of the linked account.
             - percent:5 (number, optional) - The "percent" (if specified) in the request for the linked account, which is the percentage of the total transaction amount to transfer to that account. This is not returned if an "amount" was specified in the request. 
             - amount:505 (number, optional) - The amount to transfer to the linked account in minor currency units. This is either the "amount" (if specified) in the request or - if "percent" was specified - the result of the percentage calculation.
