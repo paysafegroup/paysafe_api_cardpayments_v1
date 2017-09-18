@@ -7,7 +7,8 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 | Version   | Date          | Details |
 |---        |---            |---      |
-| 1.0       | November 2016 | <ul><li>Document release</li></ul>|
+| 1.0       | November 2016 | Document release |
+| 2.0       | September 2017 | Adding Turnkey features |
 
 # Overview
 
@@ -741,6 +742,7 @@ These are raw results returned by the acquirer.
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a settlement.|
 
 ```apib
 {
@@ -1109,6 +1111,7 @@ merchants who provide more detailed information when processing card-not-present
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The Settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a settlement.|
 
 ```apib
 {
@@ -1143,6 +1146,29 @@ merchants who provide more detailed information when processing card-not-present
     "country":"CA",
     "zip":"M5H 2N2"
   }
+  }
+```
+
+<a name="splitpayobject" title="splitpay Object"></a>
+## splitpay
+
+|Element            |Type    |Required |Description |
+|---                |---     |---      |---        |
+|linkedAccount      |string  |Yes      |This is the ID of the linked account.
+|amount             |number  |         |This is the amount to transfer to the linked account in minor currency units. The total amount to all linked accounts cannot exceed the transaction total. Either this or percent must be specified.|
+|percent            |number  |         |This is the percentage of the total transaction amount to transfer to the linked account, to two decimal places. The total percentage to all linked accounts cannot exceed 100%. Either this or amount must be specified.|
+
+```apib
+  {
+  "splitpay": [
+    {
+    "linkedAccount": "123124124",
+    "percent": 5
+    },
+    {
+    "linkedAccount": "767862873",
+    "amount": 500
+    }]
   }
 ```
 
@@ -1497,6 +1523,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + Include Card
         + Include Purchase Base
         + Include Settle
+        + Include Splitpay
 
     + Headers
 
@@ -1512,6 +1539,8 @@ This is how you submit an Authorization request that includes the Settlement. To
         + Include Settle
         + Include Available Settle None
         + Include Purchase Response Base
+        + Include Splitpay
+        + Include Settlement Response Purchase
 
 ## Authorization with a Payment Token [POST /v1/accounts/{account_id}/auths]
 <a name="authtoken" title="Authorization with Payment Token"></a>
@@ -1574,6 +1603,7 @@ This is how you look up an Authorization request using the ID returned in the re
         + Include Settle
         + Include Available Settle None
         + Include Purchase Response Base
+        + Include Splitpay Response
 
 ## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getauthmerchantrefnum" title="Look Up an Authorization Using a Merchant Reference Number"></a>
@@ -1721,6 +1751,7 @@ This is how you submit a Settlement request.
 
     + Attributes
         + Include Settlement
+        + Include Splitpay
 
     + Headers
 
@@ -2333,6 +2364,7 @@ This is how you look up a Standalone Credit using the merchant reference number 
         + Include Settle
         + Include Available Settle None
         + Include Purchase Response Base
+        + Include Splitpay Response
 
 ## Auth Void Get Array
 + voidauths (array, required) - This is an array of requests associated with this merchant reference number.
@@ -2736,6 +2768,14 @@ This is how you look up a Standalone Credit using the merchant reference number 
 + dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
 + txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
 + status:`COMPLETED` (enum, required) - This is the [status of the transaction request](#settlementsobject).
++ Include Splitpay Response
+
+## Settlement Response Purchase
++ settlements (array, required) - This is an array of requests associated with this merchant reference number.
+    + (object)
+        + Include Links Settlement
+        + Include Settlement Response
+        + Include Splitpay Response
 
 ## Settlement Cancel Response
 + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response.
@@ -2751,6 +2791,24 @@ This is how you look up a Standalone Credit using the merchant reference number 
 + state:ON (string, optional) - This is the state or province in the shipping address. 
 + country:CA (string, optional) - This is the country in the shipping address. 
 + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
+
+## Splitpay
++ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
+    + (object)
+        + Properties
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
+            + One of
+                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
+                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
+
+## Splitpay Response
++ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
+    + (object)
+        + Properties
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
+            + One of
+                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units. This is either the *amount* (if specified) in the request or - if *percent* was specified - the result of the percentage calculation.            
+                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account. This is not returned if *amount* was specified in the request.
 
 ## Standalone Credit Base
 + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
