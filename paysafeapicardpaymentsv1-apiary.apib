@@ -1539,7 +1539,7 @@ This is how you submit an Authorization request that includes the Settlement. To
         + Include Settle
         + Include Available Settle None
         + Include Purchase Response Base
-        + Include Splitpay
+        + Include Splitpay Response
         + Include Settlement Response Purchase
 
 ## Authorization with a Payment Token [POST /v1/accounts/{account_id}/auths]
@@ -2802,13 +2802,10 @@ This is how you look up a Standalone Credit using the merchant reference number 
                 + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
 
 ## Splitpay Response
-+ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
-    + (object)
-        + Properties
-            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
-            + One of
-                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units. This is either the *amount* (if specified) in the request or - if *percent* was specified - the result of the percentage calculation.            
-                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account. This is not returned if *amount* was specified in the request.
++ splitpay (object, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount shared with each.
+    - linkedAccount:123124124 (string, required) - The ID of the linked account.
+    - percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount transferred to that account. This is not returned if an amount was specified in the request.
+    - amount:505 (number, required) - The amount to transfer to the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the result of the percentage calculation.
 
 ## Standalone Credit Base
 + merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
