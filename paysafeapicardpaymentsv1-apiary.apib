@@ -737,7 +737,7 @@ These are raw results returned by the acquirer.
 |avsResponse        |enum                                   |This is the AVS response from the card issuer. Possible values are: <ul><li>MATCH  </li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
 |cvvVerification    |enum                                   |This is the response to the *cvv* submitted with the transaction request. Possible values are:<ul><li>MATCH </li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul>|
 |error              |[error](#errorobject)                  |       |
-|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
@@ -1023,7 +1023,7 @@ merchants who provide more detailed information when processing card-not-present
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
 |error              |[error](#errorobject)                  |       |
-|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerData       |[acquirerData](#acquirerdataobject)    |This is additional information about your card acquirer, required only when you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
@@ -1085,7 +1085,7 @@ merchants who provide more detailed information when processing card-not-present
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |error              |[error](#errorobject)                  |       |
-|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1191,7 +1191,7 @@ merchants who provide more detailed information when processing card-not-present
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
 |error              |[error](#errorobject)                  |       |
-|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully reversed.</li></ul>|
+|status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
@@ -1407,12 +1407,12 @@ The recipient is deemed to be the person or party who has the contractual relati
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
 |400                |3500           |The confirmation number included in this request could not be found.|
-|402                |3501           |The requested Authorization Reversal amount exceeds the remaining Authorization amount.|
-|402                |3502           |You cannot process an Authorization Reversal transaction against an Authorization that has been settled.|
-|402                |3503           |The Authorization Reversal transaction is not supported for the card type used for the Authorization you are attempting to void.|
-|402                |3504           |The external processing gateway for which your merchant account is configured does not support partial Authorization Reversals.|
-|500                |3505           |The Authorization Reversal could not be completed.|
-|402                |3506           |The reversal amount exceeds the remaining amount of the Authorization.|
+|402                |3501           |The requested void (authorization reversal) amount exceeds the remaining Authorization amount.|
+|402                |3502           |You cannot process a void (authorization reversal) transaction against an Authorization that has been settled.|
+|402                |3503           |The void (authorization reversal) transaction is not supported for the card type used for the Authorization you are attempting to void.|
+|402                |3504           |The external processing gateway for which your merchant account is configured does not support partial voids (authorization reversals).|
+|500                |3505           |The void (authorization reversal) could not be completed.|
+|402                |3506           |The void (reversal) amount exceeds the remaining amount of the Authorization.|
 
 <a name="settlementerrors" title="Settlement Errors"></a>
 ## Settlement Errors
