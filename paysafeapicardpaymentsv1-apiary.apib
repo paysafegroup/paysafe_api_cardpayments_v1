@@ -2741,6 +2741,12 @@ This is how you look up a Standalone Credit using the merchant reference number 
 + dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
 + txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
 + status:`PENDING` (enum, required) - This is the [status of the transaction request](#refundsobject).
++ acquirerResponse (object, optional) - This is the [raw response](#acquirerresponseobject) returned by an acquirer. It is returned only if your account is configured accordingly.
+    - code:DJN (string, optional) - This is acquirer identification code.
+    - terminalId:12345678 (string, required) - The merchant's terminal ID.
+    - batchNumber:001 (string, required) - The batch number.
+    - seqNumber:151 (string, required) - The merchant's sequence number.
+    - effectiveDate:170728 (string, required) - The date of the bank deposit associated with the transaction.
 
 ## Refund Cancel Response
 + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response.
