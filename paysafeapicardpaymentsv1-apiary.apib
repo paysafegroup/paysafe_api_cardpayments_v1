@@ -1459,6 +1459,16 @@ When you are ready to test your example, you can choose between the Production a
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
 
+# Legal and Community
+<ul>
+<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
+<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
+<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
+<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
+</ul>
+
 ## Verify That the Service Is Accessible [GET /monitor]
 <a name="verifyservice" title="Verify Service"></a>
 
@@ -1857,6 +1867,7 @@ This is how you submit a Refund request.
 
     + Attributes
         + Include Refund
+        + Include Splitpay Refund Request
 
     + Headers
 
@@ -1867,7 +1878,8 @@ This is how you submit a Refund request.
     + Attributes
         + Include Links Refund
         + Include Refund Response
-
+        + Include Splitpay Refund Response
+    
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
 <a name="cancelrefund" title="Cancel a Refund"></a>
 
@@ -1915,6 +1927,7 @@ This is how you look up a Refund request using the ID returned in the response t
     + Attributes
         + Include Links Refund
         + Include Refund Response
+        + Include Splitpay Refund Response
 
 ## Get Refund Using Merchant Reference Number [GET /v1/accounts/{account_id}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
@@ -1941,6 +1954,7 @@ This is how you look up a Refund using the merchant reference number used in the
     + Attributes
         + Include Links Refund Get Reference
         + Include Refund Get Array
+        + Include Splitpay Refund Response
 
 # Verifications [/verifications]
 <a name="verifications" title="Verifications"></a>
@@ -2305,20 +2319,6 @@ This is how you look up a Standalone Credit request using the ID returned in the
 <a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
-
-<br>
-<br>
-<br>
-<a name="footer">
-<h1>Legal and Community</h1>
-<ul class="footer-menu">
-<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
-<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
-<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
-<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
-<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
-</ul>
 
 + Parameters
 
@@ -2740,6 +2740,12 @@ This is how you look up a Standalone Credit using the merchant reference number 
 + dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
 + txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
 + status:`PENDING` (enum, required) - This is the [status of the transaction request](#refundsobject).
++ acquirerResponse (object, optional) - This is the [raw response](#acquirerresponseobject) returned by an acquirer. It is returned only if your account is configured accordingly.
+    - code:DJN (string, optional) - This is acquirer identification code.
+    - terminalId:12345678 (string, required) - The merchant's terminal ID.
+    - batchNumber:001 (string, required) - The batch number.
+    - seqNumber:151 (string, required) - The merchant's sequence number.
+    - effectiveDate:170728 (string, required) - The date of the bank deposit associated with the transaction.
 
 ## Refund Cancel Response
 + id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response.
@@ -2803,6 +2809,35 @@ This is how you look up a Standalone Credit using the merchant reference number 
             + One of
                 + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
                 + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
+
+## Splitpay Refund Request
++ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount to refund from each. You must include either *amount* or *percent*. However, you cannot include both values. You can specify any number of linked accounts, but the example here uses two.
+    + (object)
+        + Properties
+            + linkedAccount:`123816816` (string, required) - This is the ID of the linked account.
+            + One of
+                + percent:6 (number, optional) - This is the percentage of the total transaction amount to transfer from the linked account.                
+                + amount:60 (number, optional) - This is the amount to transfer from the linked account in minor currency units.
+    + (object)
+        + Properties
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
+            + One of
+                + amount:50 (number, optional) - This is the amount to transfer from the linked account in minor currency units.
+                + percent:5 (number, optional) - This is the percentage of the total transaction amount to transfer from the linked account.
+
+## Splitpay Refund Response
++ splitpay (array, optional) - For Split Payouts transactions only, an array containing the linked accounts and the amount to refund from each. The example is for a merchant with two linked accounts.
+    + (object)
+        + Properties    
+            + linkedAccount:`123816816` (string, required) - The ID of the linked account.
+            + percent:6 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount transferred from that account. This is not returned if an amount was specified in the request.
+            + amount:60 (number, required) - The amount to transfer from the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the result of the percentage calculation.
+    + (object)
+        + Properties    
+            + linkedAccount:`123124124` (string, required) - The ID of the linked account.
+            + One of
+                + amount:50 (number, required) - The amount to transfer from the linked account in minor currency units. This is either the amount (if specified) in the request or - if percent was specified - the result of the percentage calculation.
+                + percent:5 (number, optional) - The percent (if specified) in the request for the linked account, which is the percentage of the total transaction amount transferred from that account. This is not returned if an amount was specified in the request.
 
 ## Splitpay Response
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
