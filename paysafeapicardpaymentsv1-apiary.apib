@@ -7,8 +7,8 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 | Version   | Date          | Details |
 |---        |---            |---      |
-| 1.0       | November 2016 | Document release |
-| 2.0       | September 2017 | Adding Turnkey features |
+| v1        | November 2016 | Document release |
+| v1        | September 2017 | Added Turnkey features |
 
 # Overview
 
@@ -23,12 +23,14 @@ Connect your application directly with our payment engine to process a full suit
 
 In order for you to use the Paysafe REST API, Paysafe must first set you up on their system
 and provide you with an API key. Your API key looks something like this:
+
  * Username – MerchantXYZ
  * Password – B-tst1-0-51ed39e4-312d02345d3f123120881dff9bb4020a89e8ac44cdfdcecd702151182fdc952272661d290ab2e5849e31bb03deede7e
 
 Note that this is not the same as your Merchant Back Office username and password.
 
 The case-sensitive API key is sent using HTTP Basic Authentication. To use HTTP Basic Authentication, you must send the API key credentials using the Authorization header with every request. The Authorization header is constructed as follows:
+
  1. The Key Username and Key Password are combined into a string separated by a colon, e.g.,“Key Username:Key Password”.
  2. The resulting string literal is then encoded using Base64.
  3. The authorization method and a space (i.e., “Basic”) are then put before the encoded string.
@@ -603,7 +605,7 @@ The Paysafe Test environment can be used to test websites or applications withou
 <a name="acquirerdataobject" title="Acquirer Data Object"></a>
 ## acquirerData
 
-This is additional information about the card acquirer required when you are performing an Original Credit request. This object is required only when you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for details.
+This is additional information about the card acquirer required when you are performing an Original Credit request. This object is required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for details.
 
 |Element            |Type                       |Required       |Description                        |
 |---                |---                        |---            |---       |
@@ -715,7 +717,7 @@ These are raw results returned by the acquirer.
 |---                |---                                    |---                                |
 |id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
 |merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
-|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
 |settleWithAuth     |boolean                                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><ul><li>false &ndash; The request is not settled</li><li>true &ndash; The request is settled</li></ul><br/>**Note:** If the merchant wants to find out whether an Authorization has been settled, they should check the *availableToSettle* element. If the amount is 0, the Authorization has been fully settled.|
 |availableToSettle  |number                                 |This is the amount of of the Authorization remaining to settle, in minor units.|
 |childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
@@ -730,7 +732,7 @@ These are raw results returned by the acquirer.
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g.the merchant could use this as a tag to identify the transaction or the product purchased at their site. You can search on keywords in the merchant back office reporting tools.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
 |merchantDescriptor |[merchantDescriptor](#merchantdescriptorobject) |This is the merchant descriptor that will be displayed on the customer's card statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
-|accordD            |[accordD](#accorddobject)              |These are parameters for financing plans supported for certain merchant configurations.<br/>Include this element only when instructed to do so by your account manager.|
+|accordD            |[accordD](#accorddobject)              |These are parameters for financing plans supported for certain merchant configurations.<br/>Include this element **only when** instructed to do so by your account manager.|
 |description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
 |currencyCode       |string<br/>`length=3`                  |This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
@@ -742,7 +744,7 @@ These are raw results returned by the acquirer.
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
-|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a settlement.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
 
 ```apib
 {
@@ -1011,7 +1013,7 @@ merchants who provide more detailed information when processing card-not-present
 |---                |---                                    |---                                |
 |id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
 |merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
-|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit.|
+|amount             |number<br/>`max=99999999999`           |This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit.|
 |childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
 |card               |[card](#cardobject)                    |These are the details of the card used.|
 |authCode           |string<br/>`length<=50`                |This is the Authorization code assigned by the issuing bank and returned in the response.|
@@ -1025,7 +1027,7 @@ merchants who provide more detailed information when processing card-not-present
 |error              |[error](#errorobject)                  |       |
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
-|acquirerData       |[acquirerData](#acquirerdataobject)    |This is additional information about your card acquirer, required only when you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.|
+|acquirerData       |[acquirerData](#acquirerdataobject)    |This is additional information about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 
 ```apib
@@ -1074,13 +1076,32 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
+<a name="recipientdateofbirthobject" title="recipientDateOfBirth Object"></a>
+## recipientDateOfBirth
+
+|Element                 |Type                   |Description|
+|---                     |---                    |---|
+|day                     |number<br/>`length=2`  |This is the day of the recipient's date of birth. |
+|month                   |number<br/>`length=2`  |This is the month of the recipient's date of birth. |
+|year                    |number<br/>`length=4`  |This is the year of the recipient's date of birth.|
+
+```apib
+    {
+    "recipientDateOfBirth":{
+        "day":"29",
+        "month": "12",
+        "year": "1989"
+    }
+    }
+```
+
 <a name="refundsobject" title="refunds Object"></a>
 ## refunds
 |Element            |Type                                   |Description                        |
 |---                |---                                    |---                                |
 |id                 |string <br/>`length<=36`               |This is the ID returned in the response. This ID can be used for future associated requests.|
 |merchantRefNum     |string <br/>`length<=255`              |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
-|amount             |number<br>`max=99999999999`            |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|amount             |number<br>`max=99999999999`            |This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/>**Note:** If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
 |childAccountNum    |string<br/>`length<=10`                |This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
@@ -1111,7 +1132,7 @@ merchants who provide more detailed information when processing card-not-present
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The Settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a settlement.|
+|splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when settleing an Authorization.|
 
 ```apib
 {
@@ -1280,13 +1301,11 @@ merchants who provide more detailed information when processing card-not-present
 
 The recipient is deemed to be the person or party who has the contractual relationship with the merchant/financial institution. This may be different from the cardholder, e.g., in the case of a parent topping up a child's savings account. Therefore, the fields should not be collected on the same page as cardholder information, but instead be passed in the background from the merchant’s records.
 
-**Note:** Include *recipientDateOfBirth* elements if your Merchant Category Code is 6012 and your registered trading address is in the United Kingdom. If you have any questions, contact your account manager. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist.
+**Note:** Include *recipientDateOfBirth* elements if your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. If you have any questions, contact your account manager. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist.
 
 |Element                    |Type                       |Description                        |
 |---                        |---                        |---                                |
-|recipientDateOfBirth.day   |number<br/>`length=2`      |This is the recipient's day of birth. |
-|recipientDateOfBirth.month |number<br/>`length=2`      |This is the recipient's month of birth.|
-|recipientDateOfBirth.year  |number<br/>`length=4`      |The is the recipient's year of birth.|
+|recipientDateOfBirth       |[recipientDateOfBirth](#recipientdateofbirthobject) |This is the recipient's date of birth. |
 |recipientZip               |string<br/>`length<=10`    |This is the recipient‘s postcode.<br/>**Note:** The last 3 characters are not sent to the banking network.|
 |recipientLastName          |string<br/>`length<=255`   |This is the recipient‘s last name.<br/>**Note:** Only the first 6 characters are sent to the banking network.|
 |recipientAccountNumber     |string<br/>`length<=25`    |This is the recipient‘s account number, e.g., a loan agreement number or customer ID. In the case where the recipient account is a prepaid card, the card number may be sent in full.<br/>**Note:** Only the first 6 and last 4 characters are sent to the banking network and will be masked accordingly within the back office and any other reports, to comply with PCI regulations.|
@@ -1407,12 +1426,12 @@ The recipient is deemed to be the person or party who has the contractual relati
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
 |400                |3500           |The confirmation number included in this request could not be found.|
-|402                |3501           |The requested void (authorization reversal) amount exceeds the remaining Authorization amount.|
-|402                |3502           |You cannot process a void (authorization reversal) transaction against an Authorization that has been settled.|
-|402                |3503           |The void (authorization reversal) transaction is not supported for the card type used for the Authorization you are attempting to void.|
-|402                |3504           |The external processing gateway for which your merchant account is configured does not support partial voids (authorization reversals).|
-|500                |3505           |The void (authorization reversal) could not be completed.|
-|402                |3506           |The void (reversal) amount exceeds the remaining amount of the Authorization.|
+|402                |3501           |The requested void (Authorization Reversal) amount exceeds the remaining Authorization amount.|
+|402                |3502           |You cannot process a void (Authorization Reversal) transaction against an Authorization that has been settled.|
+|402                |3503           |The void (Authorization Reversal) transaction is not supported for the card type used for the Authorization you are attempting to void.|
+|402                |3504           |The external processing gateway for which your merchant account is configured does not support partial voids (Authorization Reversals).|
+|500                |3505           |The void (Authorization Reversal) could not be completed.|
+|402                |3506           |The void (Authorization Reversal) amount exceeds the remaining amount of the Authorization.|
 
 <a name="settlementerrors" title="Settlement Errors"></a>
 ## Settlement Errors
@@ -1446,7 +1465,7 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3418           |The external processing gateway for which your merchant account is configured does not support partial Credits.|
 
 
-# Using the example API calls (Console Window)
+# Using the Example API Calls (Console Window)
 To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right hand pane.
 Using the Console window you can update the headers, the request body, and parts of the API endpoint.
 For example, for many requests you must update the endpoint to include your account ID, which you do by selecting **URI Parameters** and then updating the **account_id** value.
@@ -1459,6 +1478,16 @@ When you are ready to test your example, you can choose between the Production a
 * Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
+
+# Legal and Community
+<ul>
+<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
+<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
+<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
+<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
+</ul>
 
 ## Verify That the Service Is Accessible [GET /monitor]
 <a name="verifyservice" title="Verify Service"></a>
@@ -1479,107 +1508,383 @@ This call returns a status of READY if the API is available.
 ## Authorization [POST /v1/accounts/{account_id}/auths]
 <a name="authrequest" title="Authorization Request"></a>
 
-This is how you submit an Authorization request.
+This shows you four examples of an Authorization request: 
+
+* An Authorization request that will have to be settled later
+* A purchase request, which authorizes and settles the payment in a single request by setting the *settleWithAuth* parameter to *true*
+* An Authorization request using a payment token
+* An Authorization including 3D Secure authentication data
+
+In the case of an Authorization request using a payment token, you can use either of two payment token types:
+
+* The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
+* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token),  [Google Payment API single-use token creation request](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token),or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
 
-+ Request Authorization (application/json)
++ Attributes
+    + Include Authorization
+    + Include links
 
-    + Attributes
-        + Include Card
-        + Include Purchase Base
-        + Include No Settle
++ Request Submit an Authorization Request (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+              "merchantRefNum": "merchant 03.24.17_3",
+              "amount": 1000,
+              "settleWithAuth": false,
+              "dupCheck": false,
+              "card": {
+                "cardNum": "4111111111111111",
+                "cardExpiry": {
+                  "month": 2,
+                  "year": 2019
+                },
+                "cvv": 123
+              },
+              "profile": {
+                "firstName": "Joe",
+                "lastName": "Smith",
+                "email": "Joe.Smith@canada.com"
+              },
+              "billingDetails": {
+                "street": "100 Queen Street West",
+                "city": "Toronto",
+                "state": "ON",
+                "country": "CA",
+                "zip": "M5H 2N2"
+              },
+              "customerIp": "204.91.0.12",
+              "description": "Video purchase"
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "availableToSettle": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
+
++ Request Submit an Authorization Including Settlement (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+              "merchantRefNum": "merchant 03.24.17_3",
+              "amount": 1000,
+              "settleWithAuth": true,
+              "dupCheck": false,
+              "card": {
+                "cardNum": "4111111111111111",
+                "cardExpiry": {
+                  "month": 2,
+                  "year": 2019
+                },
+                "cvv": 123
+              },
+              "profile": {
+                "firstName": "Joe",
+                "lastName": "Smith",
+                "email": "Joe.Smith@canada.com"
+              },
+              "billingDetails": {
+                "street": "100 Queen Street West",
+                "city": "Toronto",
+                "state": "ON",
+                "country": "CA",
+                "zip": "M5H 2N2"
+              },
+              "customerIp": "204.91.0.12",
+              "description": "Video purchase"
+            }    
+
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth
-        + Include ID Auth
-        + Include Card Response Object
-        + Include Purchase Base
-        + Include No Settle
-        + Include Available Settle
-        + Include Purchase Response Base
+    + Body
 
-## Authorization with Settlement [POST /v1/accounts/{account_id}/auths]
-<a name="authsettlement" title="Authorization with Settlement"></a>
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": true,
+                "availableToSettle": 0,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "settlements": [{
+                    "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/settlements/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }],
+                    "id": "994f621d-f692-4282-9b2f-db3ea14c93a7",
+                    "merchantRefNum": "merchant ABC-555666",
+                    "txnTime": "2016-09-29T19:29:34Z",
+                    "status": "PENDING",
+                    "amount": 15098,
+                    "availableToRefund": 15098
+                }],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    },
+                    {
+                        "rel": "settlement",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/settlements/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
 
-This is how you submit an Authorization request that includes the Settlement. To settle the Authorization in the same request, just set the *settleWithAuth* parameter to *true*.
-
-+ Parameters
-
-    + account_id:123456789 (string, required) - This is the merchant account number.
-
-+ Request Authorization with Settlment (application/json)
-
-    + Attributes
-        + Include Card
-        + Include Purchase Base
-        + Include Settle
-        + Include Splitpay
++ Request Submit an Authorization Request Using a Payment Token (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-    
+
+    + Body
+
+            {
+              "merchantRefNum": "merchant 03.24.17_3",
+              "amount": 1000,
+              "settleWithAuth": false,
+              "dupCheck": false,
+              "card": {
+                "paymentToken": "LTEyMzYzMjQ3ODg"
+              },
+              "keywords": [
+                "Repeat Customer",
+                "Profile"
+              ],
+              "customerIp": "204.91.0.12",
+              "description": "Video purchase"
+            }
+
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth
-        + Include ID Auth
-        + Include Card Response
-        + Include Purchase Base
-        + Include Settle
-        + Include Available Settle None
-        + Include Purchase Response Base
-        + Include Splitpay
-        + Include Settlement Response Purchase
+    + Body
 
-## Authorization with a Payment Token [POST /v1/accounts/{account_id}/auths]
-<a name="authtoken" title="Authorization with Payment Token"></a>
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "availableToSettle": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "keywords": [
+                    "REPEAT CUSTOMER",
+                    "PROFILE"
+                ],
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
 
-This is how you submit an Authorization request using a payment token. If you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault along with the payment token.
-
-There are two types of payment token you can use. 
-
-You can use the permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
-
-You can also use the temporary payment token that you receive in the response to:<ul><li>A Customer Vault [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token)</li><li>A [Google Payment API single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token)</li><li>A [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/single-use-tokens/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token)</li><li>When using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
-
-**Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li></ul>
-        
-+ Parameters
-
-    + account_id:123456789 (string, required) - This is the merchant account number.
-
-+ Request Authorization with Payment Token (application/json)
-
-    + Attributes
-        + Include Card Token
-        + Include Purchase Base
-        + Include No Settle
++ Request Submit an Authorization Request with Authentication Data (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-    
+
+    + Body
+
+            {
+                "merchantRefNum": "merchant 03.24.17_3",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "dupCheck": false,
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    },
+                    "cvv": 123
+                },
+                "authentication": {
+                    "eci": 5,
+                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                    "threeDEnrollment": "Y",
+                    "threeDResult": "Y",
+                    "signatureStatus": "Y"
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase"
+            }
+
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth
-        + Include ID Auth
-        + Include Card Response
-        + Include Purchase Base
-        + Include No Settle
-        + Include Available Settle
-        + Include Purchase Response Base
+    + Body
+
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "availableToSettle": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authentication": {
+                    "eci": 5,
+                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                    "threeDEnrollment": "Y",
+                    "threeDResult": "Y",
+                    "signatureStatus": "Y"
+                },                
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
 
 ## Get Authorization [GET /v1/accounts/{account_id}/auths/{auth_id}]
 <a name="getauth" title="Look Up an Authorization"></a>
@@ -1599,15 +1904,53 @@ This is how you look up an Authorization request using the ID returned in the re
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth Get
-        + Include ID Auth
-        + Include Card Response
-        + Include Purchase Base
-        + Include Settle
-        + Include Available Settle None
-        + Include Purchase Response Base
-        + Include Splitpay Response
+    + Body
+
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "availableToSettle": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "keywords": [
+                    "REPEAT CUSTOMER",
+                    "PROFILE"
+                ],
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/123456789/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
 
 ## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getauthmerchantrefnum" title="Look Up an Authorization Using a Merchant Reference Number"></a>
@@ -1619,11 +1962,11 @@ This is how you look up an Authorization request using the merchant reference nu
     + account_id:123456789 (string, required) - This is the merchant account number.    
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Authorization (application/json)
++ Request Get Authorization Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -1631,10 +1974,58 @@ This is how you look up an Authorization request using the merchant reference nu
 
 + Response 200 (application/json)
 
-    + Attributes
+    + Body
 
-        + Include Links Auth Get Reference
-        + Include Auth Get Array
+             {
+                 "auths": [{
+                     "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                     "merchantRefNum": "merchant 03.24.17_3",
+                     "txnTime": "2017-03-24T18:28:28Z",
+                     "status": "COMPLETED",
+                     "amount": 1000,
+                     "settleWithAuth": false,
+                     "availableToSettle": 1000,
+                     "card": {
+                         "type": "VI",
+                         "lastDigits": "1111",
+                         "cardExpiry": {
+                             "month": 2,
+                             "year": 2019
+                         }
+                     },
+                     "authCode": "180796",
+                     "profile": {
+                         "firstName": "Joe",
+                         "lastName": "Smith",
+                         "email": "Joe.Smith@canada.com"
+                     },
+                     "billingDetails": {
+                         "street": "100 Queen Street West",
+                         "city": "Toronto",
+                         "state": "ON",
+                         "country": "CA",
+                         "zip": "M5H2N2"
+                     },
+                     "customerIp": "204.91.0.12",
+                     "keywords": [
+                         "REPEAT CUSTOMER",
+                         "PROFILE"
+                     ],
+                     "description": "Video purchase",
+                     "currencyCode": "CAD",
+                     "avsResponse": "MATCH",
+                     "cvvVerification": "MATCH",
+                     "links": [{
+                         "rel": "self",
+                         "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                     }]
+                 }],
+                 "links": [{
+                         "rel": "self",
+                         "href": "https://api.test.netbanx.com/cardpayments/v1/accounts/123456789/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                     }
+                 ]
+             }           
 
 ## Complete an Authorization [PUT /v1/accounts/{account_id}/auths/{auth_id}]
 <a name="completeauth" title="Complete an Authorization"></a>
@@ -1656,9 +2047,20 @@ This is how you complete an Authorization request with the status of Held.
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth
-        + Include Completion Response
+    + Body
+
+            {
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths/5f2164fa-7141-40a9-b065-1426243970f1"
+                }],
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "amount": 10098,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "PENDING",
+                "settleWithAuth": false,
+                "availableToSettle": 10098
+            }
 
 # Void Authorizations [/voidauths]
 <a name="voidauths" title="Void Authorizations"></a>
@@ -1666,29 +2068,47 @@ This is how you complete an Authorization request with the status of Held.
 ## Void an Authorization [POST /v1/accounts/{account_id}/auths/{auth_id}/voidauths]
 <a name="voidanauth" title="Void an Authorization"></a>
 
-This is how you submit a Void Authorization request. You can void an Authorization only if it has not yet been settled. 
+This is how you submit a Void Authorization request. You can void an Authorization **only if** it has not yet been settled. 
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number. 
     + auth_id:`ef8e4da6-68c1-40fb-ba43-d735148b1a7f` (string, required) - This is the Authorization ID returned in the response.
 
-+ Request Void Authorization (application/json)
++ Attributes
+    + Include Void Authorization
+    + Include Links Auth Void
 
-    + Attributes
-        + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + amount:898 (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be voided.
-        + dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
++ Request Void Authorization (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "merchantRefNum": "merchant ABC-123-voidauths",
+                "amount": 898,
+                "dupCheck": true
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth Void
-        + Include Auth Void Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchant ABC-123-voidauths",
+                "amount": 898,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
 
 ## Get Void Authorization [GET /v1/accounts/{account_id}/voidauths/{void_auth_id}]
 <a name="getvoidauth" title="Look Up a Void Authorization"></a>
@@ -1708,9 +2128,20 @@ This is how you look up a Void Authorization request using the ID returned in th
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth Void
-        + Include Auth Void Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchant ABC-123-voidauths",
+                "amount": 898,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
 
 ## Get Void Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getvoidauthmerchantrefnum" title="Look Up a Void Authorization Using a Merchant Reference Number"></a>
@@ -1720,13 +2151,13 @@ This is how you look up a Void Authorization request using the merchant referenc
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    + merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Void Authorization (application/json)
++ Request Get Void Authorization Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -1734,9 +2165,27 @@ This is how you look up a Void Authorization request using the merchant referenc
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Auth Void Get Reference
-        + Include Auth Void Get Array
+    + Body
+
+            {
+                "voidauths": [{
+                    "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                    "merchantRefNum": "merchant ABC-123-voidauths",
+                    "amount": 898,
+                    "dupCheck": true,
+                    "txnTime": "2017-02-14T15:12:18Z",
+                    "status": "COMPLETED",
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+                }],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                    }]
+            }
 
 # Settlements [/settlements]
 <a name="settlements" title="Settlements"></a>
@@ -1744,28 +2193,123 @@ This is how you look up a Void Authorization request using the merchant referenc
 ## Settlement [POST /v1/accounts/{account_id}/auths/{auth_id}/settlements]
 <a name="settlementrequest" title="Settlement Request"></a>
 
-This is how you submit a Settlement request.
+This shows you three examples of a Settlement request:
+
+* A regular Settlement, where the initial request was an Authorization that now has to be settled
+* A partial Settlement, where only part of the initial Authorization is settled, leaving the balance to be settled later
+* A Settlement that is split into multiple merchant accounts, for merchant accounts that are configured to do so
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + auth_id:`e3058030-1a0c-4b8a-b7f7-ceb79157df3f` (string, required) - This is the ID returned in the response to the Authorization request.
 
-+ Request Settlement (application/json)
++ Attributes
+    + Include Settlement
+    + Include Splitpay
+    + Include Links Settlement
 
-    + Attributes
-        + Include Settlement
-        + Include Splitpay
++ Request Process a Settlement (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "dupCheck": true
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Settlement
-        + Include Settlement Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "availableToRefund": 5500,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
+
++ Request Process a Partial Settlement (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 2250,
+                "dupCheck": true
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 2250,
+                "availableToRefund": 2250,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
+
++ Request Process a Settlement with Split Payouts (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "dupCheck": true,
+                "splitpay": [{
+                    "linkedAccount": "123124124",
+                    "amount": 500
+                }]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "availableToRefund": 5500,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "splitpay": [{
+                    "linkedAccount": "123124124",
+                    "amount": 500
+                }],
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
 
 ## Cancel a Settlement [PUT /v1/accounts/{account_id}/settlements/{settlement_id}]
 <a name="cancelsettlement" title="Cancel a Settlement"></a>
@@ -1775,22 +2319,33 @@ This is how you submit a Cancel Settlement request.
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
+    + settlement_id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) -  This is the ID returned in the response to the Settlement request.
 
 + Request Cancel Settlement (application/json)
-
-    + Attributes
-        + status:CANCELLED (enum, required) - This is the status of the transaction request.
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "status": "CANCELLED"
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Settlement
-        + Include Settlement Cancel Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "CANCELLED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
 
 ## Get Settlement [GET /v1/accounts/{account_id}/settlements/{settlement_id}]
 <a name="getsettlement" title="Look Up a Settlement"></a>
@@ -1800,7 +2355,7 @@ This is how you look up a Settlement request using the ID returned in the respon
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + settlement_id:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Settlement ID returned in the response.
+    + settlement_id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the Settlement ID returned in the response.
 
 + Request Get Settlement (application/json)
 
@@ -1810,9 +2365,21 @@ This is how you look up a Settlement request using the ID returned in the respon
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Settlement
-        + Include Settlement Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "availableToRefund": 2225,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                }]
+            }
 
 ## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{account_id}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
@@ -1824,11 +2391,11 @@ This is how you look up a Settlement using the merchant reference number used in
     + account_id:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Settlement (application/json)
++ Request Get Settlement Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -1836,9 +2403,32 @@ This is how you look up a Settlement using the merchant reference number used in
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Settlement Get Reference
-        + Include Settlement Get Array
+    + Body
+
+            {
+                "settlements": [{
+                    "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                    }],
+                    "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+                    "merchantRefNum": "merchant-ABC-123",
+                    "amount": 50,
+                    "availableToRefund": 25,
+                    "dupCheck": true,
+                    "txnTime": "2017-02-14T15:12:18Z",
+                    "status": "COMPLETED",
+                    "splitpay": [{
+                        "linkedAccount": "123124124",
+                        "amount": 505
+                    }]
+                }],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+            }
 
 
 # Refunds [/refunds]
@@ -1847,27 +2437,89 @@ This is how you look up a Settlement using the merchant reference number used in
 ## Refund [POST /v1/accounts/{account_id}/settlements/{settlement_id}/refunds]
 <a name="refund request" title="Refund Request"></a>
 
-This is how you submit a Refund request.
+This shows you two examples of a Refund request:
+
+* A regular Refund
+* A Refund that is split into multiple merchant accounts, for merchant accounts that are configured to do so
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
     + settlement_id:`6ddbc05a-ff40-4dc1-b2d3-f200934dfdde` (string, required) -  This is the ID returned in the response to the Settlement request.
 
-+ Request Refund (application/json)
++ Attributes
+    + Include  Refund
+    + Include Links Refund        
 
-    + Attributes
-        + Include Refund
++ Request Process a Refund (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "dupCheck": true
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Refund
-        + Include Refund Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                }]
+            }
+
++ Request Process a Refund with Split Payouts (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "dupCheck": true,
+                "splitpay": [{
+                    "linkedAccount": "123124124",
+                    "amount": 500
+                }]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "COMPLETED",
+                "splitpay": [{
+                    "linkedAccount": "123124124",
+                    "amount": 500
+                }],
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                }]
+            }
 
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
 <a name="cancelrefund" title="Cancel a Refund"></a>
@@ -1877,23 +2529,33 @@ This is how you submit a Cancel Refund request.
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + refund_id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response to the Refund request.
+    + refund_id:`d1fb46ee-2736-4ef5-a724-f263ace75374` (string, required) - This is the ID returned in the response to the Refund request.
 
 + Request Cancel Refund (application/json)
-
-    + Attributes
-
-        + status:CANCELLED (enum, required) - This is the status of the transaction request.
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "status": "CANCELLED"
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Refund
-        + Include Refund Cancel Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "CANCELLED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                }]
+            }
 
 ## Get Refund [GET /v1/accounts/{account_id}/refunds/{refund_id}]
 <a name="getrefund" title="Look Up a Refund"></a>
@@ -1903,7 +2565,7 @@ This is how you look up a Refund request using the ID returned in the response t
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + refund_id:`00ec4b4f-f601-4430-8fb6-f90271cf9291` (string, required) - This is the Refund ID returned in the response.
+    + refund_id:`d1fb46ee-2736-4ef5-a724-f263ace75374` (string, required) - This is the Refund ID returned in the response.
 
 + Request Get Refund (application/json)
 
@@ -1913,9 +2575,24 @@ This is how you look up a Refund request using the ID returned in the response t
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Refund
-        + Include Refund Response
+    + Body
+
+            {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "amount": 5500,
+                "dupCheck": true,
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "PENDING",
+                "splitpay": [{
+                    "linkedAccount": "123124124",
+                    "amount": 500
+                }],
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                }]
+            }
 
 ## Get Refund Using Merchant Reference Number [GET /v1/accounts/{account_id}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
@@ -1927,11 +2604,11 @@ This is how you look up a Refund using the merchant reference number used in the
     + account_id:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Refund (application/json)
++ Request Get Refund Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -1939,9 +2616,31 @@ This is how you look up a Refund using the merchant reference number used in the
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Refund Get Reference
-        + Include Refund Get Array
+    + Body
+
+            {
+                "refunds": [{
+                    "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                    }],
+                    "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                    "merchantRefNum": "merchant-ABC-123",
+                    "amount": 50,
+                    "dupCheck": true,
+                    "txnTime": "2017-02-14T15:12:18Z",
+                    "status": "COMPLETED",
+                    "splitpay": [{
+                        "linkedAccount": "123124124",
+                        "amount": 505
+                    }]
+                }],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+            }
 
 # Verifications [/verifications]
 <a name="verifications" title="Verifications"></a>
@@ -1949,58 +2648,176 @@ This is how you look up a Refund using the merchant reference number used in the
 ## Verification [POST /v1/accounts/{account_id}/verifications]
 <a name="verificationrequest" title="Verification Request"></a>
 
-This is how you submit a Verification request. This example verifies a card and associated billing details.
+This shows you two examples of a Verification request to verify card details:
 
-+ Parameters
+* A Verification request using card details
+* A Verification request using a payment token
 
-    + account_id:123456789 (string, required) - This is the merchant account number.
+In the case of a payment token, you can use either of two payment token types:
 
-+ Request Verification (application/json)
+* The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
+* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
-    + Attributes
-        + Include Card
-        + Include Verification Base
-
-    + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-+ Response 200 (application/json)
-
-    + Attributes
-        + Include Links Verification
-        + Include Verification Response
-
-## Verification with a Payment Token [POST /v1/accounts/{account_id}/verifications]
-<a name="verificationtoken" title="Verification with Payment Token"></a>
-
-This is how you submit a Verification request using a payment token.
-
-When you use a payment token, you can submit the request without extra parameters such as card, profile, and billing address information. When provided, these details are stored in the Customer Vault with the payment token. 
-
-You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Verification requests.
 
 **Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li><li>If you intend to use the Customer Vault API to [convert a single-use payment token into a permanent payment token](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/profiles/create-a-profile-using-a-single-use-token), you should verify the token using this Card Payments API request before proceeding with the conversion.</li></ul>
-        
+
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
 
-+ Request Verification with Payment Token (application/json)
++ Attributes
 
-    + Attributes
-        + Include Card Token Verification
-        + Include Verification Base Token
+    + Include Verification
+    + Include Links Verification
+
++ Request Submit a Verification Request (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 12,
+                        "year": 2020
+                    },
+                    "cvv": "123"
+                },
+                "merchantRefNum": "merchant ABC-444",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "email": "jsmith@email.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H 2N2",
+                    "phone": "555"
+                },
+                "customerIp": "204.91.0.12",
+                "dupCheck": true,
+                "description": "This is a Verification transaction."
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Verification
-        + Include Verification Response Token
+    + Body
+
+            {
+                "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                "merchantRefNum": "merchant ABC-444",
+                "profile": {
+                    "profile": {
+                        "firstName": "John",
+                        "lastName": "Smith",
+                        "email": "jsmith@email.com"
+                    }
+                },
+                "billingDetails": {
+                    "billingDetails": {
+                        "street": "100 Queen Street West",
+                        "city": "Toronto",
+                        "state": "ON",
+                        "country": "CA",
+                        "zip": "M5H 2N2",
+                        "phone": "555"
+                    }
+                },
+                "customerIp": "204.91.0.12",
+                "dupCheck": true,
+                "description": "This is a Verification transaction.",
+                "card": {
+                    "type": "VI",
+                    "lastDigits": 1111,
+                    "cardExpiry": {
+                        "month": 12,
+                        "year": 2020
+                    }
+                },
+                "authCode": "1234567890",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "currencyCode": "USD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }]
+            }
+
++ Request Submit a Verification Request Using a Payment Token (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "card": {
+                    "paymentToken": "LTEyMzYzMjQ3ODg"
+                },
+                "merchantRefNum": "merchant ABC-444",
+                "customerIp": "204.91.0.12",
+                "dupCheck": true,
+                "description": "This is a Verification transaction."
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                "merchantRefNum": "merchant ABC-444",
+                "profile": {
+                    "profile": {
+                        "firstName": "John",
+                        "lastName": "Smith",
+                        "email": "jsmith@email.com"
+                    }
+                },
+                "billingDetails": {
+                    "billingDetails": {
+                        "street": "100 Queen Street West",
+                        "city": "Toronto",
+                        "state": "ON",
+                        "country": "CA",
+                        "zip": "M5H 2N2",
+                        "phone": "555"
+                    }
+                },
+                "customerIp": "204.91.0.12",
+                "dupCheck": true,
+                "description": "This is a Verification transaction.",
+                "card": {
+                    "type": "VI",
+                    "lastDigits": 1111,
+                    "cardExpiry": {
+                        "month": 12,
+                        "year": 2020
+                    }
+                },
+                "authCode": "1234567890",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "currencyCode": "USD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }]
+            }
 
 ## Get Verification [GET /v1/accounts/{account_id}/verifications/{verification_id}]
 <a name="getverification" title="Look Up a Verification"></a>
@@ -2020,9 +2837,50 @@ This is how you look up a Verification request using the ID returned in the resp
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Verification
-        + Include Verification Response
+    + Body
+
+            {
+                "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                "merchantRefNum": "merchant ABC-444",
+                "profile": {
+                    "profile": {
+                        "firstName": "John",
+                        "lastName": "Smith",
+                        "email": "jsmith@email.com"
+                    }
+                },
+                "billingDetails": {
+                    "billingDetails": {
+                        "street": "100 Queen Street West",
+                        "city": "Toronto",
+                        "state": "ON",
+                        "country": "CA",
+                        "zip": "M5H 2N2",
+                        "phone": "555"
+                    }
+                },
+                "customerIp": "204.91.0.12",
+                "dupCheck": true,
+                "description": "This is a Verification transaction.",
+                "card": {
+                    "type": "VI",
+                    "lastDigits": 1111,
+                    "cardExpiry": {
+                        "month": 12,
+                        "year": 2020
+                    }
+                },
+                "authCode": "1234567890",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "currencyCode": "USD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                }]
+            }
 
 ## Get Verification Using Merchant Reference Number [GET /v1/accounts/{account_id}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getverificationmerchantrefnum" title="Look Up a Verification Using a Merchant Reference Number"></a>
@@ -2034,11 +2892,11 @@ This is how you look up a Verification request using the merchant reference numb
     + account_id:123456789 (string, required) - This is the merchant account number.
     + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Verification (application/json)
++ Request Get Verification Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -2046,9 +2904,57 @@ This is how you look up a Verification request using the merchant reference numb
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Verification Get Reference
-        + Include Verification Get Array
+    + Body
+
+            {
+               "verifications": [{
+                    "id": "e50e19a6-8edd-44ec-abc4-18d0a97d51d8",
+                    "merchantRefNum": "merchant ABC-123",
+                    "profile": {
+                        "profile": {
+                            "firstName": "John",
+                            "lastName": "Smith",
+                            "email": "jsmith@email.com"
+                        }
+                    },
+                    "billingDetails": {
+                        "billingDetails": {
+                            "street": "100 Queen Street West",
+                            "city": "Toronto",
+                            "state": "ON",
+                            "country": "CA",
+                            "zip": "M5H 2N2",
+                            "phone": "555"
+                        }
+                    },
+                    "customerIp": "204.91.0.12",
+                    "dupCheck": true,
+                    "description": "This is a Verification transaction.",
+                    "card": {
+                        "type": "VI",
+                        "lastDigits": 1111,
+                        "cardExpiry": {
+                            "month": 12,
+                            "year": 2020
+                        }
+                    },
+                    "authCode": "1234567890",
+                    "txnTime": "2017-02-14T15:12:18Z",
+                    "currencyCode": "USD",
+                    "avsResponse": "MATCH",
+                    "cvvVerification": "MATCH",
+                    "status": "COMPLETED",
+                    "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8"
+                    }]
+                }],
+                 "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+            }
 
 # Original Credits [/originalcredits]
 <a name="originalcredits" title="Original Credits"></a>
@@ -2071,54 +2977,148 @@ By default, Test accounts do not support Original Credits; if you wish to use th
 ## Original Credit [POST /v1/accounts/{account_id}/originalcredits]
 <a name="originalcreditrequest" title="Original Credit Request"></a>
 
-This is how you submit an Original Credit request.
+This shows you two examples of an Original Credit request:
+
+* An Original Credit request using card information
+* An Original Credit request using a payment token
+
+In the case of a payment token, you can use either of two payment token types:
+
+* The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
+* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
+
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Original Credit requests.
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
 
-+ Request Original Credit (application/json)
++ Attributes
+    + Include Original Credit
+    + Include Links Original Credit
 
-    + Attributes
-        + Include Card
-        + Include Original Credit Base
-
-    + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-+ Response 200 (application/json)
-
-    + Attributes
-        + Include Links Original Credit
-        + Include Original Credit Response
-
-## Original Credit with a Payment Token [POST /v1/accounts/{account_id}/originalcredits]
-<a name="originalcredittoken" title="Original Credit with Payment Token"></a>
-
-This is how you submit an Original Credit request using a payment token.
-
-You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
-
-+ Parameters
-
-    + account_id:123456789 (string, required) - This is the merchant account number.
-
-+ Request Original Credit with Payment Token (application/json)
-
-    + Attributes
-        + Include Card Token
-        + Include Original Credit Base Token
++ Request Submit an Original Credit (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "merchantRefNum": "merchant 07.05.17_16",
+                "amount": 1000,
+                "dupCheck": "true",
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto"
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Original Credit
-        + Include Original Credit Response
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/originalcredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+
++ Request Submit an Original Credit Request Using a Payment Token (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+    
+    + Body
+
+            {
+                "merchantRefNum": "merchant 07.05.17_16",
+                "amount": 1000,
+                "dupCheck": "true",
+                "card": {
+                    "paymentToken": "LTEyMzYzMjQ3ODg"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/originalcredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+
 
 ## Cancel an Original Credit [PUT /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 <a name="canceloriginalcredit" title="Cancel an Original Credit"></a>
@@ -2128,22 +3128,33 @@ This is how you submit a Cancel Original Credit request.
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + original_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Original Credit request.
+    + original_credit_id:`86dcb68d-cbd0-4878-8da7-ffc0e6554513` (string, required) - This is the ID returned in the response to the Original Credit request.
 
-+ Request Cancel Original Credit (application/json)
-
-    + Attributes
-        + status:CANCELLED (enum, required) - This is the status of the transaction request.
++ Request Cancel an Original Credit (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+    
+    + Body
+
+            {
+                "status": "CANCELLED"
+            }    
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Original Credit
-        + Include Original Credit Cancel Response
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "CANCELLED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            }
 
 ## Get Original Credit [GET /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 <a name="getoriginalcredit" title="Look Up an Original Credit"></a>
@@ -2153,9 +3164,9 @@ This is how you look up an Original Credit request using the ID returned in the 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + original_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` - This is the Original Credit ID returned in the response.
+    + original_credit_id:`86dcb68d-cbd0-4878-8da7-ffc0e6554513` - This is the Original Credit ID returned in the response.
 
-+ Request Get Original Credit (application/json)
++ Request Get an Original Credit (application/json)
 
     + Headers
 
@@ -2163,9 +3174,43 @@ This is how you look up an Original Credit request using the ID returned in the 
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Original Credit
-        + Include Original Credit Response
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/originalcredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
 
 ## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getoriginalcreditmerchantrefnum" title="Look Up an Original Credit Using a Merchant Reference Number"></a>
@@ -2175,13 +3220,13 @@ This is how you look up an Original Credit using the merchant reference number u
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    + merchantRefNum:`merchant 07.05.17_16` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Original Credit (application/json)
++ Request Get an Original Credit Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -2189,98 +3234,245 @@ This is how you look up an Original Credit using the merchant reference number u
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Original Credit Get Reference
-        + Include Original Credit Get Array
+    + Body
+
+            {
+                "originalcredits": [
+                {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/originalcredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+            ],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant 07.05.17_16&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+            }
 
 # Standalone Credits [/standalonecredits]
 <a name="standalonecredits" title="Standalone Credits"></a>
 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
 
-**Note:** If your merchant category code (MCC) is listed as able to process Original Credits, you must not use Standalone Credits.
+**Note:** If your merchant category code (MCC) is listed as able to [process Original Credits](#originalcredits), you must not use Standalone Credits.
 
 By default, Test accounts do not support Standalone Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/). 
 
 ## Standalone Credit [POST /v1/accounts/{account_id}/standalonecredits]
 <a name="standalonecreditrequest" title="Standalone Credit Request"></a>
 
-This is how you submit a Standalone Credit request.
+This shows you two examples of a Standalone Credit request:
+
+* A Standalone Credit request using card information
+* A Standalone Credit request using a payment token
+
+In the case of a payment token, you can use either of two payment token types:
+
+* The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
+* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
+
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Standalone Credit requests.
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
 
-+ Request Standalone Credit (application/json)
++ Attributes
+    + Include Standalone Credit
+    + Include Links Standalone Credit
 
-    + Attributes
-        + Include Card
-        + Include Standalone Credit Base
-
-    + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-+ Response 200 (application/json)
-
-    + Attributes
-        + Include Links Standalone Credit
-        + Include Standalone Credit Response
-
-## Standalone Credit with a Payment Token [POST /v1/accounts/{account_id}/standalonecredits]
-<a name="standalonecredittoken" title="Standalone Credit with Payment Token"></a>
-
-This is how you submit a Standalone Credit request using a payment token.
-
-You can use either of two payment token types:<ul><li>The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)</li><li>The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)</li></ul>
-
-+ Parameters
-
-    + account_id:123456789 (string, required) - This is the merchant account number.
-
-+ Request Standalone Credit with Payment Token (application/json)
-
-    + Attributes
-        + Include Card Token
-        + Include Standalone Credit Base Token
++ Request Submit a Standalone Credit (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
+    + Body
+
+            {
+                "merchantRefNum": "merchant 07.05.17_16",
+                "amount": 1000,
+                "dupCheck": "true",
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto"
+            }
+
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Standalone Credit
-        + Include Standalone Credit Response
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/standalonecredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+
++ Request Submit a Standalone Credit Request Using a Payment Token (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+    
+    + Body
+
+            {
+                "merchantRefNum": "merchant 07.05.17_16",
+                "amount": 1000,
+                "dupCheck": "true",
+                "card": {
+                    "paymentToken": "LTEyMzYzMjQ3ODg"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/standalonecredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+
 
 ## Cancel a Standalone Credit [PUT /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
-<a name="cancelstandalonecredit" title="Cancel a Standalone Credit"></a>
+<a name="canceloriginalcredit" title="Cancel an Original Credit"></a>
 
 This is how you submit a Cancel Standalone Credit request.
 
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response to the Standalone Credit request.
+    + standalone_credit_id:`86dcb68d-cbd0-4878-8da7-ffc0e6554513` (string, required) - This is the ID returned in the response to the Standalone Credit request.
 
-+ Request Cancel Standalone Credit (application/json)
-
-    + Attributes
-
-        + status:CANCELLED (enum, required) - This is the status of the transaction request.
++ Request Cancel a Standalone Credit (application/json)
 
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+    
+    + Body
+
+            {
+                "status": "CANCELLED"
+            }    
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Standalone Credit
-        + Include Standalone Credit Cancel Response
+    + Body
 
-## Get Standalone Credit [GET /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "status": "CANCELLED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            }
+
+## Get Standalone Credit [GET /v1/accounts/{account_id}/standaonecredits/{standalone_credit_id}]
 <a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
 
 This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
@@ -2288,9 +3480,9 @@ This is how you look up a Standalone Credit request using the ID returned in the
 + Parameters
 
     + account_id:123456789 (string, required) - This is the merchant account number.
-    + standalone_credit_id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the Standalone Credit ID returned in the response.
+    + standalone_credit_id:`86dcb68d-cbd0-4878-8da7-ffc0e6554513` - This is the Standalone Credit ID returned in the response.
 
-+ Request Get Standalone Credit (application/json)
++ Request Get a Standalone Credit (application/json)
 
     + Headers
 
@@ -2298,39 +3490,59 @@ This is how you look up a Standalone Credit request using the ID returned in the
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Standalone Credit
-        + Include Standalone Credit Response
+    + Body
+
+            {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/standalonecredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
 
 ## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
 
 This is how you look up a Standalone Credit using the merchant reference number used in the original request.
 
-<br>
-<br>
-<br>
-<a name="footer">
-<h1>Legal and Community</h1>
-<ul class="footer-menu">
-<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
-<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
-<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
-<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
-<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
-</ul>
-
 + Parameters
 
-    + account_id:123456789 (string, required) - This is the merchant account number.    
-    + merchantRefNum:`merchant-ABC-123` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    + account_id:123456789 (string, required) - This is the merchant account number.
+    + merchantRefNum:`merchant 07.05.17_16` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     + limit:2 (string, optional) - This is the total number of records to return. Default value is 10. Max value is 50.
-    + offset:2 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
+    + offset:0 (string, optional) - This is the starting position, where 0 is the first record. Default = 0.
     + startDate:`2017-01-14T15:12:18Z` - This is the start date in UTC. Default = 30 days before the *endDate*.
     + endDate:`2017-04-04T15:12:18Z` - This is the end date in UTC. Default = current date and time.
 
-+ Request Get Standalone Credit (application/json)
++ Request Get a Standalone Credit Using Merchant Reference Number (application/json)
 
     + Headers
 
@@ -2338,68 +3550,204 @@ This is how you look up a Standalone Credit using the merchant reference number 
 
 + Response 200 (application/json)
 
-    + Attributes
-        + Include Links Standalone Credit Get Reference
-        + Include Standalone Credit Get Array
+    + Body
+
+            {
+                "standalonecredits": [
+                {
+                "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
+                "merchantRefNum": "merchant 07.05.17_16",
+                "txnTime": "2017-07-06T19:59:17Z",
+                "status": "PENDING",
+                "amount": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Winning payment from Loto",
+                "currencyCode": "CAD",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/standalonecredits/86dcb68d-cbd0-4878-8da7-ffc0e6554513"
+                }]
+            
+            }
+            ],
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant 07.05.17_16&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z"
+                    }
+                ]
+            }
 
 # Data Structures
 
-## AccordD
-+ financingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
-+ plan:112 (string, required) - This is the plan number for this financing transaction.
-+ gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
-+ term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
+## `AccordD`
 
-## Authentication
-+ eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
-+ cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
-+ xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
-+ threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
-+ threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
-+ signatureStatus:Y (enum, optional) - This is the 3D Secure signature verification result value.
++ `accordD` (object, optional) - These are parameters for [financing plans](#accorddobject) supported for certain merchant configurations.
+    + financingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
+    + plan:112 (string, required) - This is the plan number for this financing transaction.
+    + gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
+    + term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
 
-## Auth Get Array
-+ auths (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Auth Get
-        + Include ID Auth
-        + Include Card Response
-        + Include Purchase Base
-        + Include Settle
-        + Include Available Settle None
-        + Include Purchase Response Base
-        + Include Splitpay Response
+## `Acquirer Data`
 
-## Auth Void Get Array
-+ voidauths (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Auth Void
-        + Include Auth Void Response
++ `acquirerData` (object) - This is additional information about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
 
-## Auth Void Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ merchantRefNum:`merchant ABC-123-voidauths` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount:898 (number, required) - This is the amount of the request, in minor units.
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:COMPLETED (enum, required) - This is the [status of the transaction request](#authsobject).
+    _Read Only_
+    
+    + Properties
+    - authId:`f06bccd6-de90-4b73-b10f-30266763bc60` (string) - This is the ID returned in the response to a previous successful Authorization or Settlement request.
+    - code:CRX (enum) - This is the code for your card acquirer.
 
-## Available Settle
-+ availableToSettle:`10098` (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
+## `Acquirer Response`
 
-## Available Settle None
-+ availableToSettle:`0` (number, required) - This is the amount of of the Authorization remaining to settle, in minor units.
++ `acquirerResponse` (object) - This is the [raw response returned by an acquirer](#acquirerresponseobject). It is returned only if your account is configured accordingly.
 
-## Billing Details
-+ street:100 Queen Street West (string, optional) - This is the first line of the street address in the billing address.
-+ street2 (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
-+ city:Toronto (string, optional) - This is the city in the billing address.
-+ state:ON (string, optional) - This is the state or province in the billing address.
-+ country:CA (string, optional) - This is the country in the billing address. 
-+ zip:M5H 2N2 (string, optional) - This is the postal/zip code in the billing address.
-+ phone:555-9999 (string, optional) - This is the customer's telephone number.
+    _Read Only_
+    
+    + Properties
+        + code:`DJN` (string) - This is the acquirer identification code.
+        + responseCode:`556677j88` (string) - This is the raw response returned by the acquirer.
+        + avsCode:`M` (string) - This is the raw AVS code returned by the acquirer.
+        + balanceResponse:`1200` (string) - This is the balance remaining on a gift card, if a gift card was used in the original transaction.
 
-## Card Expiry
+## `Authentication`
+
++ `authentication` (object, optional) - These are [3D Secure](#authenticationobject) details.
+    + eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+    + cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+    + xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+    + threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
+    + threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
+    + signatureStatus:Y (enum, optional) - This is the 3D Secure signature verification result value.
+
+## Authorization
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+
+    _Read Only_
+
++ Include Card
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+
++ Include Authentication
++ Include Profile
++ Include Billing Details
++ Include Shipping Details
++ `recurring`:`INITIAL` (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
+
+    + Members
+        + `INITIAL`
+        + `RECURRING`
+
++ `customerIp`:`204.91.0.12` (string, optional) - This is the customer's IP address.
+
+    _length<=39_ 
+
+
++ `dupCheck`:`false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ Keywords:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
+    - Repeat Customer
+    - Profile Stored
+
++ Include Merchant Descriptor
++ Include AccordD
++ `description`:`Video Purchase` (string, optional) - This is a description of the transaction, provided by the merchant.
+
+    _length<=255_
+
++ Include Visa Additional Auth Data
++ Include Level2Level3
+
++ `settleWithAuth`:`true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement). Default = *false*
+
+    + Default: false
+
++ `availableToSettle`: `1000` (number) - This is the amount of of the Authorization remaining to settle, in minor units.
+
+    _max=99999999999_
+
+    _Read Only_
+
++ `authCode`: `123456789011` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
+
+    _Read Only_
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+
+    _Read Only_
+
++ `avsResponse`:`MATCH` (enum) - This is the [AVS response from the card issuer](#authsobject).
+
+    _Read Only_
+
++ `cvvVerification`:`MATCH` (enum) - This is the [response to the cvv submitted](#authsobject) with the transaction request.
+
+    _Read Only_
+
++ `status`:`RECEIVED` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `HELD`
+        + `FAILED`
+        + `CANCELLED`
+
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
+
++ Include Acquirer Response
++ Include Splitpay
++ Include Error Response
+
+## `Billing Details`
+
++ `billingDetails` (object, optional) -This is the billing address of the customer.
+    + street:100 Queen Street West (string, optional)
+    + street2 (string, optional)
+    + city:Toronto (string, optional)
+    + state:ON (string, optional)
+    + country:CA (string, optional) 
+    + zip:M5H 2N2 (string, optional)
+    + phone:555-9999 (string, optional)
+
+## `Card Expiry`
 + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
 
     + Properties
@@ -2407,394 +3755,304 @@ This is how you look up a Standalone Credit using the merchant reference number 
         + year:2020 (number, required) - This is the card expiry year.
         
 
-## Card
+## `Card`
+
 + card (object, required) - These are the details of the [card](#cardobject) used for the request.
-
+    
     + Properties
-        + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
-        + Include Card Expiry
-        + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
-        + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
-        + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
+        + One Of
+            + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token representing the card.
+            + Card details
+                + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+                + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+                    + month:12 (number, required) - This is the card expiry month.
+                    + year:2020 (number, required) - This is the card expiry year.
+                + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+                + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
 
-## Card Response
-+ type:`VI`
-+ lastDigits:`1111` (number, required) - This is the last four digits of the card used for the request.
-+ Include Card Expiry
-
-## Card Response Object
-+ card (object, required) - These are the details of the [card](#cardobject) used for the request.
-
-    + Properties
-        + type:`VI`
-        + lastDigits:`1111` (number, required) - This is the last four digits of the card used for the request.
-        + Include Card Expiry
-
-
-## Card Token
+## `Card Token`
 + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. 
 
     + Properties
         + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token.
 
-## Card Token Verification
-+ card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. 
+## Error Response
++ error (object)
 
+    _Read Only_
+    
     + Properties
-        + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token.
-        + cvv:`123` (string, required) - This is the 3- or 4-digit security code that appears on the card following the number.
-
-## Completion Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:`PENDING` (enum, required) - This is the [status of the transaction request](#authssobject).
-+ Include Settle False
-+ Include Available Settle
-
-## ID Auth
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+        + code:`1000` (string) - This is the error code.
+        + message:`An internal error occurred.` (string) - This is a description of the error.
+        + details: (string) - These are details of any parameter value errors.
+        + links: (array) - This is one or more rel/href pairs, where rel is "errorinfo", and href is the Developer Center URL containing a description of the error.
 
 ## Level2Level3
-+ exemptLocalTax:true (boolean, optional) - This indicates whether or not local tax is exempted for the request. 
-+ localTaxAmount:1500 (number, optional) - This is the local sales tax applied to the purchase.
-+ nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
-+ freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
-+ dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
-+ destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
-+ destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
-+ shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
-+ lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
+
++ `level2Level3` (object, optional) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object).
+    + exemptLocalTax:true (boolean, optional) - This indicates whether or not local tax is exempted for the request. 
+    + localTaxAmount:1500 (number, optional) - This is the local sales tax applied to the purchase.
+    + nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
+    + freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
+    + dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
+    + destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+    + destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
+    + shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
+    + lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
     + Include Line Items
             
 ## Line Items
-+ description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
-+ productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
-+ quantity:4 (number, optional) - This is the quantity of the item.
-+ unitAmount:120000 (number, optional) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting. 
-+ taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
-+ taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
-+ totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units.
 
-## Links Auth
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
++ `lineItems` (object, optional) - this is more [detailed information](#lineitemsobject) about the items that are being purchased.
+    + description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
+    + productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
+    + quantity:4 (number, optional) - This is the quantity of the item.
+    + unitAmount:120000 (number, optional) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting. 
+    + taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
+    + taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
+    + totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units.
 
-## Links Auth Get
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:settlement (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/5f2164fa-7141-40a9-b065-1426243970f1` (string, required) - This is the URI of the resource.
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
+## `link`
++ rel: self 
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
-## Links Auth Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/auths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+## `links`
++ links (array[link]) - This is an array of links related to the resource.  
 
-## Links Auth Void
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
+## `link auth void`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths/e50e19a6-8edd-44ec-abc4-18d0a97d51d9`
 
-## Links Auth Void Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/voidauths?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+## `Links Auth Void`
++ links (array[link auth void]) - This is an array of links related to the resource.  
 
-## Links Original Credit
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Links Original Credit Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+## `link original credit`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/originalcredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d9`
 
-## Links Refund
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/refunds/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+## `Links Original Credit`
++ links (array[link original credit]) - This is an array of links related to the resource.  
 
-## Links Refund Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Links Settlement
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the URI of the resource.
+## `link refund`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
-## Links Settlement Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+## `Links Refund`
++ links (array[link refund]) - This is an array of links related to the resource.  
 
-## Links Standalone Credit
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Links Standalone Credit Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+## `link settlement`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
-## Links Verification
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/99000/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the URI of the resource.
+## `Links Settlement`
++ links (array[link settlement]) - This is an array of links related to the resource.  
 
-## Links Verification Get Reference
-+ links (array, required) - This is an array of [links](#linksobject).
-    + (object)
-        + rel:self (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=2&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:next (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=4&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
-    + (object)
-        + rel:previous (string, required)
-        + href:`https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications?merchantRefNum=merchant-ABC-123&limit=2&offset=0&startDate=2017-01-14T15:12:18Z&endDate=2017-04-04T15:12:18Z` (string, required)
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Merchant Descriptor
-+ dynamicDescriptor:Online Store (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
-+ phone:`888-9999` (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
+## `link standalone credit`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/standalonecredits/e50e19a6-8edd-44ec-abc4-18d0a97d51d9`
 
-## Merchant Reference Number
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+## `Links Standalone Credit`
++ links (array[link standalone credit]) - This is an array of links related to the resource.  
 
-## No Settle
-+ settleWithAuth:false (boolean, required) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Original Credit Base
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
-+ acquirerData (object, optional) - This is [additional information](#acquirerdataobject) about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
-    - authId:`f06bccd6-de90-4b73-b10f-30266763bc60` (string, required) - This is the ID returned in the response to a previous successful Authorization or Settlement request.
-    - code:CRX (enum, required) - This is the code for your card acquirer.
+## `link verification`
++ rel:`self` (string) -  This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
++ href: `https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/verifications/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
-## Original Credit Base Token
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
-+ profile (object, optional) - These are some [details about the customer](#profileobject). Include **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
-    + Include Profile
-+ acquirerData (object, optional) - This is [additional information](#acquirerdataobject) about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
-    - authId:`f06bccd6-de90-4b73-b10f-30266763bc60` (string, required) - This is the ID returned in the response to a previous successful Authorization or Settlement request.
-    - code:CRX (enum, required) - This is the code for your card acquirer.
+## `Links Verification`
++ links (array[link verification]) - This is an array of links related to the resource.  
 
-## Original Credit Response
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units.
-+ card (object, required)
-    + Include Card Response
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode:`USD` (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-+ status:`PENDING` (enum, required) - This is the [status of the transaction request](#originalcreditsobject).
-+ acquirerData (object, optional) - This is [additional information](#acquirerdataobject) about your card acquirer, returned **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.
-    - authId:`f06bccd6-de90-4b73-b10f-30266763bc60` (string, required) - This is the ID returned in the response to a previous successful Authorization or Settlement request.
-    - code:CRX (enum, required) - This is the code for your card acquirer.
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.
+    
+    _Read Only_
 
-## Original Credit Cancel Response
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:CANCELLED (enum, required) - This is the [status of the transaction request](#originalcreditsobject).
+## `Merchant Descriptor`
 
-## Original Credit Get Array
-+ originalcredits (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Original Credit
-        + Include Original Credit Response
++ `merchantDescriptor` (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
+    + `dynamicDescriptor`:`Online Store` (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+    + `phone`:`888-9999` (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
 
-## Profile
-+ firstName:John (string, optional) - This is the customer’s first name.
-+ lastName:Smith (string, optional) - This is the customer's last name.
-+ email:`jsmith@email.com` (string, optional) - This is the customer's email address.
+## `Original Credit`
 
-## Purchase Base
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`10098`  - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-+ authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-    + Include Authentication
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
-    + Include Shipping Details
-+ recurring:INITIAL (enum, optional) - This indicates [whether this is an initial or repeat transaction](#authsobject) for a customer for whom you will be processing recurring transactions.
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-+ Keywords:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
-    - Repeat Customer
-    - Profile Stored
-+ merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
-    + Include Merchant Descriptor
-+ accordD (object, optional) - These are parameters for [financing plans](#accorddobject) supported for certain merchant configurations.
-    + Include AccordD
-+ description:Video purchase (string, optional) - This is a description of the transaction, provided by the merchant.
-+ visaAdditionalAuthData  (object, optional) - This allows [additional data](#visaadditionalauthdataobject) to be included with a request using Visa as a payment method.
-    + Include Visa Additional Auth Data
-+ level2Level3 (object, optional) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object).
-    + Include Level2Level3
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-## Purchase Response Base
-+ authCode:1234567890  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode:USD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-+ dupCheck:true (boolean, optional) - This validates that this request is not a duplicate.
-+ avsResponse:MATCH (enum, optional) - This is the [AVS response from the card issuer](#authsobject).
-+ cvvVerification:MATCH (enum, optional) - This is the [response to the cvv submitted](#authsobject) with the transaction request.
-+ status:COMPLETED (enum, required) - This is the [status of the transaction request](#authsobject).
-+ riskReasonCode (array, optional) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
-+ acquirerResponse (object, optional) - This is the [raw response](#acquirerresponseobject) returned by an acquirer. It is returned only if your account is configured accordingly.
-    - code:DJN (string, optional) - This is acquirer identification code.
-    - responseCode:556677j88 (string, optional) - This is the raw response returned by the acquirer.
-    - avsCode:M (string, optional) - This is the raw AVS code returned by the acquirer.
-    - balanceResponse:1200 (string, optional) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
+    _Read Only_
 
-## Refund
-+ merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`1000` (number, optional) - This is the amount of the request, in minor units If this value is not provided, the remaining amount on the settlement will be refunded.
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
-## Refund Get Array
-+ refunds (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Refund
-        + Include Refund Response
+    _max=99999999999_
 
-## Refund Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ merchantRefNum:`merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount:`1000` (number, required) - This is the amount of the request, in minor units.
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:`PENDING` (enum, required) - This is the [status of the transaction request](#refundsobject).
++ Include Card
 
-## Refund Cancel Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:CANCELLED (enum, required) - This is the [status of the transaction request](#refundsobject).
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
-## Settle
-+ settleWithAuth:true (boolean, required) - This indicates that the request is a Purchase (i.e., Authorization plus Settlement).
+    _length<=255_
 
-## Settle False
-+ settleWithAuth:`false` (boolean, required) - This indicates that the request is an Authorization.
++ Include Profile
++ Include Billing Details
++ `customerIp`:`204.91.0.12` (string, optional) - This is the customer's IP address.
+
+    _length<=39_ 
+
++ `dupCheck`:`false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ `description`:`Purchase Credit` (string, optional) - This is a description of the transaction, provided by the merchant.
+
+    _length<=255_
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
+
+    _Read Only_
+
++ `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+
+    _Read Only_
+
++ `status`:`RECEIVED` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `PENDING`
+        + `FAILED`
+        + `CANCELLED`
+
++ Include Acquirer Response
++ Include Acquirer Data
++ Include Error Response
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
+
+## `Profile`
+
++ `profile` (object, optional) -  These are some details about the customer.
+    + firstName:John (string, optional)
+    + lastName:Smith (string, optional)
+    + email:`jsmith@email.com` (string, optional)
+
+## `Refund`
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e.g., lookups.
+
+    _Read Only_
++ `merchantRefNum`: `merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+
+    _length<=255_
+
++ `amount`:`50` (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount on the Settlement will be refunded. 
+
+    _max=99999999999_
++ `dupCheck`:`true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+    
++ `status`:`RECEIVED` (enum) - This is the [status of the request](#refundsobject).
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `COMPLETED`
+        + `FAILED`
+        + `CANCELLED`
+
++ Include Acquirer Response
++ Include Splitpay
++ Include Error Response
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
 
 ## Settlement
-+ merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`50` (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the remaining amount on the authorization will be settled. 
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Refunds.
 
-## Settlement Get Array
-+ settlements (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Settlement
-        + Include Settlement Response
+    _Read Only_
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
 
-## Settlement Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ merchantRefNum:`merchantRef_2016_04_11_05` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount:`50` (number, required) - This is the amount of the request, in minor units.
-+ availableToRefund:`25` (number, required) - This is the amount of of the Authorization remaining to Refund, in minor units.
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:`COMPLETED` (enum, required) - This is the [status of the transaction request](#settlementsobject).
-+ Include Splitpay Response
+    _length<=255_
 
-## Settlement Response Purchase
-+ settlements (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Settlement
-        + Include Settlement Response
-        + Include Splitpay Response
++ amount:`50` (number, optional) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount on the Authorization will be settled. 
 
-## Settlement Cancel Response
-+ id:`d1fb46ee-2736-4ef5-a724-f263ace75373` (string, required) - This is the ID returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:CANCELLED (enum, required) - This is the [status of the transaction request](#settlementsobject).
+    _max=99999999999_
++ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
 
-## Shipping Details
-+ carrier:CAD (enum, optional) - This is the shipment carrier.
-+ shipMethod:T (enum, optional) - This is the shipment method.
-+ recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
-+ street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
-+ city:Toronto (string, optional) - This is the city in the shipping address.
-+ state:ON (string, optional) - This is the state or province in the shipping address. 
-+ country:CA (string, optional) - This is the country in the shipping address. 
-+ zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
+    + Default: true
++ availableToRefund:`25` (number) - This is the amount of of the Authorization remaining to Refund, in minor units.
+
+    _Read Only_
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+    
++ `status`:`RECEIVED` (enum) - This is the [status of the request](#settlementsobject).
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `FAILED`
+        + `CANCELLED`
+
++ Include Error Response
+
+## `Shipping Details` (object, optional) -This is the shipping address of the customer.
+
++ `shippingDetails` (object, optional) -This is the shipping address of the customer.
+    + carrier:CAD (enum, optional) - This is the shipment carrier.
+    + shipMethod:T (enum, optional) - This is the shipment method.
+    + recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
+    + street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+    + city:Toronto (string, optional) - This is the city in the shipping address.
+    + state:ON (string, optional) - This is the state or province in the shipping address. 
+    + country:CA (string, optional) - This is the country in the shipping address. 
+    + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
@@ -2805,120 +4063,170 @@ This is how you look up a Standalone Credit using the merchant reference number 
                 + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
                 + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
 
-## Splitpay Response
-+ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each.
-    + (object)
-        + Properties
-            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
-            + One of
-                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units. This is either the *amount* (if specified) in the request or - if *percent* was specified - the result of the percentage calculation.            
-                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account. This is not returned if *amount* was specified in the request.
+## `Standalone Credit`
 
-## Standalone Credit Base
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-## Standalone Credit Base Token
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
+    _Read Only_
 
-## Standalone Credit Response
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount:`10098` (number, required) - This is the amount of the request, in minor units.
-+ card (object, required)
-    + Include Card Response
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ description:`Winning payment from Loto` (string, optional) - This is a description of the transaction, provided by the merchant.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode:`USD` (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-+ status:`PENDING` (enum, required) - This is the [status of the transaction request](#standalonecreditsobject).
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
-## Standalone Credit Cancel Response
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ status:CANCELLED (enum, required) - This is the [status of the transaction request](#standalonecreditsobject).
+    _max=99999999999_
 
-## Standalone Credit Get Array
-+ standalonecredits (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Standalone Credit
-        + Include Standalone Credit Response
++ Include Card
 
-## Verification Base
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ profile (object, optional) - These are some [details about the customer](#profileobject).
-    + Include Profile
-+ billingDetails (object, optional) - These are the [billing details for the request](#billingdetailsobject).
-    + Include Billing Details
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ dupCheck:true (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-+ description:This is a Verification transaction. (string, optional) - This is a description of the transaction, provided by the merchant.
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
-## Verification Base Token
-+ merchantRefNum:`merchant ABC-444` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-+ customerIp:`204.91.0.12` (string, optional) - This is the customer's IP address.
-+ dupCheck:`true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-+ description:`This is a Verification transaction.` (string, optional) - This is a description of the transaction, provided by the merchant.
-+ authentication (object, optional) - These are [3D Secure](#authenticationobject) details.
-    + Include Authentication
-+ shippingDetails (object, optional) - These are the [shipping details for the request](#shippingdetailsobject).
-    + Include Billing Details
-+ merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
-    + Include Merchant Descriptor
-+ accordD (object, optional) - These are parameters for [financing plans](#accorddobject) supported for certain merchant configurations.
-    + Include AccordD
+    _length<=255_
 
-## Verification Get Array
-+ verifications (array, required) - This is an array of requests associated with this merchant reference number.
-    + (object)
-        + Include Links Verification
-        + Include Verification Response
++ Include Profile
++ Include Billing Details
++ `customerIp`:`204.91.0.12` (string, optional) - This is the customer's IP address.
 
-## Verification Response 
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ Include Verification Base
-+ card (object, required)
-    + Include Card Response
-+ authCode:1234567890  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode:USD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-+ avsResponse:MATCH (enum, optional) - This is the [AVS response from the card issuer](#verificationsobject).
-+ cvvVerification:MATCH (enum, optional) - This is the [response to the cvv submitted with the transaction request](#verificationsobject).
-+ status:COMPLETED (enum, required) - This is the [status of the transaction request](#verificationsobject).
-+ merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
-    + Include Merchant Descriptor
+    _length<=39_ 
 
-## Verification Response Token
-+ id:`e50e19a6-8edd-44ec-abc4-18d0a97d51d8` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests.
-+ Include Verification Base
-+ card (object, required)
-    + Include Card Response
-+ authCode:1234567890  (string, required) - This is the Authorization code assigned by the issuing bank and returned in the response.
-+ txnTime:`2017-02-14T15:12:18Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode:USD (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-+ avsResponse:MATCH (enum, optional) - This is the [AVS response from the card issuer](#verificationsobject).
-+ cvvVerification:MATCH (enum, optional) - This is the [response to the cvv submitted with the transaction request](#verificationsobject).
-+ status:COMPLETED (enum, required) - This is the [status of the transaction request](#verificationsobject).
-+ merchantDescriptor (object, optional) - This is the [merchant descriptor](#merchantdescriptorobject) that will be displayed on the customer's card statement.
-    + Include Merchant Descriptor
++ `dupCheck`:`false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ `description`:`Purchase Credit` (string, optional) - This is a description of the transaction, provided by the merchant.
+
+    _length<=255_
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
+
+    _Read Only_
+
++ `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+
+    _Read Only_
+
++ `status`:`RECEIVED` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `PENDING`
+        + `FAILED`
+        + `CANCELLED`
+
++ Include Acquirer Response
++ Include Error Response
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
+
+## Verification
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
+
+    _Read Only_
+
++ Include Card
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ Include Profile
++ Include Billing Details
++ `customerIp`:`204.91.0.12` (string, optional) - This is the customer's IP address.
+
+    _length<=39_ 
+
++ `dupCheck`:`false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ `description`:`Video Purchase` (string, optional) - This is a description of the transaction, provided by the merchant.
+
+    _length<=255_
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
+
+    _Read Only_
+
++ `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
+
+    _Read Only_
+
++ `avsResponse`:`MATCH` (enum) - This is the [AVS response from the card issuer](#authsobject).
+
+    _Read Only_
+
++ `cvvVerification`:`MATCH` (enum) - This is the [response to the cvv submitted](#authsobject) with the transaction request.
+
+    _Read Only_
+
++ `status`:`RECEIVED` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `FAILED`
+
++ Include Acquirer Response
++ Include Error Response
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
 
 ## Visa Additional Auth Data
-+ recipientDateOfBirth.day:29 (number, optional) - This is the recipient's day of birth.
-+ recipientDateOfBirth.month:1 (number, optional) - This is the recipient's month of birth. 
-+ recipientDateOfBirth.year:2001 (number, optional) - The is the recipient's year of birth.
-+ recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
-+ recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
-+ recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
+
++ `visaAdditionalAuthData` (object, optional) - This allows [additional data](#visaadditionalauthdataobject) to be included with a request using Visa as a payment method.
+    + recipientDateOfBirth.day:29 (number, optional) - This is the recipient's day of birth.
+    + recipientDateOfBirth.month:1 (number, optional) - This is the recipient's month of birth. 
+    + recipientDateOfBirth.year:2001 (number, optional) - The is the recipient's year of birth.
+    + recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+    + recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
+    + recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
+
+## Void Authorization
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
+
+    _Read Only_
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+
++ `dupCheck`:`false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.
+
+    + Default: true
+
++ `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `status`:`RECEIVED` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `FAILED`
+
++ `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
+
+    _Read Only_
+
++ Include Acquirer Response
++ Include Error Response
