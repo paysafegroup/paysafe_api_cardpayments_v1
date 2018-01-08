@@ -7,8 +7,8 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 | Version   | Date          | Details |
 |---        |---            |---      |
-| v1        | November 2016 | Document release |
 | v1        | September 2017 | Added Turnkey features |
+| v1        | November 2016 | Document release |
 
 # Overview
 
@@ -1518,7 +1518,7 @@ This shows you four examples of an Authorization request:
 In the case of an Authorization request using a payment token, you can use either of two payment token types:
 
 * The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
-* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token),  [Google Payment API single-use token creation request](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token),or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
+* The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token),  [Google Pay single-use token creation request](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token),or [Apple Pay single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token), or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
 + Parameters
 
@@ -2659,7 +2659,7 @@ In the case of a payment token, you can use either of two payment token types:
 * The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
 * The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
-You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Verification requests.
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Verification requests.
 
 **Note**<ul><li>If you use a payment token that **does not** have an address associated with it, you must include the *billingDetails* object in this request in order to pass an Address Verification (AVS) check.</li><li>If you use a payment token that **does** have an address associated with it and you include the *billingDetails* object, the address information included in the *billingDetails* object will override the address information associated with the payment token, for this transaction request only.</li><li>If you intend to use the Customer Vault API to [convert a single-use payment token into a permanent payment token](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/profiles/create-a-profile-using-a-single-use-token), you should verify the token using this Card Payments API request before proceeding with the conversion.</li></ul>
 
@@ -2988,7 +2988,7 @@ In the case of a payment token, you can use either of two payment token types:
 * The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
 * The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
-You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Original Credit requests.
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Original Credit requests.
 
 + Parameters
 
@@ -3304,7 +3304,7 @@ In the case of a payment token, you can use either of two payment token types:
 * The permanent, reusable payment token that you receive in the response to a Customer Vault [card creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/cards/create-a-card)
 * The temporary payment token that you receive in the response to a Customer Vault [mobile single-use token creation request](https://developer.paysafe.com/en/payments/vault/api/#/reference/0/mobile-device-single-use-tokens/create-a-mobile-device-single-use-token) or when using the [Paysafe.js SDK](https://developer.paysafe.com/en/sdks/paysafejs/tokenize/)
 
-You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Payment API single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Standalone Credit requests.
+You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/apple-pay-single-use-tokens/create-an-apple-pay-single-use-token) or [Google Pay single-use tokens](https://developer.paysafe.com/en/vault/api/#/reference/single-use-tokens/google-payment-api-single-use-tokens/create-a-google-payment-api-single-use-token) in Standalone Credit requests.
 
 + Parameters
 
