@@ -1420,6 +1420,9 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3052           |The bank has requested that you retrieve the card from the cardholder &ndash; the credit card is restricted.|
 |402                |3053           |The bank has requested that you retrieve the card from the cardholder &ndash; please call the acquirer.|
 |402                |3054           |The transaction was declined due to suspected fraud.|
+|402                |3055           |This type of transaction is not supported.|
+|402                |3056           |The original transaction type does not match.|
+|402                |3057           |Please tell cardholder to call the issuer &ndash; do not retry transaction.|
 
 <a name="voidautherrors" title="Void Authorization Errors"></a>
 ## Void Authorization Errors
@@ -1444,6 +1447,7 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3204           |The requested Settlement amount exceeds the remaining Authorization amount.|
 |402                |3205           |The Authorization you are attempting to settle has expired.|
 |402                |3206           |The external processing gateway has rejected the transaction.|
+|402                |3207           |Due to issuer policies, this type of transaction is not allowed.|
 
 <a name="refunderrors" title="Refund Errors"></a>
 ## Refund Errors
@@ -1463,6 +1467,7 @@ The recipient is deemed to be the person or party who has the contractual relati
 |402                |3416           |The external processing gateway for which your merchant account is configured does not support partial Settlements.|
 |402                |3417           |There is already another request being processed on the transaction referenced for this request. |
 |402                |3418           |The external processing gateway for which your merchant account is configured does not support partial Credits.|
+|402                |3419           |This type of transaction cannot be refunded.|
 
 
 # Using the Example API Calls (Console Window)
@@ -1508,7 +1513,7 @@ This call returns a status of READY if the API is available.
 ## Authorization [POST /v1/accounts/{account_id}/auths]
 <a name="authrequest" title="Authorization Request"></a>
 
-This shows you four examples of an Authorization request: 
+Click on **Authorization** above to see four examples of an Authorization request: 
 
 * An Authorization request that will have to be settled later
 * A purchase request, which authorizes and settles the payment in a single request by setting the *settleWithAuth* parameter to *true*
@@ -1889,7 +1894,7 @@ In the case of an Authorization request using a payment token, you can use eithe
 ## Get Authorization [GET /v1/accounts/{account_id}/auths/{auth_id}]
 <a name="getauth" title="Look Up an Authorization"></a>
 
-This is how you look up an Authorization request using the ID returned in the response to the original request.
+Click on **Get Authorization** above to see how to look up an Authorization request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -1955,7 +1960,7 @@ This is how you look up an Authorization request using the ID returned in the re
 ## Get Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/auths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getauthmerchantrefnum" title="Look Up an Authorization Using a Merchant Reference Number"></a>
 
-This is how you look up an Authorization request using the merchant reference number used in the original request.
+Click on **Get Authorization Using Merchant Reference Number** above to see how to look up an Authorization request using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -2030,7 +2035,7 @@ This is how you look up an Authorization request using the merchant reference nu
 ## Complete an Authorization [PUT /v1/accounts/{account_id}/auths/{auth_id}]
 <a name="completeauth" title="Complete an Authorization"></a>
 
-This is how you complete an Authorization request with the status of Held.
+Click on **Complete an Authorization** above to see how to complete an Authorization request with the status of Held.
 
 + Parameters
     + account_id:123456789 (string, required) - This is the merchant account number.
@@ -2068,7 +2073,7 @@ This is how you complete an Authorization request with the status of Held.
 ## Void an Authorization [POST /v1/accounts/{account_id}/auths/{auth_id}/voidauths]
 <a name="voidanauth" title="Void an Authorization"></a>
 
-This is how you submit a Void Authorization request. You can void an Authorization **only if** it has not yet been settled. 
+Click on **Void an Authorization** above to see how to submit a Void Authorization request. You can void an Authorization **only if** it has not yet been settled. 
 
 + Parameters
 
@@ -2113,7 +2118,7 @@ This is how you submit a Void Authorization request. You can void an Authorizati
 ## Get Void Authorization [GET /v1/accounts/{account_id}/voidauths/{void_auth_id}]
 <a name="getvoidauth" title="Look Up a Void Authorization"></a>
 
-This is how you look up a Void Authorization request using the ID returned in the response to the original request.
+Click on **Get Void Authorization** above to see how to look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -2146,7 +2151,7 @@ This is how you look up a Void Authorization request using the ID returned in th
 ## Get Void Authorization Using Merchant Reference Number [GET /v1/accounts/{account_id}/voidauths?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getvoidauthmerchantrefnum" title="Look Up a Void Authorization Using a Merchant Reference Number"></a>
 
-This is how you look up a Void Authorization request using the merchant reference number used in the original request.
+Click on **Get Void Authorization Using Merchant Reference Number** above to see how to look up a Void Authorization request using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -2193,7 +2198,7 @@ This is how you look up a Void Authorization request using the merchant referenc
 ## Settlement [POST /v1/accounts/{account_id}/auths/{auth_id}/settlements]
 <a name="settlementrequest" title="Settlement Request"></a>
 
-This shows you three examples of a Settlement request:
+Click on **Settlement** above to see three examples of a Settlement request:
 
 * A regular Settlement, where the initial request was an Authorization that now has to be settled
 * A partial Settlement, where only part of the initial Authorization is settled, leaving the balance to be settled later
@@ -2314,7 +2319,7 @@ This shows you three examples of a Settlement request:
 ## Cancel a Settlement [PUT /v1/accounts/{account_id}/settlements/{settlement_id}]
 <a name="cancelsettlement" title="Cancel a Settlement"></a>
 
-This is how you submit a Cancel Settlement request.
+Click on **Cancel a Settlement** above to see how to submit a Cancel Settlement request.
 
 + Parameters
 
@@ -2350,7 +2355,7 @@ This is how you submit a Cancel Settlement request.
 ## Get Settlement [GET /v1/accounts/{account_id}/settlements/{settlement_id}]
 <a name="getsettlement" title="Look Up a Settlement"></a>
 
-This is how you look up a Settlement request using the ID returned in the response to the original request.
+Click on **Get Settlement** above to see how to look up a Settlement request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -2384,7 +2389,7 @@ This is how you look up a Settlement request using the ID returned in the respon
 ## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{account_id}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
 
-This is how you look up a Settlement using the merchant reference number used in the original request.
+Click on **Get Settlement Using Merchant Reference Number** above to see how to look up a Settlement using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -2437,7 +2442,7 @@ This is how you look up a Settlement using the merchant reference number used in
 ## Refund [POST /v1/accounts/{account_id}/settlements/{settlement_id}/refunds]
 <a name="refund request" title="Refund Request"></a>
 
-This shows you two examples of a Refund request:
+Click on **Refund** above to see two examples of a Refund request:
 
 * A regular Refund
 * A Refund that is split into multiple merchant accounts, for merchant accounts that are configured to do so
@@ -2525,7 +2530,7 @@ This shows you two examples of a Refund request:
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
 <a name="cancelrefund" title="Cancel a Refund"></a>
 
-This is how you submit a Cancel Refund request.
+Click on **Cancel a Refund** above to see how to submit a Cancel Refund request.
 
 + Parameters
 
@@ -2561,7 +2566,7 @@ This is how you submit a Cancel Refund request.
 ## Get Refund [GET /v1/accounts/{account_id}/refunds/{refund_id}]
 <a name="getrefund" title="Look Up a Refund"></a>
 
-This is how you look up a Refund request using the ID returned in the response to the original request.
+Click on **Get Refund** above to see how to look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -2598,7 +2603,7 @@ This is how you look up a Refund request using the ID returned in the response t
 ## Get Refund Using Merchant Reference Number [GET /v1/accounts/{account_id}/refunds?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
 
-This is how you look up a Refund using the merchant reference number used in the original request.
+Click on **Get Refund Using Merchant Reference Number** above to see how to look up a Refund using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -2649,7 +2654,7 @@ This is how you look up a Refund using the merchant reference number used in the
 ## Verification [POST /v1/accounts/{account_id}/verifications]
 <a name="verificationrequest" title="Verification Request"></a>
 
-This shows you two examples of a Verification request to verify card details:
+Click on **Verification** above to see two examples of a Verification request to verify card details:
 
 * A Verification request using card details
 * A Verification request using a payment token
@@ -2823,7 +2828,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
 ## Get Verification [GET /v1/accounts/{account_id}/verifications/{verification_id}]
 <a name="getverification" title="Look Up a Verification"></a>
 
-This is how you look up a Verification request using the ID returned in the response to the original request.
+Click on **Get Verification** above to see how to look up a Verification request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -2886,7 +2891,7 @@ This is how you look up a Verification request using the ID returned in the resp
 ## Get Verification Using Merchant Reference Number [GET /v1/accounts/{account_id}/verifications?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getverificationmerchantrefnum" title="Look Up a Verification Using a Merchant Reference Number"></a>
 
-This is how you look up a Verification request using the merchant reference number used in the original request.
+Click on **Get Verification Using Merchant Reference Number** above to see how to look up a Verification request using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -2978,7 +2983,7 @@ By default, Test accounts do not support Original Credits; if you wish to use th
 ## Original Credit [POST /v1/accounts/{account_id}/originalcredits]
 <a name="originalcreditrequest" title="Original Credit Request"></a>
 
-This shows you two examples of an Original Credit request:
+Click on **Original Credit** above to see two examples of an Original Credit request:
 
 * An Original Credit request using card information
 * An Original Credit request using a payment token
@@ -3124,7 +3129,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
 ## Cancel an Original Credit [PUT /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 <a name="canceloriginalcredit" title="Cancel an Original Credit"></a>
 
-This is how you submit a Cancel Original Credit request.
+Click on **Cancel an Original Credit** above to see how to submit a Cancel Original Credit request.
 
 + Parameters
 
@@ -3160,7 +3165,7 @@ This is how you submit a Cancel Original Credit request.
 ## Get Original Credit [GET /v1/accounts/{account_id}/originalcredits/{original_credit_id}]
 <a name="getoriginalcredit" title="Look Up an Original Credit"></a>
 
-This is how you look up an Original Credit request using the ID returned in the response to the original request.
+Click on **Get Original Credit** above to see how to look up an Original Credit request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -3216,7 +3221,7 @@ This is how you look up an Original Credit request using the ID returned in the 
 ## Get Original Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/originalcredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getoriginalcreditmerchantrefnum" title="Look Up an Original Credit Using a Merchant Reference Number"></a>
 
-This is how you look up an Original Credit using the merchant reference number used in the original request.
+Click on **Get Original Credit Using Merchant Reference Number** above to see how to look up an Original Credit request using the merchant reference number used in the original request.
 
 + Parameters
 
@@ -3294,7 +3299,7 @@ By default, Test accounts do not support Standalone Credits; if you wish to use 
 ## Standalone Credit [POST /v1/accounts/{account_id}/standalonecredits]
 <a name="standalonecreditrequest" title="Standalone Credit Request"></a>
 
-This shows you two examples of a Standalone Credit request:
+Click on **Standalone Credit** above to see two examples of a Standalone Credit request:
 
 * A Standalone Credit request using card information
 * A Standalone Credit request using a payment token
@@ -3440,7 +3445,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
 ## Cancel a Standalone Credit [PUT /v1/accounts/{account_id}/standalonecredits/{standalone_credit_id}]
 <a name="canceloriginalcredit" title="Cancel an Original Credit"></a>
 
-This is how you submit a Cancel Standalone Credit request.
+Click on **Cancel a Standalone Credit** above to see how to submit a Cancel Standalone Credit request.
 
 + Parameters
 
@@ -3476,7 +3481,7 @@ This is how you submit a Cancel Standalone Credit request.
 ## Get Standalone Credit [GET /v1/accounts/{account_id}/standaonecredits/{standalone_credit_id}]
 <a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
 
-This is how you look up a Standalone Credit request using the ID returned in the response to the original request.
+Click on **Get Standalone Credit** above to see how to look up a Standalone Credit request using the ID returned in the response to the original request.
 
 + Parameters
 
@@ -3532,7 +3537,7 @@ This is how you look up a Standalone Credit request using the ID returned in the
 ## Get Standalone Credit Using Merchant Reference Number [GET /v1/accounts/{account_id}/standalonecredits?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
 
-This is how you look up a Standalone Credit using the merchant reference number used in the original request.
+Click on **Get Standalone Credit Using Merchant Reference Number** above to see how to look up a Standalone Credit using the merchant reference number used in the original request.
 
 + Parameters
 
