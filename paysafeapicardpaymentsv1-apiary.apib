@@ -742,7 +742,7 @@ These are raw results returned by the acquirer.
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-|visaAdditionalAuthData |[visaAdditionalAuthData](#visaadditionalauthdataobject) |This allows additional data to be included with a request using Visa as a payment method.|
+|recipient          |[recipient](#recipientobject)          |In certain cases, this allows additional data to be included with a payment request. |
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
 
@@ -858,6 +858,25 @@ When providing card information, merchants can provide either card details or a 
     "cardExpiry":{
         "month": "12",
         "year": "2020"
+    }
+    }
+```
+
+<a name="dateofbirthobject" title="dateOfBirth Object"></a>
+## dateOfBirth
+
+|Element                 |Type                   |Description|
+|---                     |---                    |---|
+|day                     |number<br/>`length=2`  |This is the day of the recipient's date of birth. |
+|month                   |number<br/>`length=2`  |This is the month of the recipient's date of birth. |
+|year                    |number<br/>`length=4`  |This is the year of the recipient's date of birth.|
+
+```apib
+    {
+    "dateOfBirth":{
+        "day":"29",
+        "month": "12",
+        "year": "1989"
     }
     }
 ```
@@ -1076,21 +1095,31 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
-<a name="recipientdateofbirthobject" title="recipientDateOfBirth Object"></a>
-## recipientDateOfBirth
+<a name="recipientobject" title="recipient Object"></a>
+## recipient 
 
-|Element                 |Type                   |Description|
-|---                     |---                    |---|
-|day                     |number<br/>`length=2`  |This is the day of the recipient's date of birth. |
-|month                   |number<br/>`length=2`  |This is the month of the recipient's date of birth. |
-|year                    |number<br/>`length=4`  |This is the year of the recipient's date of birth.|
+The recipient is deemed to be the person or party who has the contractual relationship with the merchant/financial institution. This may be different from the cardholder, e.g., in the case of a parent topping up a child's savings account. Therefore, the fields should not be collected on the same page as cardholder information, but instead be passed in the background from the merchant’s records.
+
+**Note:** You can include *recipient* elements in your [authorization request](#authrequest) only if your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist. If you have any questions, contact your account manager.
+
+|Element                    |Type                       |Description                        |
+|---                        |---                        |---                                |
+|dateOfBirth                |[dateOfBirth](#dateofbirthobject) |This is the recipient's date of birth. |
+|zip                        |string<br/>`length<=10`    |This is the recipient‘s postcode.<br/>**Note:** The last 3 characters are not sent to the banking network.|
+|lastName                   |string<br/>`length<=255`   |This is the recipient‘s last name.<br/>**Note:** Only the first 6 characters are sent to the banking network.|
+|accountNumber              |string<br/>`length<=25`    |This is the recipient‘s account number, e.g., a loan agreement number or customer ID. In the case where the recipient account is a prepaid card, the card number may be sent in full.<br/>**Note:** Only the first 6 and last 4 characters are sent to the banking network and will be masked accordingly within the back office and any other reports, to comply with PCI regulations.|
 
 ```apib
     {
-    "recipientDateOfBirth":{
-        "day":"29",
-        "month": "12",
-        "year": "1989"
+    "recipient": {
+        "dateOfBirth": {
+            "day": 29,
+            "month": 1,
+            "year": 2001
+        },
+        "zip": "CB24 9AD",
+        "lastName": "Smith",
+        "accountNumber": "ABC1234567890"
     }
     }
 ```
@@ -1294,36 +1323,6 @@ merchants who provide more detailed information when processing card-not-present
     "customerIp": "204.91.0.12",
     "description": "This is a test transaction"
 }    
-```
-
-<a name="visaadditionalauthdataobject" title="visaAdditionalAuthData Object"></a>
-## visaAdditionalAuthData
-
-The recipient is deemed to be the person or party who has the contractual relationship with the merchant/financial institution. This may be different from the cardholder, e.g., in the case of a parent topping up a child's savings account. Therefore, the fields should not be collected on the same page as cardholder information, but instead be passed in the background from the merchant’s records.
-
-**Note:** Include *recipientDateOfBirth* elements if your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. If you have any questions, contact your account manager. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist.
-
-|Element                    |Type                       |Description                        |
-|---                        |---                        |---                                |
-|recipientDateOfBirth       |[recipientDateOfBirth](#recipientdateofbirthobject) |This is the recipient's date of birth. |
-|recipientZip               |string<br/>`length<=10`    |This is the recipient‘s postcode.<br/>**Note:** The last 3 characters are not sent to the banking network.|
-|recipientLastName          |string<br/>`length<=255`   |This is the recipient‘s last name.<br/>**Note:** Only the first 6 characters are sent to the banking network.|
-|recipientAccountNumber     |string<br/>`length<=25`    |This is the recipient‘s account number, e.g., a loan agreement number or customer ID. In the case where the recipient account is a prepaid card, the card number may be sent in full.<br/>**Note:** Only the first 6 and last 4 characters are sent to the banking network and will be masked accordingly within the back office and any other reports, to comply with PCI regulations.|
-
-
-```apib
-    {
-    "visaAdditionalAuthData": {
-        "recipientDateOfBirth": {
-            "day": 29,
-            "month": 1,
-            "year": 2001
-        },
-        "recipientZip": "CB24 9AD",
-        "recipientLastName": "Smith",
-        "recipientAccountNumber": "ABC1234567890"
-    }
-    }
 ```
 
 # Error Summary
@@ -3690,7 +3689,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     _length<=255_
 
-+ Include Visa Additional Auth Data
++ Include Recipient
 + Include Level2Level3
 
 + `settleWithAuth`:`true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement). Default = *false*
@@ -3782,6 +3781,14 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     + Properties
         + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token.
+
+## `Date of Birth`
++ dateOfBirth (object, required) - This is the recipient's date of birth. 
+
+    + Properties
+        + day:29 (number, required) - This is the day of birth.
+        + month:12 (number, required) - This is the month of birth.
+        + year:2020 (number, required) - This is the year of birth.
 
 ## Error Response
 + error (object)
@@ -3975,6 +3982,14 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + firstName:John (string, optional)
     + lastName:Smith (string, optional)
     + email:`jsmith@email.com` (string, optional)
+
+## Recipient
+
++ `recipient` (object, optional) - This allows [additional data](#recipientobject) to be included with a request. Include this object only if your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom.
+    + Include Date of Birth
+    + zip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
+    + lastName:Smith (string, optional) - This is the recipient‘s last name.
+    + accountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
 
 ## `Refund`
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e.g., lookups.
@@ -4188,16 +4203,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
 
     _Read Only_
-
-## Visa Additional Auth Data
-
-+ `visaAdditionalAuthData` (object, optional) - This allows [additional data](#visaadditionalauthdataobject) to be included with a request using Visa as a payment method.
-    + recipientDateOfBirth.day:29 (number, optional) - This is the recipient's day of birth.
-    + recipientDateOfBirth.month:1 (number, optional) - This is the recipient's month of birth. 
-    + recipientDateOfBirth.year:2001 (number, optional) - The is the recipient's year of birth.
-    + recipientZip:M5M 5M5 (string, optional) - This is the recipient‘s postcode.
-    + recipientLastName:Smith (string, optional) - This is the recipient‘s last name.
-    + recipientAccountNumber:ABC1234567890 (string, optional) - This is the recipient‘s account number, e.g., a loan agreement number or customer ID.
 
 ## Void Authorization
 
