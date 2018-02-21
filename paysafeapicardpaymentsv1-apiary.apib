@@ -1104,6 +1104,8 @@ The recipient is deemed to be the person or party who has the contractual relati
 **Note:** You can include *recipient* elements in your [authorization request](#authrequest) **only if** your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. All fields are optional. However, scheme fines may apply if data is consistently not supplied and chargebacks persist. If you have any questions, contact your account manager.
 If you are using a payment token for an Authorization request and there is already recipient data for the consumer profile associated with the payment token, then if you include the *recipient* object in the Authorization, this data will override the recipient data already in the profile.
 
+If you [look up an authorization request](#getauth)  that used the *visaAdditionalAuthData* parameter (now deprecated), the response will contain the relevant data in both the *recipient* and the *visaAdditionalAuthData* objects.
+
 |Element                    |Type                       |Description                        |
 |---                        |---                        |---                                |
 |dateOfBirth                |[dateOfBirth](#dateofbirthobject) |This is the recipient's date of birth. |
@@ -3681,7 +3683,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     + Default: true
 
-+ Keywords:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
++ `keywords`:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
     - Repeat Customer
     - Profile Stored
 
