@@ -747,6 +747,7 @@ These are raw results returned by the acquirer.
 |recipient          |[recipient](#recipientobject)          |In certain cases, this allows additional data to be included with a payment request. |
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
+|storedCredential   |[storedCredential](#storedcredentialobject) |This object is used to identify requests that use stored credentials that the merchant has on file for the consumer.|
 
 ```apib
 {
@@ -771,6 +772,10 @@ These are raw results returned by the acquirer.
   "avsResponse":"NOT_PROCESSED",
   "cvvVerification":"MATCH",
   "status":"COMPLETED",
+  "storedCredential": {
+    "type": "RECURRING",
+    "occurrence": "SUBSEQUENT"
+    },
   "keywords": [
     "Repeat Customer",
     "Profile Stored"
@@ -1276,6 +1281,31 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
   "customerIp":"204.91.0.12",
   "description":"Refund without receipt"
 }    
+```
+
+<a name="storedcredentialobject" title="storedCredential Object"></a>
+## storedCredential
+
+The *storedCredential* object is used to identify [authorization requests](#authrequest) that use stored credentials for a consumer. This can occur in two cases: 
+ - Using a payment token &ndash; An authorization request that uses a *paymentToken* from the [Customer Vault API](https://developer.paysafe.com/en/vault/api/)
+ - Using a card number &ndash; An authorization request that uses a credit card number stored by the merchant 
+
+**Notes:** 
+ - If you use a *paymentToken* in the authorization request but do not include the *storedCredential* object, Paysafe will provide default information taken from Customer Vault data. 
+ - If you do not include *type* in the *storedCredential* object but you include the *recurring* parameter and set it to *RECURRING*, then *type* will default to RECURRING as well.
+
+|Element                 |Type                   |Description|
+|---                     |---                    |---|
+|type                    |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash; Unscheduled merchant-iniitated request when a consumer balance is below a set limit </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul>|
+|occurrence              |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>|
+
+```apib
+{
+    "storedCredential": {
+        "type": "RECURRING",
+        "occurrence": "SUBSEQUENT"
+    }
+}
 ```
 
 <a name="verificationsobject" title="verifications Object"></a>
@@ -3745,6 +3775,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include Acquirer Response
 + Include Splitpay
 + Include Error Response
++ Include Stored Credential
 
 ## `Billing Details`
 
@@ -4147,6 +4178,18 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
 
     _Read Only_
+
+## `Stored Credential`
++ storedCredential (object) - This object is used to identify authorization requests that [use stored credentials for a consumer's authorization request](#storedcredentialobject).
+
+    + Properties
+        + type:`ADHOC` (enum) - This specifies the type of request being made.
+            - ADHOC
+            - TOPUP
+            - RECURRING
+        + occurrence:`RECURRING` (enum) - This specifies whether the stored credential request is initial or recurring. 
+            - INITIAL
+            - RECURRING
 
 ## Verification
 
