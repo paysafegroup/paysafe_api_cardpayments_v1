@@ -729,7 +729,8 @@ These are raw results returned by the acquirer.
 |profile            |[profile](#profileobject)              |These are some details about the customer.|
 |billingDetails     |[billingDetails](#billingdetailsobject)|These are the billing details for the request.|
 |shippingDetails    |[shippingDetails](#shippingdetailsobject) |These are the shipping details for the request.|
-|recurring          |enum                                   |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|recurring          |enum                                   |This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. The Recurring Indicator is used to identify transactions that are eligible for repeat processing. The merchant should identity the initial transaction processed with full billing information including the card security code (CVV) by setting the recurring indicator to “INITIAL”. Subsequent charges to the same card can be identified with the recurring indicator set to “RECURRING”. For these transactions the card security code is not required and could not be passed in because card regulations do not allow merchants to store it.<ul><li>INITIAL</li><li>RECURRING</li></ul><br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information. You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.|
+|storedCredential   |[storedCredential](#storedcredentialobject) |This object is used to identify requests that use stored credentials that the merchant has on file for the consumer, in order to improve authorization rates and reduce fraud.<br/>**Note:** You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.|
 |customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g.the merchant could use this as a tag to identify the transaction or the product purchased at their site. You can search on keywords in the merchant back office reporting tools.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
@@ -747,7 +748,6 @@ These are raw results returned by the acquirer.
 |recipient          |[recipient](#recipientobject)          |In certain cases, this allows additional data to be included with a payment request. |
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
-|storedCredential   |[storedCredential](#storedcredentialobject) |This object is used to identify requests that use stored credentials that the merchant has on file for the consumer.|
 
 ```apib
 {
@@ -1286,18 +1286,20 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 <a name="storedcredentialobject" title="storedCredential Object"></a>
 ## storedCredential
 
-The *storedCredential* object is used to identify [authorization requests](#authrequest) that use stored credentials for a consumer. This can occur in two cases: 
+The *storedCredential* object is used to identify [authorization requests](#authrequest) that use stored credentials for a consumer, in order to improve authorization rates and reduce fraud. Stored credentials can be used in two cases: 
  - Using a payment token &ndash; An authorization request that uses a *paymentToken* from the [Customer Vault API](https://developer.paysafe.com/en/vault/api/)
  - Using a card number &ndash; An authorization request that uses a credit card number stored by the merchant 
 
 **Notes:** 
- - If you use a *paymentToken* in the authorization request but do not include the *storedCredential* object, Paysafe will provide default information taken from Customer Vault data. 
- - If you do not include *type* in the *storedCredential* object but you include the *recurring* parameter and set it to *RECURRING*, then *type* will default to RECURRING as well.
+ - If you use a *paymentToken* in the authorization request but do not include the *storedCredential* object, Paysafe will provide default information taken from Customer Vault data.
+ - You cannot include both the *storedCredential* object and the *recurring* parameter in the same authorization request. Paysafe recommends using the *storedCredential* object.
+ - The *cvv* parameter of the [card object](#cardobject) is required when the *occurrence* parameter is set to *INITIAL*. However, *cvv* is not required when the *occurrence* parameter is set to *SUBSEQUENT*.
+ - The *storedCredential* object cannot be used for Apple Pay or Google Pay transactions.
 
 |Element                 |Type                   |Description|
 |---                     |---                    |---|
-|type                    |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash; Unscheduled merchant-iniitated request when a consumer balance is below a set limit </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul>|
-|occurrence              |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>|
+|type                    |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash; Unscheduled merchant-iniitated request when a consumer balance is below a set limit </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
+|occurrence              |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
 
 ```apib
 {
@@ -3699,12 +3701,13 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include Profile
 + Include Billing Details
 + Include Shipping Details
-+ `recurring`:`INITIAL` (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions.
++ `recurring`:`INITIAL` (enum, optional) - This indicates whether this is an initial or repeat transaction for a customer for whom you will be processing recurring transactions. You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.
 
     + Members
         + `INITIAL`
         + `RECURRING`
 
++ Include Stored Credential
 + `customerIp`:`204.91.0.12` (string, optional) - This is the customer's IP address.
 
     _length<=39_ 
@@ -3775,7 +3778,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include Acquirer Response
 + Include Splitpay
 + Include Error Response
-+ Include Stored Credential
 
 ## `Billing Details`
 
@@ -4180,16 +4182,20 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     _Read Only_
 
 ## `Stored Credential`
-+ storedCredential (object) - This object is used to identify authorization requests that [use stored credentials for a consumer's authorization request](#storedcredentialobject).
++ storedCredential (object) - This object is used to identify authorization requests that use stored credentials for a consumer's authorization request, in order to improve authorization rates and reduce fraud. You cannot include both the *storedCredential* object and the *recurring* parameter in the same authorization request. Paysafe recommends using the *storedCredential* object. Please consult the [storedCredential object for full details](#storedcredentialobject).
 
     + Properties
-        + type:`ADHOC` (enum) - This specifies the type of request being made.
+        + type:`ADHOC` (enum) - This specifies the type of request being made. 
             - ADHOC
             - TOPUP
             - RECURRING
+            
+            + Default: ADHOC
         + occurrence:`RECURRING` (enum) - This specifies whether the stored credential request is initial or recurring. 
             - INITIAL
             - RECURRING
+            
+            + Default: INITIAL
 
 ## Verification
 
