@@ -3661,7 +3661,9 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     
     + Properties
     - authId:`f06bccd6-de90-4b73-b10f-30266763bc60` (string) - This is the ID returned in the response to a previous successful Authorization or Settlement request.
+        _length<=36_
     - code:CRX (enum) - This is the code for your card acquirer.
+        _length<=10_
 
 ## `Acquirer Response`
 
@@ -3804,19 +3806,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + phone:555-9999 (string, optional)
         _length<=40_
 
-## `Card Expiry`
-+ cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-
-    + Properties
-        + month:12 (number, required) - This is the card expiry month.
-        + year:2020 (number, required) - This is the card expiry year.
-        
-
 ## `Card Auth`
 
 + One of
 
-    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one **card** object can be included in the request.
 
         + Properties
 
@@ -3825,7 +3819,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
             + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
                 _length=3-4_
 
-    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one **card** object can be included in the request.
 
         + Properties
 
@@ -3846,14 +3840,14 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + One of
 
-    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one **card** object can be included in the request.
     
         + Properties
 
             + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token representing the card.
                 _length<=80_
 
-    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one **card** object can be included in the request.
     
         + Properties
 
@@ -3868,28 +3862,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
                 _length=3-4_
             + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
             + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
-
-## `Card` backup
-
-+ card (object, required) - These are the details of the [card](#cardobject) used for the request.
-    
-    + Properties
-        + One Of
-            + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token representing the card.
-            + Card details
-                + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
-                + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-                    + month:12 (number, required) - This is the card expiry month.
-                    + year:2020 (number, required) - This is the card expiry year.
-                + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
-                + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
-                + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
-
-## `Card Token`
-+ card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. 
-
-    + Properties
-        + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token.
 
 ## `Date of Birth`
 + dateOfBirth (object, required) - This is the recipient's date of birth. 
@@ -4047,7 +4019,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
@@ -4079,11 +4051,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
 
-    _Read Only_
+    _Read Only_, _length<=50_
 
 + `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
 
-    _Read Only_
+    _Read Only_, _length=3_
 
 + `status`:`RECEIVED` (enum) - This is the status of the request.
 
@@ -4127,7 +4099,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 ## `Refund`
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e.g., lookups.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 + `merchantRefNum`: `merchantABC-444-refund` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
 
     _length<=255_
@@ -4164,7 +4136,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 ## Settlement
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Refunds.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 + `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
 
     _length<=255_
@@ -4177,7 +4149,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + Default: true
 + availableToRefund:`25` (number) - This is the amount of of the Authorization remaining to Refund, in minor units.
 
-    _Read Only_
+    _Read Only_, _max=99999999999_
 + `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
     _Read Only_
@@ -4227,7 +4199,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
@@ -4259,11 +4231,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
 
-    _Read Only_
+    _Read Only_, _length<=50_
 
 + `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
 
-    _Read Only_
+    _Read Only_, _length=3_
 
 + `status`:`RECEIVED` (enum) - This is the status of the request.
 
@@ -4302,7 +4274,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 
 + Include Card
 
@@ -4330,11 +4302,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `authCode`: `12345678901` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
 
-    _Read Only_
+    _Read Only_, _length<=50_
 
 + `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
 
-    _Read Only_
+    _Read Only_, _length=3_
 
 + `avsResponse`:`MATCH` (enum) - This is the [AVS response from the card issuer](#authsobject).
 
@@ -4363,7 +4335,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
-    _Read Only_
+    _Read Only_, length<=36
 
 + `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
