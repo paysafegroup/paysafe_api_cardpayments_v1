@@ -733,7 +733,7 @@ These are raw results returned by the acquirer.
 |storedCredential   |[storedCredential](#storedcredentialobject) |This object is used to identify requests that use stored credentials that the merchant has on file for the consumer, in order to improve authorization rates and reduce fraud.<br/>**Note:** You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.|
 |customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
-|keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g.the merchant could use this as a tag to identify the transaction or the product purchased at their site. You can search on keywords in the merchant back office reporting tools.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
+|keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g., the merchant could use this as a tag to identify the transaction or the product purchased at their site. You can search on keywords in the merchant back office reporting tools.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
 |merchantDescriptor |[merchantDescriptor](#merchantdescriptorobject) |This is the merchant descriptor that will be displayed on the customer's card statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |accordD            |[accordD](#accorddobject)              |These are parameters for financing plans supported for certain merchant configurations.<br/>Include this element **only when** instructed to do so by your account manager.|
 |description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
@@ -827,6 +827,7 @@ When providing card information, merchants can provide either card details or a 
 |Element            |Type                       |Description                        |
 |---                |---                        |---                                |
 |paymentToken       |string <br/>`length<=80`   |If the payment token is provided, no other card information is necessary. |
+|cvv                |string<br/>`length=3-4`    |This is the 3- or 4-digit security code that appears on the card following the card number.|
 
 **OR**
 
@@ -3646,8 +3647,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `accordD` (object, optional) - These are parameters for [financing plans](#accorddobject) supported for certain merchant configurations.
     + financingType:DEFERRED_PAYMENT (enum, required) - This is the type of financing offered.
     + plan:112 (string, required) - This is the plan number for this financing transaction.
-    + gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions. 
+        _length<=3_
+    + gracePeriod:12 (number, optional) - This is the grace period, in months, associated with deferred payment transactions.
+        _max=99_
     + term:24 (number, optional) - This is the number of payments, in months, for equal payment transactions.
+        _max=99_
 
 ## `Acquirer Data`
 
@@ -3675,8 +3679,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `authentication` (object, optional) - These are [3D Secure](#authenticationobject) details.
     + eci:5 (number, required) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated.
+        _length<=2_
     + cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
+        _length<=80_
     + xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+        _length<=40_
     + threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
     + threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
     + signatureStatus:Y (enum, optional) - This is the 3D Secure signature verification result value.
@@ -3685,9 +3692,9 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
-    _Read Only_
+    _Read Only_, _length<=36_
 
-+ Include Card
++ Include Card Auth
 
 + `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
@@ -3718,6 +3725,8 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + Default: true
 
 + `keywords`:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
+    _length<=255_
+
     - Repeat Customer
     - Profile Stored
 
@@ -3736,13 +3745,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `availableToSettle`: `1000` (number) - This is the amount of of the Authorization remaining to settle, in minor units.
 
-    _max=99999999999_
-
-    _Read Only_
+    _Read Only_, _max=99999999999_
 
 + `authCode`: `123456789011` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
 
-    _Read Only_
+    _Read Only_, _length<=50_
 
 + `txnTime`: `2017-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
@@ -3750,7 +3757,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `currencyCode`:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
 
-    _Read Only_
+    _Read Only_, _length=3_
 
 + `avsResponse`:`MATCH` (enum) - This is the [AVS response from the card issuer](#authsobject).
 
@@ -3783,12 +3790,19 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `billingDetails` (object, optional) -This is the billing address of the customer.
     + street:100 Queen Street West (string, optional)
+        _length<=50_
     + street2 (string, optional)
+        _length<=50_
     + city:Toronto (string, optional)
+        _length<=40_
     + state:ON (string, optional)
-    + country:CA (string, optional) 
+        _length<=40_
+    + country:CA (string, optional)
+        _length=2_
     + zip:M5H 2N2 (string, optional)
+        _length<=10_
     + phone:555-9999 (string, optional)
+        _length<=40_
 
 ## `Card Expiry`
 + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
@@ -3798,7 +3812,64 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         + year:2020 (number, required) - This is the card expiry year.
         
 
+## `Card Auth`
+
++ One of
+
+    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+
+        + Properties
+
+            + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token representing the card.
+                _length<=80_
+            + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                _length=3-4_
+
+    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+
+        + Properties
+
+            + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+                _length=8-20_
+                
+            + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+                + month:12 (number, required) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number, required) - This is the card expiry year.
+                    _length=4_
+            + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                _length=3-4_
+            + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+            + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
+
 ## `Card`
+
++ One of
+
+    + card (object, required) - This is the payment token that represents the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    
+        + Properties
+
+            + paymentToken:`LTEyMzYzMjQ3ODg` (string, required) - This is the payment token representing the card.
+                _length<=80_
+
+    + card (object, required) - These are the details of the [card](#cardobject) used for the request. Only one *card* object can be included in the request.
+    
+        + Properties
+
+            + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+                _length=8-20_
+               + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+                + month:12 (number, required) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number, required) - This is the card expiry year.
+                    _length=4_
+            + cvv:`123` (string, optional) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                _length=3-4_
+            + track1 (string, optional) - This is Track 1 information read from the card's magnetic stripe.
+            + track2 (string, optional) - This is Track 2 information read from the card's magnetic stripe.
+
+## `Card` backup
 
 + card (object, required) - These are the details of the [card](#cardobject) used for the request.
     
@@ -3825,8 +3896,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     + Properties
         + day:29 (number, required) - This is the day of birth.
+            _length=2_
         + month:12 (number, required) - This is the month of birth.
+            _length=2_
         + year:2020 (number, required) - This is the year of birth.
+            _length=4_
 
 ## Error Response
 + error (object)
@@ -3844,25 +3918,38 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `level2Level3` (object, optional) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object).
     + exemptLocalTax:true (boolean, optional) - This indicates whether or not local tax is exempted for the request. 
     + localTaxAmount:1500 (number, optional) - This is the local sales tax applied to the purchase.
+        _length<=99999999999_
     + nationalTaxAmount:0 (number, optional) - This is the national tax included in the transaction amount.
+        _length<=99999999999_
     + freightAmount:0 (number, optional) - This is the freight or shipping portion of the total transaction amount.
+        _length<=99999999999_
     + dutyAmount:0 (number, optional) - This is the duty associated with the import of the purchased goods.
+        _length<=99999999999_
     + destinationZip:90210 (string, optional) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+        _length<=10_
     + destinationCountry:US (string, optional) - This is the country to which the goods are being shipped.
+        _length=2_
     + shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
-    + lineItems (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
+        _length<=10_
     + Include Line Items
             
 ## Line Items
 
-+ `lineItems` (object, optional) - this is more [detailed information](#lineitemsobject) about the items that are being purchased.
++ `lineItems` (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
     + description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
+        _length<=50_
     + productCode:DCL (string, optional) - This is a merchant-defined description code of the item being purchased.
+        _length<=12_
     + quantity:4 (number, optional) - This is the quantity of the item.
-    + unitAmount:120000 (number, optional) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting. 
+        _length<=99999999999_, _max 4 decimals_
+    + unitAmount:120000 (number, optional) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.
+        _length<=99999999999_
     + taxRate:5 (number, optional) - This is the tax rate used to calculate the tax amount.
+        _length<=100_, _max 2 decimals_
     + taxAmount:24000 (number, optional) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
+        _length<=99999999999_
     + totalAmount:504000 (number, optional) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units.
+        _length<=99999999999_
 
 ## `link`
 + rel: self 
@@ -3952,7 +4039,9 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `merchantDescriptor` (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
     + `dynamicDescriptor`:`Online Store` (string, required) - This is a merchant descriptor that will be displayed on a customer’s card statement.
+        _length<=20_
     + `phone`:`888-9999` (string, optional) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.
+        _length<=13_
 
 ## `Original Credit`
 
@@ -4018,16 +4107,22 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `profile` (object, optional) -  These are some details about the customer.
     + firstName:John (string, optional)
+        _length<=80_
     + lastName:Smith (string, optional)
+        _length<=80_
     + email:`jsmith@email.com` (string, optional)
+        _length<=255_
 
 ## Recipient
 
 + `recipient` (object, optional) - This allows [additional data](#recipientobject) to be included with a request. Include this object **only if** your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. **Note:** If there is already recipient data associated with a consumer profile and you are using the payment token from that profile for an Authorization, then if you include recipient data in the Authorization itself, that data will override the recipient data in the profile.
     + Include Date of Birth
     + zip:M5M 5M5 (string, optional) - This is the recipient's postcode.
+        _length<=10_
     + lastName:Smith (string, optional) - This is the recipient's last name.
+        _length<=255_
     + accountNumber:ABC1234567890 (string, optional) - This is the recipient's account number, e.g., a loan agreement number or customer ID.
+        _length<=25_
 
 ## `Refund`
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e.g., lookups.
@@ -4107,11 +4202,17 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + carrier:CAD (enum, optional) - This is the shipment carrier.
     + shipMethod:T (enum, optional) - This is the shipment method.
     + recipientName:Jane Smith (string, optional) - This is the name of the person receiving the goods.
+        _length<=255_
     + street:102 Queen Street West (string, optional) - This is the first line of the street address in the shipping address.
+        _length<=50_
     + city:Toronto (string, optional) - This is the city in the shipping address.
-    + state:ON (string, optional) - This is the state or province in the shipping address. 
-    + country:CA (string, optional) - This is the country in the shipping address. 
+        _length<=40_
+    + state:ON (string, optional) - This is the state or province in the shipping address.
+        _length<=40_
+    + country:CA (string, optional) - This is the country in the shipping address.
+        _length<=2_
     + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
+        _length<=10_
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
