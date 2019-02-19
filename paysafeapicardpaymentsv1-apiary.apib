@@ -4260,14 +4260,14 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     + Properties
         + type:`ADHOC` (enum) - This specifies the type of request being made. 
-            - ADHOC
-            - TOPUP
-            - RECURRING
+            - ADHOC - Ad hoc consumer-initiated request
+            - TOPUP - Unscheduled merchant-iniitated request when a consumer balance is below a set limit
+            - RECURRING - Scheduled, merchant-initiated recurring request
             
             + Default: ADHOC
-        + occurrence:`RECURRING` (enum) - This specifies whether the stored credential request is initial or recurring. 
-            - INITIAL
-            - RECURRING
+        + occurrence:`SUBSEQUENT` (enum) - This specifies whether the stored credential request is initial or recurring. 
+            - INITIAL - Used when this is the first time the consumer uses this credit card
+            - SUBSEQUENT - Used when the consumer uses this credit card for subsquent requests
             
             + Default: INITIAL
 
