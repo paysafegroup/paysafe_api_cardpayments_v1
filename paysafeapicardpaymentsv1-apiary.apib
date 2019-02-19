@@ -139,11 +139,11 @@ The following request types are supported:
 
 # Getting Started
 
-Click [here for details](https://developer.paysafe.com/en/rest-api/cards/using-the-api/scenarios/) of some common scenarios for making Card payments.
+Click [here for details](https://developer.paysafe.com/en/rest-apis/cards/using-the-api/scenarios/) of some common scenarios for making Card payments.
 
 # Testing Instructions
 
-The Paysafe Test environment can be used to test websites or applications without actually running transactions through the payment processing engine. It is important to make sure that your systems are working correctly before going into a live environment. Click [here for details](https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/testing-instructions/) about using the Test environment.
+The Paysafe Test environment can be used to test websites or applications without actually running transactions through the payment processing engine. It is important to make sure that your systems are working correctly before going into a live environment. Click [here for details](https://developer.paysafe.com/en/rest-apis/cards/test-and-go-live/testing-instructions/) about using the Test environment.
 
 <a name="isostandards" title="ISO Standards"></a>
 # ISO Standards
@@ -834,7 +834,7 @@ When providing card information, merchants can provide either card details or a 
 |Element            |Type                       |Description                        |
 |---                |---                        |---                                |
 |cardNum            |string <br/>`length=8-20`  |This is the card number used for the request. |
-|type               |enum                       |This is the type of card used for the request, returned in the response. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DC &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; Mastercard</li><li>MD &ndash; Maestro</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
+|type               |enum                       |This is the type of card used for the request, returned in the response. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DI &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; Mastercard</li><li>MD &ndash; Maestro</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
 |lastDigits         |string<br/>`length=4`      |This is the last four digits of the card used for the request.|
 |cardExpiry         |[cardExpiry](#cardexpiryobject)|This is the card's expiry date.|
 |cvv                |string<br/>`length=3-4`    |This is the 3- or 4-digit security code that appears on the card following the card number.|
@@ -909,7 +909,7 @@ When providing card information, merchants can provide either card details or a 
       "links":[  
          {  
             "rel":"errorinfo",
-            "href":"https://developer.paysafe.com/en/rest-api/cards/test-and-go-live/card-errors/#ErrorCode5270"
+            "href":"https://developer.paysafe.com/en/rest-apis/cards/test-and-go-live/card-errors/#ErrorCode5270"
          }
       ]
    }
@@ -4191,7 +4191,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
     + (object)
         + Properties
-            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account.
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account. This account must already be linked to the merchant account.
             + One of
                 + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
                 + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
