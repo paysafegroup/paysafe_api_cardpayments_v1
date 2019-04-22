@@ -700,7 +700,20 @@ These are raw results returned by the acquirer.
 |threeDResult                       |enum                           |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &ndash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li><li>R &ndash; Rejected transaction.</li></ul><br/>**Note:** The _R_ value only exists for 3D Secure 2.|
 |signatureStatus                    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul><br/>**Note:** This only exists for 3DS 1.0.2.|
 |directoryServerTransactionId       |string<br/>`length<=36`        |This is the unique directory server transaction ID required for Mastercard. <br/>**Note:** This only exists for 3D Secure 2. |
-|threeDSecureVersion                |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response.|
+|threeDSecureVersion\*              |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response. \*See the table below for specific threeDSecureVersion parameter examples. |
+
+
+| Scenario                      | 3DS version                    | Card Issuer | directoryServerTransactionId present?                              | Outcome                                 |
+|-------------------------------|--------------------------------|-------------|--------------------------------------------------------------------|-----------------------------------------|
+| A correct authorization with… |                                |             |                                                                    |                                         |
+|                               | 2+                             | Mastercard  | Yes                                                                | Successful authorization                |
+|                               | 2+                             | Mastercard  | No                                                                 | Unsuccessful authorization              |
+|                               | 2+                             | Mastercard  | Yes, but does not follow canonical format defined in IETF RFC 4122 | Unsuccessful authorization              |
+|                               | Version is entered incorrectly | Mastercard  | Yes                                                                | Unsuccessful authorization              |
+|                               | Not entered                    | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+|                               | 1.0.2                          | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+|                               | 2+                             | Visa        | Yes/No                                                             | Successful authorization                |
+|                               | Not entered                    | Visa        | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
 
 The following is an example of the 3DS 1.0 authentication object:
 ```apib
