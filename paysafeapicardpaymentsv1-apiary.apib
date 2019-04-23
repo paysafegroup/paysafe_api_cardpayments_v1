@@ -793,7 +793,8 @@ The following is an example of the 3D Secure 2 authentication object:
     "cardExpiry":{
       "month":2,
       "year":2019
-    },
+    }
+  },
     "billingDetails":{
       "zip":"M5H 2N2"
     },
@@ -806,12 +807,12 @@ The following is an example of the 3D Secure 2 authentication object:
   "storedCredential": {
     "type": "RECURRING",
     "occurrence": "SUBSEQUENT"
-    },
+  },
   "keywords": [
     "Repeat Customer",
     "Profile Stored"
   ],
-  "settlements":[
+  "settlements": [
     {
       "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
       "merchantRefNum":"ORDER_ID:1231",
@@ -819,9 +820,8 @@ The following is an example of the 3D Secure 2 authentication object:
       "availableToRefund":0,
       "txnTime":"2013-12-14T15:12:18Z",
       "status":"PENDING"
-      }
-    ]
     }
+  ]
 }    
 ```
 
