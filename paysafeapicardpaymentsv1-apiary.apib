@@ -703,44 +703,53 @@ These are raw results returned by the acquirer.
 |threeDSecureVersion\*              |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response. \*See the table below for specific threeDSecureVersion parameter examples. |
 
 
-| Scenario                      | 3DS version                    | Card Issuer | directoryServerTransactionId present?                              | Outcome                                 |
-|-------------------------------|--------------------------------|-------------|--------------------------------------------------------------------|-----------------------------------------|
-| A correct authorization with… |                                |             |                                                                    |                                         |
-|                               | 2+                             | Mastercard  | Yes                                                                | Successful authorization                |
-|                               | 2+                             | Mastercard  | No                                                                 | Unsuccessful authorization              |
-|                               | 2+                             | Mastercard  | Yes, but does not follow canonical format defined in IETF RFC 4122 | Unsuccessful authorization              |
-|                               | Version is entered incorrectly | Mastercard  | Yes                                                                | Unsuccessful authorization              |
-|                               | Not entered                    | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
-|                               | 1.0.2                          | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
-|                               | 2+                             | Visa        | Yes/No                                                             | Successful authorization                |
-|                               | Not entered                    | Visa        | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+### Authorization Scenarios with Authentication
+| 3DS version                    | Card Issuer | directoryServerTransactionId Present?                              | Outcome                                 |
+|--------------------------------|-------------|--------------------------------------------------------------------|-----------------------------------------|
+| 2+                             | Mastercard  | Yes                                                                | Successful authorization                |
+| 2+                             | Mastercard  | No                                                                 | Unsuccessful authorization              |
+| 2+                             | Mastercard  | Yes, but does not follow canonical format defined in IETF RFC 4122 | Unsuccessful authorization              |
+| Not entered                    | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+| 1.0.2                          | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+| 2+                             | Visa        | Yes/No                                                             | Successful authorization                |
+| Not entered                    | Visa        | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+
+### 3DS Field Usage
+|    Brand         |    3DS Version of the Authentication Flow    |    threeDSecureVersion Field    |    directoryServerTransactionId Field    |
+|------------------|----------------------------------------------|---------------------------------|------------------------------------------|
+|    Mastercard    |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    Mastercard    |    2.X.Y                                     |    required                     |    required                              |
+|    Visa          |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    Visa          |    2.X.Y                                     |    required                     |    optional                              |
+|    AMEX          |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    AMEX          |    2.X.Y                                     |    required                     |    optional                              |
 
 The following is an example of the 3DS 1.0.2 authentication object:
 ```apib
-  {
-  "authentication":{
-    "eci":5,
-    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
-    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
-    "threeDEnrollment":"Y",
-    "threeDResult":"Y",
-    "threeDSecureVersion":"1.0.2",
-    "signatureStatus":"Y"
-  }
-  }
+    {
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+            "threeDEnrollment": "Y",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "1.0.2",
+            "signatureStatus": "Y"
+        }
+    }
 ```
 
 The following is an example of the 3D Secure 2 authentication object:
 ```apib
-  {
-  "authentication":{
-    "eci":5,
-    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
-    "threeDResult":"Y",
-    "threeDSecureVersion":"2.1.0",
-    "directoryServerTransactionId":"a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
-  }
-  }
+    {
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "2.1.0",
+            "directoryServerTransactionId": "a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
+        }
+    }
 ```
 
 <a name="authorizationobject" title="auths Object"></a>
