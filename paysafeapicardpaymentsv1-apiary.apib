@@ -5,12 +5,13 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 # Release Notes
 
-| Version   | Date          | Details |
-|---        |---            |---      |
-| v1        | April 2018 | Renamed "Turnkey" to "Platforms" |
-| v1        | February 2018  | Added *recipient* object |
-| v1        | September 2017 | Added Turnkey features |
-| v1        | November 2016 | Document release |
+| Version   | Date              | Details |
+|---        |---                |---      |
+| v1        | April 2019        | Added 3D Secure 2 Authentication object fields |
+| v1        | April 2018        | Renamed "Turnkey" to "Platforms" |
+| v1        | February 2018     | Added *recipient* object |
+| v1        | September 2017    | Added Turnkey features |
+| v1        | November 2016     | Document release |
 
 # Overview
 
@@ -690,26 +691,65 @@ These are raw results returned by the acquirer.
 <a name="authenticationobject" title="Authentication Object"></a>
 ## authentication
 
-|Element            |Type                           |Description                        |
-|---                |---                            |---                                |
-|eci                |number<br/>`length<=2`         |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the *eci* value includes a leading zero, e.g., 01 or 02.<br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
-|cavv               |string<br/>`length<=80`        |This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated. This value should be appended to the Authorization request signifying that the transaction has been successfully authenticated.| 
-|xid                |string<br/>`length<=40`        |This is the transaction identifier returned by the card issuer.|
-|threeDEnrollment   |enum                           |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul>|
-|threeDResult       |enum                           |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &dash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>|
-|signatureStatus    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
+|Element                            |Type                           |Description                        |
+|---                                |---                            |---                                |
+|eci                                |number<br/>`length<=2`         |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the *eci* value includes a leading zero, e.g., 01 or 02.<br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
+|cavv                               |string<br/>`length<=80`        |This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated. This value should be appended to the Authorization request signifying that the transaction has been successfully authenticated.| 
+|xid                                |string<br/>`length<=40`        |This is the transaction identifier returned by the card issuer. <br/>**Note:** This only exists for 3DS 1.0.2.|
+|threeDEnrollment                   |enum                           |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul><br/>**Note:** This only exists for 3DS 1.0.2.|
+|threeDResult                       |enum                           |This indicates the outcome of the authentication.<ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &ndash; The cardholder failed to authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li><li>R &ndash; Rejected transaction.</li></ul><br/>**Note:** The _R_ value only exists for 3D Secure 2.|
+|signatureStatus                    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul><br/>**Note:** This only exists for 3DS 1.0.2.|
+|directoryServerTransactionId       |string<br/>`length<=36`        |This is the unique directory server transaction ID required for Mastercard. <br/>**Note:** This only exists for 3D Secure 2. |
+|threeDSecureVersion\*              |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response. \*See the table below for specific threeDSecureVersion parameter examples. |
 
+
+### Authorization Scenarios with Authentication
+| 3DS version                    | Card Issuer | directoryServerTransactionId Present?                              | Outcome                                 |
+|--------------------------------|-------------|--------------------------------------------------------------------|-----------------------------------------|
+| 2+                             | Mastercard  | Yes                                                                | Successful authorization                |
+| 2+                             | Mastercard  | No                                                                 | Unsuccessful authorization              |
+| 2+                             | Mastercard  | Yes, but does not follow canonical format defined in IETF RFC 4122 | Unsuccessful authorization              |
+| Not entered                    | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+| 1.0.2                          | Mastercard  | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+| 2+                             | Visa        | Yes/No                                                             | Successful authorization                |
+| Not entered                    | Visa        | Yes/No                                                             | Successful authorization with 3DS 1.0.2 |
+
+### 3DS Field Usage
+|    Brand         |    3DS Version of the Authentication Flow    |    threeDSecureVersion Field    |    directoryServerTransactionId Field    |
+|------------------|----------------------------------------------|---------------------------------|------------------------------------------|
+|    Mastercard    |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    Mastercard    |    2.X.Y                                     |    required                     |    required                              |
+|    Visa          |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    Visa          |    2.X.Y                                     |    required                     |    optional                              |
+|    AMEX          |    1.0.2                                     |    optional (default 1.0.2)     |    N/A                                   |
+|    AMEX          |    2.X.Y                                     |    required                     |    optional                              |
+
+The following is an example of the 3DS 1.0.2 authentication object:
 ```apib
-  {
-  "authentication":{
-    "eci":5,
-    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
-    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
-    "threeDEnrollment":"Y",
-    "threeDResult":"Y",
-    "signatureStatus":"Y"
-  }
-  }
+    {
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+            "threeDEnrollment": "Y",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "1.0.2",
+            "signatureStatus": "Y"
+        }
+    }
+```
+
+The following is an example of the 3D Secure 2 authentication object:
+```apib
+    {
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "2.1.0",
+            "directoryServerTransactionId": "a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
+        }
+    }
 ```
 
 <a name="authorizationobject" title="auths Object"></a>
@@ -762,10 +802,11 @@ These are raw results returned by the acquirer.
     "cardExpiry":{
       "month":2,
       "year":2019
-    },
-    "billingDetails":{
-        "zip":"M5H 2N2"
-        },
+    }
+  },
+  "billingDetails":{
+    "zip":"M5H 2N2"
+  },
   "authCode":"1234567890",
   "txnTime":"2013-12-14T15:12:18Z",
   "currencyCode":"USD",
@@ -775,12 +816,12 @@ These are raw results returned by the acquirer.
   "storedCredential": {
     "type": "RECURRING",
     "occurrence": "SUBSEQUENT"
-    },
+  },
   "keywords": [
     "Repeat Customer",
     "Profile Stored"
   ],
-  "settlements":[
+  "settlements": [
     {
       "id":"a02e52c7-c991-4418-966a-b62989cb0eae",
       "merchantRefNum":"ORDER_ID:1231",
@@ -788,9 +829,8 @@ These are raw results returned by the acquirer.
       "availableToRefund":0,
       "txnTime":"2013-12-14T15:12:18Z",
       "status":"PENDING"
-      }
-    ]
     }
+  ]
 }    
 ```
 
@@ -1555,7 +1595,8 @@ Click on **Authorization** above to see four examples of an Authorization reques
 * An Authorization request that will have to be settled later
 * A purchase request, which authorizes and settles the payment in a single request by setting the *settleWithAuth* parameter to *true*
 * An Authorization request using a payment token
-* An Authorization including 3D Secure authentication data
+* An Authorization including 3D Secure 1.0.2 authentication data 
+* An Authorization including 3D Secure 2 authentication data
 
 In the case of an Authorization request using a payment token, you can use either of two payment token types:
 
@@ -1829,7 +1870,7 @@ In the case of an Authorization request using a payment token, you can use eithe
                 ]
             }
 
-+ Request Submit an Authorization Request with Authentication Data (application/json)
++ Request Submit an Authorization Request with 3DS 1.0.2 Authentication Data (application/json)
 
     + Headers
 
@@ -1851,12 +1892,13 @@ In the case of an Authorization request using a payment token, you can use eithe
                     "cvv": 123
                 },
                 "authentication": {
-                    "eci": 5,
-                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
-                    "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
-                    "threeDEnrollment": "Y",
-                    "threeDResult": "Y",
-                    "signatureStatus": "Y"
+                    "eci":5,
+                    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                    "threeDEnrollment":"Y",
+                    "threeDResult":"Y",
+                    "threeDSecureVersion":"1.0.2",
+                    "signatureStatus":"Y"
                 },
                 "profile": {
                     "firstName": "Joe",
@@ -1896,12 +1938,111 @@ In the case of an Authorization request using a payment token, you can use eithe
                     }
                 },
                 "authentication": {
-                    "eci": 5,
-                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
-                    "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
-                    "threeDEnrollment": "Y",
-                    "threeDResult": "Y",
-                    "signatureStatus": "Y"
+                    "eci":5,
+                    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+                    "threeDEnrollment":"Y",
+                    "threeDResult":"Y",
+                    "threeDSecureVersion":"1.0.2",
+                    "signatureStatus":"Y"
+                },                
+                "authCode": "180796",
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase",
+                "currencyCode": "CAD",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
+                    }
+                ]
+            }
+
++ Request Submit an Authorization Request with 3D Secure 2 Authentication Data (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "merchantRefNum": "merchant 03.24.17_3",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "dupCheck": false,
+                "card": {
+                    "cardNum": "4111111111111111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    },
+                    "cvv": 123
+                },
+                "authentication": {
+                    "eci":5,
+                    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "threeDResult":"Y",
+                    "threeDSecureVersion":"2.1.0",
+                    "directoryServerTransactionId":"a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
+                },
+                "profile": {
+                    "firstName": "Joe",
+                    "lastName": "Smith",
+                    "email": "Joe.Smith@canada.com"
+                },
+                "billingDetails": {
+                    "street": "100 Queen Street West",
+                    "city": "Toronto",
+                    "state": "ON",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "customerIp": "204.91.0.12",
+                "description": "Video purchase"
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "merchantRefNum": "merchant 03.24.17_3",
+                "txnTime": "2017-03-24T18:28:28Z",
+                "status": "COMPLETED",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "availableToSettle": 1000,
+                "card": {
+                    "type": "VI",
+                    "lastDigits": "1111",
+                    "cardExpiry": {
+                        "month": 2,
+                        "year": 2019
+                    }
+                },
+                "authentication": {
+                    "eci":5,
+                    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "threeDResult":"Y",
+                    "threeDSecureVersion":"2.1.0",
+                    "directoryServerTransactionId":"a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
                 },                
                 "authCode": "180796",
                 "profile": {
@@ -3005,16 +3146,18 @@ Click on **Get Verification Using Merchant Reference Number** above to see how t
 
 Original Credits allow merchants with specific merchant category codes (MCCs) to issue winnings as credits to cardholders, without requiring a previous Authorization/Settlement. 
 
-Merchants with the following MCCs can process Original Credits:
- * 4829
- * 6012
- * 6051
- * 6211
- * 6540
- * 7299
+**Note:** Acquirers and processors do not necessarily support all available MCCs; before integrating, you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/) for details.
+
+Worldpay Inc. (formerly Vantiv) supports Original Credit transactions with the following MCCs:
+ * 5816
+ * 7800
+ * 7801
+ * 7802
+ * 7994
+
+Original Credit transfers are supported for non-Worldpay Inc. merchants with the following MCCs:
  * 7994
  * 7995
- * 8999
 
 By default, Test accounts do not support Original Credits; if you wish to use them you should contact [Integration Support](https://developer.paysafe.com/en/resources-and-support/contact-us/).
 
@@ -3685,11 +3828,16 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=2_
     + cavv:AAABCIEjYgAAAAAAlCNiENiWiV+= (string, required) - This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated.
         _length<=80_
-    + xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer.
+    + xid:OU9rcTRCY1VJTFlDWTFESXFtTHU= (string, optional) - This is the transaction identifier returned by the card issuer. **Note:** This only exists for 3DS 1.0.2.
         _length<=40_
-    + threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure.
+    + threeDEnrollment:Y (enum, optional) - This indicates whether or not the cardholder is enrolled in 3D Secure. **Note:** This only exists for 3DS 1.0.2.
     + threeDResult:Y (enum, optional) - This indicates the outcome of the authentication.
-    + signatureStatus:Y (enum, optional) - This is the 3D Secure signature verification result value.
+    + signatureStatus:Y (enum, optional) - This is the 3D Secure signature verification result value. **Note:** This only exists for 3DS 1.0.2.
+    + directoryServerTransactionId:`123e4567-e89b-12d3-a456-4266554456745` (string, optional) - This is the unique directory server transaction ID required for Mastercard. **Note:** This is field is required when the card issuer is Mastercard. This only exists for 3D Secure 2.
+        _length<=36_
+    + threeDSecureVersion:`2.1.0` (string, required) - This is the 3D secure protocol version. **Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response.
+        _min=5_ _max=8_
+    
 
 ## Authorization
 
