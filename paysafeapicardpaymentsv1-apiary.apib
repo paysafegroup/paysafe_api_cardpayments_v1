@@ -1353,6 +1353,7 @@ The *storedCredential* object is used to identify [authorization requests](#auth
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|storedCredential   |[storedCredential](#storedcredentialobject) |Identifies requests that use stored credentials that the merchant has on file for the consumer, in order to improve authorization rates and reduce fraud.<br/>**Note:** You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.|
 
 ```apib
 {
