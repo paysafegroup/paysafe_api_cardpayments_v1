@@ -1316,10 +1316,12 @@ The *storedCredential* object is used to identify [authorization requests](#auth
  - The *cvv* parameter of the [card object](#cardobject) is required when the *occurrence* parameter is set to *INITIAL*. However, *cvv* is not required when the *occurrence* parameter is set to *SUBSEQUENT*.
  - The *storedCredential* object cannot be used for Apple Pay or Google Pay transactions.
 
-|Element                 |Type                   |Description|
-|---                     |---                    |---|
-|type                    |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash; Unscheduled merchant-iniitated request when a consumer balance is below a set limit </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
-|occurrence              |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
+|Element                       |Type                   |Description|
+|---                           |---                    |---|
+|type                          |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash;  Unscheduled merchant-iniitated request </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
+|occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
+|initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
+|externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
 
 ```apib
 {
