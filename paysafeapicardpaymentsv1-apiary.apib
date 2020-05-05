@@ -1798,6 +1798,7 @@ In the case of an Authorization request using a payment token, you can use eithe
 + Attributes
     + Include Authorization
     + Include links
+    + Include airlineTravelDetails
 
 + Request Submit an Authorization Request (application/json)
 
@@ -2259,10 +2260,7 @@ In the case of an Authorization request using a payment token, you can use eithe
             }
 + Request Authorization with ignored airline travel details for AIRLINE merchants only (application/json)
 
-    + Attributes
-        +  Include airlineTravelDetails
-
-    + Headers
+        + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
@@ -2357,10 +2355,7 @@ In the case of an Authorization request using a payment token, you can use eithe
 
 + Request Submit an Authorization Including Settlement for AIRLINE merchants only (application/json)
 
-    + Attributes
-        +  Include airlineTravelDetails
-
-    + Headers
+        + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
@@ -2859,6 +2854,7 @@ Click on **Settlement** above to see three examples of a Settlement request:
     + Include Settlement
     + Include Splitpay
     + Include Links Settlement
+    +  Include airlineTravelDetails
 
 + Request Process a Settlement (application/json)
 
@@ -2964,9 +2960,6 @@ Click on **Settlement** above to see three examples of a Settlement request:
 
 + Request Settlement for AIRLINE Merchants (application/json)
     
-    + Attributes
-        +  Include airlineTravelDetails
-
     + Headers
 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
