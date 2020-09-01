@@ -1757,6 +1757,10 @@ A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 |402                |3417           |There is already another request being processed on the transaction referenced for this request. |
 |402                |3418           |The external processing gateway for which your merchant account is configured does not support partial Credits.|
 |402                |3419           |This type of transaction cannot be refunded.|
+|500                |3420           |An error occurred while processing the purchase return authorization.|
+|402                |3421           |The purchase return authorization has been declined by the issuing bank.|
+|402                |3422           |The purchase return authorization has failed.|
+|500                |3423           |An error occurred while processing the purchase return authorization reversal.|
 
 
 # Using the Example API Calls (Console Window)
@@ -3308,6 +3312,49 @@ Click on **Refund** above to see two examples of a Refund request:
                     "rel": "self",
                     "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
                 }]
+            }
+
++ Request Process a Refund with Purchase Return Authorization (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+               {
+              "merchantRefNum": "merchantRef_2016_04_11_05",
+              "amount": 5500,
+              "dupCheck": true
+            }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+             {
+              "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+              "merchantRefNum": "merchantRef_2016_04_11_05",
+              "amount": 5500,
+              "dupCheck": true,
+              "txnTime": "2017-02-14T15:12:18Z",
+              "purchaseReturnAuthorization": {
+                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
+                "merchantRefNum": "merchantRef_2016_04_11_05",
+                "txnTime": "2017-02-14T15:12:18Z",
+                "authCode": "120072",
+                "amount": 5500,
+                "currencyCode": "USD"
+              }
+              "status": "COMPLETED",
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
+                }
+              ]
             }
 
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
@@ -4969,6 +5016,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
 
     _Read Only_
++ Include purchaseReturnAuthorization
 
 ## Settlement
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Refunds.
