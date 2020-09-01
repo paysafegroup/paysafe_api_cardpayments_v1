@@ -1262,7 +1262,7 @@ merchants who provide more detailed information when processing card-not-present
       "authCode": "120072",
       "amount": 5500,
       "currencyCode": "USD"
-    }
+      }
     }
 ```
 
@@ -1313,7 +1313,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-    |purchaseReturnAuthorization   |[purchaseReturnAuthorization](#purchaseReturnAuthorization) |This is the Purchase Return Authorization that was performed for the refund. Note: Purchase Return Authorization is performed and returned in the response only if acquirer/processor supports it.|
+|purchaseReturnAuthorization   |[purchaseReturnAuthorization](#purchaseReturnAuthorization) |This is the Purchase Return Authorization that was performed for the refund. Note: Purchase Return Authorization is performed and returned in the response only if acquirer/processor supports it.|
 
 ```apib
 {
