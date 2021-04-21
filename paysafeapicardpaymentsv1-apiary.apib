@@ -3,7 +3,7 @@ HOST: https://api.test.paysafe.com/cardpayments/
 
 # Paysafe Card Payments API
 
->**Note:** To download a French version of this guide in PDF, click [here](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/1.3_Payments_API_fr.pdf)
+>**Note:** To download a French version of this guide in PDF, click [here](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/1.3_Payments_API_fr.pdf) 
 
 
 # Release Notes
@@ -1143,7 +1143,7 @@ merchants who provide more detailed information when processing card-not-present
 ## merchantDescriptor
 |Element            |Type                       |Description                        |
 |---                |---                        |---                                |
-|dynamicDescriptor  |string <br/>`length<=20`   |This is a merchant descriptor that will be displayed on a customer’s card statement.|
+|dynamicDescriptor  |string <br/>`length<=20`   |This is a merchant descriptor that will be displayed on a customer’s card statement.</br> **Note**If you are a Consumer Bill Payment Service (CBPS) merchant, then provide your name and biller`s name, separated with asterisk. For example: CBPS Name*Biller Name.|
 |phone              |string <br/>`length<=13`   |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
 
 ```apib
