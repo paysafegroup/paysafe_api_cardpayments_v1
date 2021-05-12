@@ -1,16 +1,12 @@
-fFORMAT: 1A
+FORMAT: 1A
 HOST: https://api.test.paysafe.com/cardpayments/
 
 # Paysafe Card Payments API
-
->**Note:** To download a French version of this guide in PDF, click [here](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/1.3_Payments_API_fr.pdf) 
-
 
 # Release Notes
 
 | Version   | Date              | Details |
 |---        |---                |---      |
-| v1        | May 2020          | Added Purchase Return Authorizations support|
 | v1        | April 2019        | Added 3D Secure 2 Authentication object fields |
 | v1        | April 2018        | Renamed "Turnkey" to "Platforms" |
 | v1        | February 2018     | Added *recipient* object |
@@ -23,7 +19,7 @@ Connect your application directly with our payment engine to process a full suit
 * Choose an efficient, lightweight, and fast integration method to access our API.
 * Implement a wide variety of REST-based API requests – including Purchases, Refunds, and Void  Authorizations.
 * Obtain output in JSON format – it’s easy to parse in a large variety of Web and mobile applications.
-* Use any language or platform to make requests through standard HTTP protocols.
+* Use any language or platform to make requests through standard HTTP protocols. 
 
 <a name="apikey" title="Authentication"></a>
 # Authentication
@@ -86,7 +82,7 @@ In the case where an API GET request returns multiple results, Paysafe returns t
 <a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
 # Global Invalid Characters
 
-You must not include any of the characters in the following table as values in any of your request parameters except in the [merchantDescriptor](#merchantdescriptorobject) Object. If you do, your request will result in an error.
+You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
 
 |    Character    |    HEX    |    Description                     |
 |-----------------|-----------|------------------------------------|
@@ -692,70 +688,13 @@ These are raw results returned by the acquirer.
   }
   }
 ```
-<a name="airlineTravelDetailsobject" title="Airline Travel Details Object"></a>
-## airlineTravelDetails
-
-**Note** This object is specific to Airline Merchants Only.
-
-|Element                            |Type                           |Description                        |
-|---                                |---                            |---                                |
-|passengerName                      |string<br/>`min=1 max=20`      |Name of the passenger to whom the ticket was issued.|
-|departureDate                      |date <br/>`UTC date format`    |Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26|
-|origin                             |string<br/>`min=3 max=3`       |Departure Airport Code (IATA Airport Code).Example “YUL”|
-|computerizedReservationSystem      |enum                           |Indicates the computerized reservation system used to make the reservation and purchase the ticket. Possible values for tickets purchased in Germany are:<ul><li>STRT - Start</li><li>PARS - TWA</li><li>DATS - Delta</li><li>SABR - Sabre</li><li>DALA - Covia-Apollo</li><li>BLAN - Dr. Blank</li><li>DERD - DER</li><li>TUID - TUI</li></ul>|
-|[ticket](#ticket)                  |object                         |Information about the Airline Ticket Number and if the ticket is restricted.|
-|customerReferenceNumber            |string<br/>`min=1 max=20`      |Contains the code that the cardholder supplied to the card acceptor.|
-|[travelAgency](#travelAgency)      |object                         |Information about the travel agency if the ticket was issued by a travel agency.|
-|[tripLegs](#tripLegs)              |object                         |A grouping of up to four trip legs. Each leg provides detailed itinerary data. |
-
-```apib
-    "airlineTravelDetails": {
-    "passengerName": "Joe Smith",
-    "departureDate": "2021-01-26",
-    "origin": "SXF",
-    "computerizedReservationSystem": "DATS",
-    "ticket": {
-        "ticketNumber": 1234567891011,
-        "isRestrictedTicket": false
-    },
-    "customerReferenceNumber": 10987654321,
-    "travelAgency": {
-      "name": "MY AGENT",
-      "code": "MYAGENT347"
-    },
-    "tripLegs": {
-      "leg1": {
-        "flight": {
-          "carrierCode": "LH",
-          "flightNumber": "0799"
-        },
-        "serviceClass": "F",
-        "isStopOverAllowed": "true",
-        "destination": "ISL",
-        "fareBasis": "VMAY",
-        "departureDate": "2021-01-26"
-      },
-      "leg2": {
-        "flight": {
-          "carrierCode": "TK",
-          "flightNumber": "1385"
-        },
-        "serviceClass": "F",
-        "isStopOverAllowed": "true",
-        "destination": "SOF",
-        "fareBasis": "VMAY",
-        "departureDate": "2021-01-26"
-      }
-    }
-  } 
-```
 
 <a name="authenticationobject" title="Authentication Object"></a>
 ## authentication
 
 |Element                            |Type                           |Description                        |
 |---                                |---                            |---                                |
-|eci                                |number<br/>`length<=2`         |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the *eci* value includes a leading zero, e.g., 01 or 02.<br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<ul><li>0 &ndash; Identifies a non-authenticated transaction.</li><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
+|eci                                |number<br/>`length<=2`         |This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the *eci* value includes a leading zero, e.g., 01 or 02.<br/>**Visa**<ul><li>5 &ndash; Identifies a successfully authenticated transaction.</li><li>6 &ndash; Identifies an attempted authenticated transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
 |cavv                               |string<br/>`length<=80`        |This is the Cardholder Authentication Verification Value, which gets returned by the card issuer, indicating that the transaction has been authenticated. This value should be appended to the Authorization request signifying that the transaction has been successfully authenticated.| 
 |xid                                |string<br/>`length<=40`        |This is the transaction identifier returned by the card issuer. <br/>**Note:** This exists only for 3DS 1.0.2.|
 |threeDEnrollment                   |enum                           |This indicates whether or not the cardholder is enrolled in 3D Secure.<ul><li>Y &ndash; Authentication is available</li><li>N &ndash; Cardholder is not enrolled</li><li>U &ndash; Authentication is unavailable</li></ul><br/>**Note:** This exists only for 3DS 1.0.2.|
@@ -814,7 +753,7 @@ The following is an example of the 3D Secure 2 authentication object:
 |customerIp         |string<br/>`length<=39`                |This is the customer's IP address.|
 |dupCheck           |boolean                                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |keywords           |array<br/>`length<=255`                |This value can be any text the merchant wants to use, e.g., the merchant could use this as a tag to identify the transaction or the product purchased at their site. You can search on keywords in the merchant back office reporting tools.<br/>**Note:** The maximum number of keywords allowed in a request is 10.|
-|merchantDescriptor |[merchantDescriptor](#merchantdescriptorobject) |This is the merchant descriptor that will be displayed on the customer's card statement.
+|merchantDescriptor |[merchantDescriptor](#merchantdescriptorobject) |This is the merchant descriptor that will be displayed on the customer's card statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |accordD            |[accordD](#accorddobject)              |These are parameters for financing plans supported for certain merchant configurations.<br/>Include this element **only when** instructed to do so by your account manager.|
 |description        |string<br/>`length<=255`               |This is a description of the transaction, provided by the merchant.|
 |txnTime            |UTC formatted date                     |This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
@@ -828,8 +767,6 @@ The following is an example of the 3D Secure 2 authentication object:
 |recipient          |[recipient](#recipientobject)          |In certain cases, this allows additional data to be included with a payment request. |
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
-|entryMode          |enum                                   |This is how the transaction has been initiated and will affect the way it will be processed. Possible values are:<ul><li>- MOTO - Mail Order/Telephone Order</li></ul><br/>**Note:**: Include this element only when instructed to do so by Paysafe.|
-|cardPresent        |enum                                   |This is how the transaction has been initiated and will affect the way it will be processed. Possible values are:<ul><li>- MOTO - Mail Order/Telephone Order</li><li>- CARD_PRESENT - Card Present</li></ul><br/>**Note**: Include this element only when instructed to do so by Paysafe.
 
 ```apib
 {
@@ -998,46 +935,6 @@ When providing card information, merchants can provide either card details or a 
    }
 ```
 
-<a name="flight" title="flight Object"></a>
-## flight
-
-**Note** This object is only for Airline Merchants
-
-|Element            |Type                      |Description                        |
-|---                |---                       |---                                |
-|carrierCode|string<br/>`min=2 max=2`|Operating Carrier Code; the standard abbreviation code indicating name of the operating carrier (United Airlines, Jet Blue, etc.).|
-|flightNumber|string<br/>`min=1 max=5`|Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|
-
-<a name="leg" title="leg Object"></a>
-## leg
-
-**Note** This object is only for Airline Merchants
-
-|Element            |Type                      |Description                        |
-|---                |---                       |---                                |
-|[flight](#flights) |object                    |Operating Carrier Code and the Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|
-|serviceClass       |string<br/>`min=1 max=1`  |Indicates service class (first class, business class, etc.). Example values (not limited to):<ul><li>F - first class</li><li>J - business class</li><li>W - premium economy class</li><li>Y - economy class</li></ul>|
-|isStopOverAllowed  |boolean                   |Indicates whether a stopover is allowed on this ticket. Valid values are: <ul><li>false - not allowed</li><li>true - allowed</li></ul>|
-|destination        |string<br/>`min=3 max=3`  |Destination Airport Code (IATA Airport Code).Example “YUL”|   
-|fareBasis          |string<br/>`min=1 max=6`  |Contains a Fare Basis Code for Leg that carriers assign to a particular ticket type, such as business class or discounted/nonrefundable.|
-|departureDate      |date<br/>`UTC date format`|Date of passenger’s departure for this leg. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26|
-
-```apib
-{
-    "leg": {
-        "flight": {
-          "carrierCode": "TK",
-          "flightNumber": "1385"
-        },
-        "serviceClass": "F",
-        "isStopOverAllowed": "true",
-        "destination": "SOF",
-        "fareBasis": "VMAY",
-        "departureDate": "2021-01-26"
-      }
-}
-```
-
 <a name="level2level3object" title="level2level3 Object"></a>
 ## level2level3
 
@@ -1143,7 +1040,7 @@ merchants who provide more detailed information when processing card-not-present
 ## merchantDescriptor
 |Element            |Type                       |Description                        |
 |---                |---                        |---                                |
-|dynamicDescriptor  |string <br/>`length<=20`   |This is a merchant descriptor that will be displayed on a customer’s card statement.<br/><br/>**Note:** If you are a Consumer Bill Payment Service (CBPS) merchant, then provide your name and biller`s name, separated with asterisk. For example: CBPS Name*Biller Name.|
+|dynamicDescriptor  |string <br/>`length<=20`   |This is a merchant descriptor that will be displayed on a customer’s card statement.|
 |phone              |string <br/>`length<=13`   |This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s card statement.|
 
 ```apib
@@ -1225,50 +1122,6 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
-<a name="paymentFacilitator" title="paymentFacilitator Object"></a>
-## paymentFacilitator
-|Element                |Type                       |Description    |
-|---                    |---                        |---                                |
-|paymentFacilitatorName |string <br/>`min=1 max=50` |This is the payment facilitator name. |
-|subMerchantId          |string <br/>`min=1 max=50` |This is an ID that the schemes can use to identify the sub merchant of the payment facilitator. Possible values could be our FMA or some other identifier that the merchant wishes to identify a sub merchant as. The default should be our FMA number. |    
-|subMerchantName        |string <br/>`min=1 max=50` |The name of the sub merchant. Potentially can be used as part of the transaction descriptor. Each acquirer integration could be different please see individual implementation for actual behavior.|
-
-
-```apib
-    {
-    "paymentFacilitator": {
-        "paymentFacilitatorName": "PRE",
-        "subMerchantId": "rSubMerId",
-        "subMerchantName": "RsubMerName"
-    }
-    }
-```
-<a name="purchaseReturnAuthorization" title="purchaseReturnAuthorization Object"></a>
-## purchaseReturnAuthorization
-|Element                |Type                       |Description    |
-|---                    |---                        |---                                |
-|id                     |string <br/> `length<=36`  | This is the unique ID returned in the response. This ID can be used for future associated requests.|
-|merchantRefNum         |string <br/> `length<=255` | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
-|txnTime                |UTC formatted date         | This is the date and time the request was processed. For example: 2014-01-26T10:32:28Z|
-|authCode               |string `length<=50`        | This is the Authorization code assigned by the issuing bank and returned in the response.|
-|amount                 |number `max=99999999999`   | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139. Note: If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
-|currencyCode           |string `length=3`          | This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. See [Currency Codes](#currencycodes)|
-
-
-```apib
-    {
-      "purchaseReturnAuthorization":{
-      "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
-      "merchantRefNum": "merchantRef_2016_04_11_05",
-      "txnTime": "2017-02-14T15:12:18Z",
-      "authCode": "120072",
-      "amount": 5500,
-      "currencyCode": "USD"
-      }
-    }
-```
-
-
 <a name="recipientobject" title="recipient Object"></a>
 ## recipient 
 
@@ -1315,7 +1168,6 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-|purchaseReturnAuthorization   |[purchaseReturnAuthorization](#purchaseReturnAuthorization) |This is the Purchase Return Authorization that was performed for the refund. Note: Purchase Return Authorization is performed and returned in the response only if acquirer/processor supports it.|
 
 ```apib
 {
@@ -1464,12 +1316,10 @@ The *storedCredential* object is used to identify [authorization requests](#auth
  - The *cvv* parameter of the [card object](#cardobject) is required when the *occurrence* parameter is set to *INITIAL*. However, *cvv* is not required when the *occurrence* parameter is set to *SUBSEQUENT*.
  - The *storedCredential* object cannot be used for Apple Pay or Google Pay transactions.
 
-|Element                       |Type                   |Description|
-|---                           |---                    |---|
-|type                          |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash;  Unscheduled merchant-iniitated request </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
-|occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
-|initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
-|externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
+|Element                 |Type                   |Description|
+|---                     |---                    |---|
+|type                    |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash; Unscheduled merchant-iniitated request when a consumer balance is below a set limit </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
+|occurrence              |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
 
 ```apib
 {
@@ -1479,90 +1329,7 @@ The *storedCredential* object is used to identify [authorization requests](#auth
     }
 }
 ```
-<a name="ticket" title="ticket Object"></a>
-## ticket
 
-**Note** This object is only for Airline Merchants
-
-Information about the Airline Ticket Number and if the ticket is restricted
-
-|Element                       |Type                      |Description|
-|---                           |---                       |---|
-|ticketNumber                  |string <br/>`min=1 max=15`|Airline Ticket Number|
-|isRestrictedTicket            |boolean                   |Indicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket.Valid values are:<ul><li>false - No restriction (default)</li><li>true - Restricted (non-refundable) ticket</li></ul>|
-
-```apib
-{
-    "ticket": {
-        "ticketNumber": 1234567891011,
-        "isRestrictedTicket": false
-    }
-}
-```
-
-<a name="travelAgency" title="travelAgency Object"></a>
-## travelAgency
-
-**Note** This object is only for Airline Merchants
-
-Information about the travel agency if the ticket was issued by a travel agency.
-
-|Element                       |Type                      |Description|
-|---                           |---                       |---|
-|code                          |string <br/>`min=1 max=8` |Code identifying travel agency if the ticket was issued by a travel agency.|
-|name                          |string <br/>`min=1 max=25`|Name of travel agency if the ticket was issued by a travel agency.|
-
-```apib
-{
-    "travelAgency": {
-      "name": "MY AGENT",
-      "code": "MYAGENT347"
-    }
-}
-```
-
-<a name="tripLegs" title="tripLegs Object"></a>
-## tripLegs
-
-**Note** This object is only for Airline Merchants
-
-A grouping of up to four trip legs. Each leg provides detailed itinerary data.
-
-|Element                       |Type    |Description|
-|---                           |---     |---|
-|[leg1](#leg)                  |object  |Description of first leg of trip.|
-|[leg2](#leg)                  |object  |Description of second leg of trip.|
-|[leg3](#leg)                  |object  |Description of third leg of trip.|
-|[leg4](#leg)                  |object  |Description of fourth leg of trip.|
-
-```apib
-{
-   "tripLegs": {
-      "leg1": {
-        "flight": {
-          "carrierCode": "LH",
-          "flightNumber": "0799"
-        },
-        "serviceClass": "F",
-        "isStopOverAllowed": "true",
-        "destination": "ISL",
-        "fareBasis": "VMAY",
-        "departureDate": "2021-01-26"
-      },
-      "leg2": {
-        "flight": {
-          "carrierCode": "TK",
-          "flightNumber": "1385"
-        },
-        "serviceClass": "F",
-        "isStopOverAllowed": "true",
-        "destination": "SOF",
-        "fareBasis": "VMAY",
-        "departureDate": "2021-01-26"
-      }
-    }
-}
-```
 <a name="verificationsobject" title="verifications Object"></a>
 ## verifications
 
@@ -1586,7 +1353,6 @@ A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-|storedCredential   |[storedCredential](#storedcredentialobject) |Identifies requests that use stored credentials that the merchant has on file for the consumer, in order to improve authorization rates and reduce fraud.<br/>**Note:** You cannot include both the *recurring* parameter and the *storedCredential* object in the same authorization request. Paysafe recommends using the *storedCredential* object.|
 
 ```apib
 {
@@ -1759,11 +1525,6 @@ A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 |402                |3417           |There is already another request being processed on the transaction referenced for this request. |
 |402                |3418           |The external processing gateway for which your merchant account is configured does not support partial Credits.|
 |402                |3419           |This type of transaction cannot be refunded.|
-|500                |3420           |An error occurred while processing the purchase return authorization.|
-|402                |3421           |The purchase return authorization has been declined by the issuing bank.|
-|402                |3422           |The purchase return authorization has failed.|
-|500                |3423           |An error occurred while processing the purchase return authorization reversal.|
-|500                |3424           |Something went wrong with the purchase return authorization, please retry the transaction.|
 
 
 # Using the Example API Calls (Console Window)
@@ -1816,9 +1577,6 @@ Click on **Authorization** above to see four examples of an Authorization reques
 * An Authorization request using a payment token
 * An Authorization including 3D Secure 1.0.2 authentication data 
 * An Authorization including 3D Secure 2 authentication data
-* A Regular Authorization with ignored airline travel details for AIRLINE merchants only
-* A purchase request, which authorizes and settles the payment in a single request by setting the *settleWithAuth* parameter to *true* for AIRLINE merchants only
-
 
 In the case of an Authorization request using a payment token, you can use either of two payment token types:
 
@@ -1832,7 +1590,6 @@ In the case of an Authorization request using a payment token, you can use eithe
 + Attributes
     + Include Authorization
     + Include links
-    + Include airlineTravelDetails
 
 + Request Submit an Authorization Request (application/json)
 
@@ -2292,278 +2049,6 @@ In the case of an Authorization request using a payment token, you can use eithe
                     }
                 ]
             }
-+ Request Authorization with ignored airline travel details for AIRLINE merchants only (application/json)
-
-        + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-    + Body
-
-            {
-              "merchantRefNum": "merchant 03.24.17_3",
-              "amount": 100000,
-              "settleWithAuth": false, //or missing as the default value is false
-              "card": {
-                "cardNum": "4111111111111111",
-                "cardExpiry": {
-                  "month": 12,
-                  "year": 2021
-                },
-                "cvv": "123"
-              },
-              "profile": {
-                "firstName": "Joe",
-                "lastName": "Smith",
-                "email": "Joe.Smith@canada.com"
-              },
-              "airlineTravelDetails": {
-                "passengerName": "Joe Smith",
-                "departureDate": "2021-01-26",
-                "origin": "SXF",
-                "computerizedReservationSystem": "DATS",
-                "ticket": {
-                    "ticketNumber": 1234567891011,
-                    "isRestrictedTicket": false
-                },
-                "customerReferenceNumber": 10987654321,
-                "travelAgency": {
-                  "name": "MY AGENT",
-                  "code": "MYAGENT347"
-                },
-                "tripLegs": {
-                  "leg1": {
-                    "flight": {
-                      "carrierCode": "LH",
-                      "flightNumber": "0799"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "ISL",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  },
-                  "leg2": {
-                    "flight": {
-                      "carrierCode": "TK",
-                      "flightNumber": "1385"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "SOF",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  }
-                }
-              }   
-            }
-
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-              "id": "6de3404d-6a32-472c-8470-ae79e8c8246b",
-              "merchantRefNum": "merchant 03.24.17_3",
-              "txnTime": "2019-12-03T09:25:36Z",
-              "status": "COMPLETED",
-              "amount": 100000,
-              "settleWithAuth": false,
-              "card": {
-                "type": "VI",
-                "lastDigits": "1111",
-                "cardExpiry": {
-                  "month": 12,
-                  "year": 2021
-                }
-              },
-              "authCode": "100945",
-              "profile": {
-                "firstName": "Joe",
-                "lastName": "Smith",
-                "email": "Joe.Smith@canada.com"
-              },
-              "currencyCode": "EUR"
-            }
-
-+ Request Submit an Authorization Including Settlement for AIRLINE merchants only (application/json)
-
-        + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-    + Body
-
-            {
-              "merchantRefNum": "merchant 03.24.17_3",
-              "amount": 100000,
-              "settleWithAuth": true,
-              "dupCheck": false,
-              "card": {
-                "cardNum": "4111111111111111",
-                "cardExpiry": {
-                  "month": 12,
-                  "year": 2021
-                },
-                "cvv": "123"
-              },
-              "profile": {
-                "firstName": "Joe",
-                "lastName": "Smith",
-                "email": "Joe.Smith@canada.com"
-              },
-              "billingDetails": {
-                "street": "100 Queen Street West",
-                "city": "Sofia",
-                "country": "BG",
-                "zip": "1000"
-              },
-              "customerIp": "204.91.0.12",
-              "airlineTravelDetails": {
-                "passengerName": "Joe Smith",
-                "departureDate": "2021-01-26",
-                "origin": "SXF",
-                "computerizedReservationSystem": "DATS",
-                "ticket": {
-                    "ticketNumber": 1234567891011,
-                    "isRestrictedTicket": false
-                },
-                "customerReferenceNumber": 10987654321,
-                "travelAgency": {
-                  "name": "MY AGENT",
-                  "code": "MYAGENT347"
-                },
-                "tripLegs": {
-                  "leg1": {
-                    "flight": {
-                      "carrierCode": "LH",
-                      "flightNumber": "0799"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "ISL",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  },
-                  "leg2": {
-                    "flight": {
-                      "carrierCode": "TK",
-                      "flightNumber": "1385"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "SOF",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  }
-                }
-              }   
-            }
-
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-              "id": "6de3404d-6a32-472c-8470-ae79e8c8246b",
-              "merchantRefNum": "merchant 03.24.17_3",
-              "txnTime": "2019-12-03T09:25:36Z",
-              "status": "COMPLETED",
-              "amount": 100000,
-              "settleWithAuth": true,
-              "preAuth": false,
-              "availableToSettle": 0,
-              "card": {
-                "type": "VI",
-                "lastDigits": "1111",
-                "cardExpiry": {
-                  "month": 12,
-                  "year": 2021
-                }
-              },
-              "authCode": "100945",
-              "profile": {
-                "firstName": "Joe",
-                "lastName": "Smith",
-                "email": "Joe.Smith@canada.com"
-              },
-              "billingDetails": {
-                "street": "100 Queen Street West",
-                "city": "Sofia",
-                "country": "BG",
-                "zip": "1000"
-              },
-              "customerIp": "204.91.0.12",
-              "currencyCode": "EUR",
-              "settlements": [
-                {
-                  "id": "6de3404d-6a32-472c-8470-ae79e8c8246b",
-                  "merchantRefNum": "merchant 03.24.17_3",
-                  "txnTime": "2019-12-03T09:25:36Z",
-                  "status": "PENDING",
-                  "amount": 100000,
-                  "availableToRefund": 100000,
-                  "links": [
-                    {
-                      "rel": "self",
-                      "href": "https://api.qa.netbanx.com/cardpayments/v1/accounts/1012537630/settlements/6de3404d-6a32-472c-8470-ae79e8c8246b"
-                    }
-                  ],
-                  "airlineTravelDetails": {
-                    "passengerName": "Joe Smith",
-                    "departureDate": "2021-01-26",
-                    "origin": "SXF",
-                    "computerizedReservationSystem": "DATS",
-                    "ticket": {
-                        "ticketNumber": 1234567891011,
-                        "isRestrictedTicket": false
-                    },
-                    "customerReferenceNumber": 10987654321,
-                    "travelAgency": {
-                      "name": "MY AGENT",
-                      "code": "MYAGENT347"
-                    },
-                    "tripLegs": {
-                      "leg1": {
-                        "flight": {
-                          "carrierCode": "LH",
-                          "flightNumber": "0799"
-                        },
-                        "serviceClass": "F",
-                        "isStopOverAllowed": "true",
-                        "destination": "ISL",
-                        "fareBasis": "VMAY",
-                        "departureDate": "2021-01-26"
-                      },
-                      "leg2": {
-                        "flight": {
-                          "carrierCode": "TK",
-                          "flightNumber": "1385"
-                        },
-                        "serviceClass": "F",
-                        "isStopOverAllowed": "true",
-                        "destination": "SOF",
-                        "fareBasis": "VMAY",
-                        "departureDate": "2021-01-26"
-                      }
-                    }
-                  }
-                }
-              ],
-              "links": [
-                {
-                  "rel": "settlement",
-                  "href": "https://api.qa.netbanx.com/cardpayments/v1/accounts/1012537630/settlements/6de3404d-6a32-472c-8470-ae79e8c8246b"
-                },
-                {
-                  "rel": "self",
-                  "href": "https://api.qa.netbanx.com/cardpayments/v1/accounts/1012537630/auths/6de3404d-6a32-472c-8470-ae79e8c8246b"
-                }
-              ]
-            }
-
 
 ## Get Authorization [GET /v1/accounts/{account_id}/auths/{auth_id}]
 <a name="getauth" title="Look Up an Authorization"></a>
@@ -2877,7 +2362,6 @@ Click on **Settlement** above to see three examples of a Settlement request:
 * A regular Settlement, where the initial request was an Authorization that now has to be settled
 * A partial Settlement, where only part of the initial Authorization is settled, leaving the balance to be settled later
 * A Settlement that is split into multiple merchant accounts, for merchant accounts that are configured to do so
-* A Regular Settlement for the authorization with the full airline travel details for the AIRLINE Merchants
 
 + Parameters
 
@@ -2888,7 +2372,6 @@ Click on **Settlement** above to see three examples of a Settlement request:
     + Include Settlement
     + Include Splitpay
     + Include Links Settlement
-    +  Include airlineTravelDetails
 
 + Request Process a Settlement (application/json)
 
@@ -2991,119 +2474,6 @@ Click on **Settlement** above to see three examples of a Settlement request:
                     "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
                 }]
             }
-
-+ Request Settlement for AIRLINE Merchants (application/json)
-    
-    + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-    + Body
-
-            {
-              "merchantRefNum": "merchantRef_2019_04_11_05",
-              "dupCheck": true,
-              "airlineTravelDetails": {
-                "passengerName": "Joe Smith",
-                "departureDate": "2021-01-26",
-                "origin": "SXF",
-                "computerizedReservationSystem": "DATS",
-                "ticket": {
-                    "ticketNumber": 1234567891011,
-                    "isRestrictedTicket": false
-                },
-                "customerReferenceNumber": 10987654321,
-                "travelAgency": {
-                  "name": "MY AGENT",
-                  "code": "MYAGENT347"
-                },
-                "tripLegs": {
-                  "leg1": {
-                    "flight": {
-                      "carrierCode": "LH",
-                      "flightNumber": "0799"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "ISL",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  },
-                  "leg2": {
-                    "flight": {
-                      "carrierCode": "TK",
-                      "flightNumber": "1385"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "SOF",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  }
-                }
-              }   
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-             "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
-              "merchantRefNum": "merchantRef_2019_04_11_05",
-              "amount": 100000,
-              "availableToRefund": 100000,
-              "dupCheck": true,
-              "txnTime": "2019-12-03T09:25:36Z",
-              "status": "PENDING",
-              "airlineTravelDetails": {
-                "passengerName": "Joe Smith",
-                "departureDate": "2021-01-26",
-                "origin": "SXF",
-                "computerizedReservationSystem": "DATS",
-                "ticket": {
-                    "ticketNumber": 1234567891011,
-                    "isRestrictedTicket": false
-                },
-                "customerReferenceNumber": 10987654321,
-                "travelAgency": {
-                  "name": "MY AGENT",
-                  "code": "MYAGENT347"
-                },
-                "tripLegs": {
-                  "leg1": {
-                    "flight": {
-                      "carrierCode": "LH",
-                      "flightNumber": "0799"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "ISL",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  },
-                  "leg2": {
-                    "flight": {
-                      "carrierCode": "TK",
-                      "flightNumber": "1385"
-                    },
-                    "serviceClass": "F",
-                    "isStopOverAllowed": "true",
-                    "destination": "SOF",
-                    "fareBasis": "VMAY",
-                    "departureDate": "2021-01-26"
-                  }
-                }
-              }   
-              "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/settlements/d1fb46ee-2736-4ef5-a724-f263ace75373"
-                }
-              ]
-            }
-
-
 
 ## Cancel a Settlement [PUT /v1/accounts/{account_id}/settlements/{settlement_id}]
 <a name="cancelsettlement" title="Cancel a Settlement"></a>
@@ -3235,7 +2605,6 @@ Click on **Refund** above to see two examples of a Refund request:
 
 * A regular Refund
 * A Refund that is split into multiple merchant accounts, for merchant accounts that are configured to do so
-* A refund with automatic [Purchase Return Authorization](#purchaseReturnAuthorization) for acquireres/processors that support it.
 
 + Parameters
 
@@ -3315,49 +2684,6 @@ Click on **Refund** above to see two examples of a Refund request:
                     "rel": "self",
                     "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
                 }]
-            }
-
-+ Request Process a Refund with Purchase Return Authorization (application/json)
-
-    + Headers
-
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-    + Body
-
-            {
-               {
-              "merchantRefNum": "merchantRef_2016_04_11_05",
-              "amount": 5500,
-              "dupCheck": true
-            }
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-
-             {
-              "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
-              "merchantRefNum": "merchantRef_2016_04_11_05",
-              "amount": 5500,
-              "dupCheck": true,
-              "txnTime": "2017-02-14T15:12:18Z",
-              "purchaseReturnAuthorization": {
-                "id": "d1fb46ee-2736-4ef5-a724-f263ace75374",
-                "merchantRefNum": "merchantRef_2016_04_11_05",
-                "txnTime": "2017-02-14T15:12:18Z",
-                "authCode": "120072",
-                "amount": 5500,
-                "currencyCode": "USD"
-              }
-              "status": "COMPLETED",
-              "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/123456789/refunds/d1fb46ee-2736-4ef5-a724-f263ace75374"
-                }
-              ]
             }
 
 ## Cancel a Refund [PUT /v1/accounts/{account_id}/refunds/{refund_id}]
@@ -4475,66 +3801,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         + avsCode:`M` (string) - This is the raw AVS code returned by the acquirer.
         + balanceResponse:`1200` (string) - This is the balance remaining on a gift card, if a gift card was used in the original transaction.
 
-## `airlineTravelDetails`
-
-+ `airlineTravelDetails` (object) - This is additional information about your airline travel.
-    _NOTE:This object is only for Airline Merchants_
-    
-    + Properties
-        + passengerName: `John Doe` (string, required) - Name of the passenger to whom the ticket was issued.
-            _min=1 max=20_ 
-        + departureDate: `2014-01-26` (string, required) - Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected.
-            _UTC Date Format_
-        + origin: `YUL` (string,required) - Departure Airport Code: IATA Airport Code.
-            _min=3 max=3_
-        + computerizedReservationSystem: `STRT` (enum) - Indicates the computerized reservation system used to make the reservation and purchase the ticket. For tickets purchased in Germany, this field should one of these codes:
-            _Conditional: Required only if the ticket is purchased in Germany_
-            + Members
-                + STRT - Start
-                + PARS - TWA
-                + DATS - Delta
-                + SABR - Sabre
-                + DALA - Covia-Apollo
-                + BLAN - Dr. Blank
-                + DERD - DER
-                + TUID - TUI
-        + `ticket` (object) - Information about the Airline Ticket Number and if the ticket is restricted.
-            _Required_
-            + Properties
-                + ticketNumber: `` (string, required) - Airline Ticket Number.
-                    _min=1 max=20_ 
-                + isRestrictedTicket: `true` (boolean, optional) - ndicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket. Valid values are: false - No restriction : default, true - Restricted : non-refundable ticket.
-        + customerReferenceNumber: ``  (string, optional) - Contains the code that the cardholder supplied to the card acceptor.
-            _min=1 max=20_ 
-        + `travelAgency` (object) - Information about the travel agency if the ticket was issued by a travel agency.
-            _Optional_
-            + Properties
-                + code: `` (string, optional) - Code identifying travel agency if the ticket was issued by a travel agency.
-                    _min=1 max=8_ 
-                + name: `` (string, optional) - Information about the travel agency if the ticket was issued by a travel agency.
-                    _min=1 max=25_ 
-        + `tripLegs` (object) - A grouping of up to four trip legs. Each leg provides detailed itinerary data.
-            _Optional_
-            + Properties
-                + `leg1, leg2, leg3, leg4` (object) - Description of the various leg of trip.
-                    _Optional_
-                    + Properties
-                        + `flight` (object) - Operating Carrier Code and the Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).
-                            _Optional_
-                            + Properties
-                                + carrierCode: `` (string, optional) - Operating Carrier Code; the standard abbreviation code indicating name of the operating carrier like United Airlines, Jet Blue, etc.
-                                    _min=2 max=2_ 
-                                + flightNumber: `` (string, optional) - Number of the airline flight to be taken on Leg of the trip excluding the carrier code.
-                                      _min=2 max=5_ 
-                        + serviceClass: `` (string, optional) - Indicates service class (first class, business class, etc.). Example values (not limited to):F - first class, J - business class, W - premium economy class, Y - economy class, 
-                            _min=1 max=8_ 
-                        + isStopOverAllowed: `true` (boolean, optional) - Indicates whether a stopover is allowed on this ticket. Valid values are: false - not allowed, true - allowed
-                        + destination: `YUL` (string, optional) - Destination Airport Code : IATA Airport Code.
-                            _min=3 max=3_ 
-                        + fareBasis: `` (string,optional) - Contains a Fare Basis Code for Leg that carriers assign to a particular ticket type, such as business class or discounted/nonrefundable.
-                            _min=1 max=6_ 
-                        + departureDate: `2014-01-26` (string, required) -Date of passenger’s departure for this leg. Date format = YYYY-MM-DD, ISO 8601 expected. UTC date format.
-
 ## `Authentication`
 
 + `authentication` (object, optional) - These are [3D Secure](#authenticationobject) details.
@@ -4558,8 +3824,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
     _Read Only_, _length<=36_
-    
-+ `entryMode`: (enum) - This is how the transaction has been initiated and will affect the way it will be processed. Possible values are MOTO - Mail Order/Telephone Order. **Note:** Include this element only when instructed to do so by Paysafe.
 
 + Include Card Auth
 
@@ -4591,7 +3855,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
     + Default: true
 
-+ `keywords`:(array, optional) - `Repeat Customer` This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
++ `keywords`:(array, optional) - This value can be any text the merchant wants to use. You can search on keywords in the Paysafe Merchant Back Office reporting tools.
     _length<=255_
 
     - Repeat Customer
@@ -4650,7 +3914,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     _Read Only_
 
 + Include Acquirer Response
-+ Include paymentFacilitator
 + Include Splitpay
 + Include Error Response
 
@@ -4770,8 +4033,9 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + shipFromZip:90211 (string, optional) - This is the postal/zip code of the address from which the purchased goods are being shipped.
         _length<=10_
     + Include Line Items
-    
+            
 ## Line Items
+
 + `lineItems` (object, optional) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
     + description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
         _length<=50_
@@ -4950,30 +4214,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     + email:`jsmith@email.com` (string, optional)
         _length<=255_
 
-## paymentFacilitator
-+ `paymentFacilitator` (object, optional) - Details of the payment facilitator transactions.
-    + paymentFacilitatorName:`PRE` (string, optional) -This is the payment facilitator name. Normally this is the name that would show up in the transaction descriptor before the '*'.
-        _min=1 max=50_
-    + subMerchantId:`rSubMerId` (string, optional) - This is an ID that the schemes can use to identify the sub merchant of the payment facilitator. Possible values could be our FMA or some other identifier that the merchant wishes to identify a sub merchant as. The default should be our FMA number.
-        _min=1 max=50_
-    + subMerchantName:`RsubMerName` (string, optional) - The name of the sub merchant. Potentially can be used as part of the transaction descriptor. Each acquirer integration could be different please see individual implementation for actual behavior.
-        _min=1 max=50_
-
-## purchaseReturnAuthorization
-+ `purchaseReturnAuthorization` (object) - This is the Purchase Return Authorization that was performed for the refund. Note: Purchase Return Authorization is performed and returned in the response only if acquirer/processor supports it.
-    + id:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) -This is the unique ID returned in the response. This ID can be used for future associated requests.
-        _Read Only_
-    + merchantRefNum:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-         _Read Only_
-    + txnTime:`2014-01-26T10:32:28Z` (string) - This is the date and time the request was processed.
-        _UTC formatted date_
-    + authCode:`123456789011` (string) - This is the Authorization code assigned by the issuing bank and returned in the response.
-         _Read Only_
-    + amount:`100` (number) - This is the amount of the request, in minor units.
-        _UTC formatted date, Read Only__
-    + currencyCode:`USD` (string) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response. 
-         _Read Only_
-
 ## Recipient
 
 + `recipient` (object, optional) - This allows [additional data](#recipientobject) to be included with a request. Include this object **only if** your Merchant Category Code is **6012** and your registered trading address is in the United Kingdom. **Note:** If there is already recipient data associated with a consumer profile and you are using the payment token from that profile for an Authorization, then if you include recipient data in the Authorization itself, that data will override the recipient data in the profile.
@@ -5021,7 +4261,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
 
     _Read Only_
-+ Include purchaseReturnAuthorization
 
 ## Settlement
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Refunds.
@@ -5216,7 +4455,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         + `FAILED`
 
 + Include Acquirer Response
-+ Include Stored Credential
 + Include Error Response
 + `riskReasonCode`: `5500` (array) - An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.
 
