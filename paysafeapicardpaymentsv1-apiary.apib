@@ -981,6 +981,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |status             |enum                                   |This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
@@ -1029,7 +1030,6 @@ The *storedCredential* object is used to identify [authorization requests](#auth
 |occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
 |initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
 |externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
-|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
