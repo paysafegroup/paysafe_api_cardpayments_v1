@@ -895,7 +895,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when settleing an Authorization.|
-|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.|**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
