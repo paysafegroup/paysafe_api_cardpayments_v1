@@ -733,6 +733,8 @@ merchants who provide more detailed information when processing card-not-present
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerData       |[acquirerData](#acquirerdataobject)    |This is additional information about your card acquirer, required **only when** you are using Credorax (CRX) as your acquirer for Original Credits. Contact your account manager for more information.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
+
 
 ```apib
 {
@@ -871,6 +873,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |purchaseReturnAuthorization   |[purchaseReturnAuthorization](#purchaseReturnAuthorization) |This is the Purchase Return Authorization that was performed for the refund. Note: Purchase Return Authorization is performed and returned in the response only if acquirer/processor supports it.|
+|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
@@ -1026,6 +1029,7 @@ The *storedCredential* object is used to identify [authorization requests](#auth
 |occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
 |initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
 |externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
+|gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
 
 ```apib
 {
@@ -1558,6 +1562,7 @@ In the case of an Authorization request using a payment token, you can use eithe
                     "status": "PENDING",
                     "amount": 15098,
                     "availableToRefund": 15098
+                    "gatewayReconciliationId": 12345678901
                 }],
                 "links": [{
                         "rel": "self",
@@ -2467,6 +2472,7 @@ Click on **Settlement** above to see three examples of a Settlement request:
                 "availableToRefund": 5500,
                 "dupCheck": true,
                 "txnTime": "2017-02-14T15:12:18Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "COMPLETED",
                 "links": [{
                     "rel": "self",
@@ -2721,6 +2727,7 @@ Click on **Get Settlement** above to see how to look up a Settlement request usi
                 "availableToRefund": 2225,
                 "dupCheck": true,
                 "txnTime": "2017-02-14T15:12:18Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "COMPLETED",
                 "links": [{
                     "rel": "self",
@@ -2729,7 +2736,8 @@ Click on **Get Settlement** above to see how to look up a Settlement request usi
             }
 
 ## Get Settlement Using Merchant Reference Number [GET /v1/accounts/{account_id}/settlements?merchantRefNum={merchantRefNum}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
-<a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
+<a name="getsettlementmerchantrefnum" title="Look Urocess a refund
+a Settlement Using a Merchant Reference Number"></a>
 
 Click on **Get Settlement Using Merchant Reference Number** above to see how to look up a Settlement using the merchant reference number used in the original request.
 
@@ -2824,6 +2832,7 @@ Click on **Refund** above to see two examples of a Refund request:
                 "amount": 5500,
                 "dupCheck": true,
                 "txnTime": "2017-02-14T15:12:18Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "COMPLETED",
                 "links": [{
                     "rel": "self",
@@ -2975,6 +2984,7 @@ Click on **Get Refund** above to see how to look up a Refund request using the I
                 "amount": 5500,
                 "dupCheck": true,
                 "txnTime": "2017-02-14T15:12:18Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "PENDING",
                 "splitpay": [{
                     "linkedAccount": "123124124",
@@ -3433,6 +3443,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
                 "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
                 "merchantRefNum": "merchant 07.05.17_16",
                 "txnTime": "2017-07-06T19:59:17Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "PENDING",
                 "amount": 1000,
                 "card": {
@@ -3585,6 +3596,7 @@ Click on **Get Original Credit** above to see how to look up an Original Credit 
                 "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
                 "merchantRefNum": "merchant 07.05.17_16",
                 "txnTime": "2017-07-06T19:59:17Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "PENDING",
                 "amount": 1000,
                 "card": {
@@ -3808,6 +3820,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
                 "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
                 "merchantRefNum": "merchant 07.05.17_16",
                 "txnTime": "2017-07-06T19:59:17Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "PENDING",
                 "amount": 1000,
                 "card": {
@@ -3901,6 +3914,7 @@ Click on **Get Standalone Credit** above to see how to look up a Standalone Cred
                 "id": "86dcb68d-cbd0-4878-8da7-ffc0e6554513",
                 "merchantRefNum": "merchant 07.05.17_16",
                 "txnTime": "2017-07-06T19:59:17Z",
+                "gatewayReconciliationId": 12345678901,
                 "status": "PENDING",
                 "amount": 1000,
                 "card": {
