@@ -2447,7 +2447,8 @@ Click on **Settlement** above to see three examples of a Settlement request:
     + Include Settlement
     + Include Splitpay
     + Include Links Settlement
-    +  Include airlineTravelDetails
+    + Include airlineTravelDetails
+    + Include gatewayReconciliationId
 
 + Request Process a Settlement (application/json)
 
@@ -2806,7 +2807,8 @@ Click on **Refund** above to see two examples of a Refund request:
 
 + Attributes
     + Include  Refund
-    + Include Links Refund        
+    + Include Links Refund   
+    + Include gatewayReconciliationId
 
 + Request Process a Refund (application/json)
 
@@ -3412,6 +3414,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
 + Attributes
     + Include Original Credit
     + Include Links Original Credit
+    + Include gatewayReconciliationId
 
 + Request Submit an Original Credit (application/json)
 
@@ -3730,6 +3733,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
 + Attributes
     + Include Standalone Credit
     + Include Links Standalone Credit
+    + Include gatewayReconciliationId
 
 + Request Submit a Standalone Credit (application/json)
 
@@ -4115,6 +4119,12 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
                             _min=1 max=6_ 
                         + departureDate: `2014-01-26` (string, required) -Date of passenger’s departure for this leg. Date format = YYYY-MM-DD, ISO 8601 expected. UTC date format.
 
+## `gatewayReconciliationId` 
+
++ `gatewayReconciliationId` (string) - Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.
+   _Note: Not all processing gateways support this parameter. Contact your account manager for more information_
+
+    _Read Only_, _length<=255_
 ## `Authentication`
 
 + `authentication` (object, optional) - These are [3D Secure](#authenticationobject) details.
