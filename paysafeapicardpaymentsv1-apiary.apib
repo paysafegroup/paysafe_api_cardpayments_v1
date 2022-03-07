@@ -571,6 +571,7 @@ When providing card information, merchants can provide either card details or a 
 ## fundingTransaction
 
 The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide information for their purpose.  It can be used by merchants registered with MCC 4829, 6012, 6051 or 6540.
+
 **Note** 
  * If you  send fundingTransaction type value in the authorization request, but the your acquirer doesn't support funding transactions or your account is not configured, the transaction will be declined.
  * If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to specific card brand,  the transaction will be successfully processed and the processorAppliedType in the response will be "NOT_APPLIED".
