@@ -384,6 +384,8 @@ The following is an example of the 3D Secure 2 authentication object:
 |level2level3       |[level2level3](#level2level3object)    |This allows merchants who are enabled to provide additional L2/L3 transaction data.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
 |splitpay           |[splitpay](#splitpayobject)            |This enables you to use the Split Payouts functionality when authorizing with a Settlement.|
 |entryMode          |enum                                   |This is how the transaction has been initiated and will affect the way it will be processed. Possible values are:<ul><li>- MOTO - Mail Order/Telephone Order</li><li>- CARD_PRESENT - Card Present</li></ul><br/>**Note:**: Include this element only when instructed to do so by Paysafe.|
+|fundingTransaction |fundingTransaction                     |The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide additional information for the purpose of the transaction.
+
 
 ```apib
 {
@@ -563,6 +565,31 @@ When providing card information, merchants can provide either card details or a 
 |---                |---                       |---                                |
 |carrierCode|string<br/>`min=2 max=2`|Operating Carrier Code; the standard abbreviation code indicating name of the operating carrier (United Airlines, Jet Blue, etc.).|
 |flightNumber|string<br/>`min=1 max=5`|Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|
+
+
+<a name="fundingTransaction" title="fundingTransaction"></a>
+## fundingTransaction
+
+The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide information for their purpose.  It can be used by merchants registered with MCC 4829, 6012, 6051 or 6540.
+**Note** 
+ * If you  send fundingTransaction type value in the authorization request, but the your acquirer doesn't support funding transactions or your account is not configured, the transaction will be declined.
+ * If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to specific card brand,  the transaction will be successfully processed and the processorAppliedType in the response will be "NOT_APPLIED".
+ * If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions and you are registered to process funding transactions to the respective card brand,  the transaction will be successfully processed and the processorAppliedType equal to the fundingTransaction type, provided in the request.
+
+|Element                |Type                               | Description|
+|---                    |---                                |---            |
+| type                  |enum                               | The fundingTransaction type is included in the request and set by the merchant. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li></ul>| 
+| processorAppliedType  |enum                               |  The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li><li>NOT_APLLIED</li></ul>|
+
+```apib
+  "fundingTransaction" :{
+    "type" : "SVDW_FUNDS_TRANSFER"
+  }
+  "fundingTransaction" :{
+    "type" : "SVDW_FUNDS_TRANSFER",
+    "processorAppliedType": "NOT_APPLIED"
+  }
+```
 
 <a name="leg" title="leg Object"></a>
 ## leg
