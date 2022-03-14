@@ -16,6 +16,7 @@ HOST: https://api.test.paysafe.com/cardpayments/
 | v1        | February 2018     | Added *recipient* object |
 | v1        | September 2017    | Added Turnkey features |
 | v1        | November 2016     | Document release |
+| v1        | March 2022        | Added Low Value Exemption support. |
 
 # Overview
 
@@ -318,6 +319,7 @@ These are raw results returned by the acquirer.
 |signatureStatus                    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul><br/>**Note:** This exists only for 3DS 1.0.2.|
 |directoryServerTransactionId       |string<br/>`length<=36`        |This is the unique directory server transaction ID required for Mastercard. <br/>**Note:** This exists only for 3D Secure 2. |
 |threeDSecureVersion                |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response. |
+|exemptionIndicator                 |enum                           |This exemption gives the customer the option to bypass the Strong Customer Authentication. <ul><li> LOW_VALUE_EXEMPTION - This exemption is valid only for transactions lower or equal to 30 euro, not exceeding five transactions in a row or 100 euro total amount transactions with no SCA(Strong Customer Authentication)</li> **Note:**: This exists only for 3D Secure 2. |
 
 The following is an example of the 3DS 1.0.2 authentication object:
 ```apib
@@ -1251,10 +1253,10 @@ A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 ## Authorization Errors
 |HTTP Status Code   |Error Code     |Description|
 |---                |---            |---|
-|400                |3002           |You submitted an invalid card number or brand or combination of card number and brand with your request. |
-|400                |3004           |The zip/postal code must be provided for an AVS check request.|
-|400                |3005           |You submitted an incorrect CVV value with your request.|
-|400                |3006           |You submitted an expired credit card number with your request.|
+|400                |3064           |Your merchant account is not configured for low value exemptions. |
+|400                |3065           |Requested amount exceeds the maximum low value exemptions amount.|
+|400                |3066           |Low value exemption not allowed for transactions with storedCredential.|
+|400                |3067           |When authentication.exemptionIndicator is present do not provide other authentication fields.|
 |402                |3007           |Your request has failed the AVS check. Note that the amount has still been reserved on the customer's card and will be released in 3&ndash;5 business days. Please ensure the billing address is accurate before retrying the transaction.|
 |400                |3008           |You submitted a card type for which the merchant account is not configured.|
 |402                |3009           |Your request has been declined by the issuing bank.|
@@ -1430,32 +1432,34 @@ In the case of an Authorization request using a payment token, you can use eithe
     + Body
 
             {
-              "merchantRefNum": "merchant 03.24.17_3",
-              "amount": 1000,
-              "settleWithAuth": false,
-              "dupCheck": false,
-              "card": {
-                "cardNum": "4111111111111111",
-                "cardExpiry": {
-                  "month": 2,
-                  "year": 2019
+                "merchantRefNum": "merchant 03.24.17_3",
+                "amount": 1000,
+                "settleWithAuth": false,
+                "dupCheck": "false",
+                "card": {
+                    "cardExpiry": {
+                        "month": 12,
+                        "year": 2021
+                    },
+                    "cvv": "123",
+                    "cardNum": "4111111111111111"
                 },
-                "cvv": "123"
-              },
-              "profile": {
-                "firstName": "Joe",
-                "lastName": "Smith",
-                "email": "Joe.Smith@canada.com"
-              },
-              "billingDetails": {
-                "street": "100 Queen Street West",
-                "city": "Toronto",
-                "state": "ON",
-                "country": "CA",
-                "zip": "M5H 2N2"
-              },
-              "customerIp": "204.91.0.12",
-              "description": "Video purchase"
+                "billingDetails": {
+                    "zip": "M2RG1Y9",
+                    "street": "5050 Southmain Drive",
+                    "state": "ON",
+                    "country": "CA",
+                    "city": "CAMBRIDGE"
+                },
+                "preAuth": true,
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "AY1@OPTIMAL.COM"
+                },
+                "authentication": {
+                    "exemptionIndicator": "LOW_VALUE_EXEMPTION"
+                }
             }
 
 
@@ -1464,9 +1468,9 @@ In the case of an Authorization request using a payment token, you can use eithe
     + Body
 
             {
-                "id": "7573f618-2f63-45aa-ae96-8412206ca403",
+                "id": "39152e1d-ba8b-4625-822c-7e9aa7f6e258",
                 "merchantRefNum": "merchant 03.24.17_3",
-                "txnTime": "2017-03-24T18:28:28Z",
+                "txnTime": "2021-11-11T14:59:16Z",
                 "status": "COMPLETED",
                 "amount": 1000,
                 "settleWithAuth": false,
@@ -1475,35 +1479,41 @@ In the case of an Authorization request using a payment token, you can use eithe
                     "type": "VI",
                     "lastDigits": "1111",
                     "cardExpiry": {
-                        "month": 2,
-                        "year": 2019
-                    }
-                },
-                "authCode": "180796",
-                "profile": {
-                    "firstName": "Joe",
-                    "lastName": "Smith",
-                    "email": "Joe.Smith@canada.com"
-                },
-                "billingDetails": {
-                    "street": "100 Queen Street West",
-                    "city": "Toronto",
-                    "state": "ON",
-                    "country": "CA",
-                    "zip": "M5H2N2"
-                },
-                "customerIp": "204.91.0.12",
-                "description": "Video purchase",
-                "currencyCode": "CAD",
-                "avsResponse": "MATCH",
-                "cvvVerification": "MATCH",
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/auths/7573f618-2f63-45aa-ae96-8412206ca403"
-                    }
-                ]
-            }
+                        "month": 12,
+                        "year": 2021
+                        }
+                    },
+                    "authentication": {
+                        "exemptionIndicator": "LOW_VALUE_EXEMPTION"
+                    },
+                    "authCode": "143123",
+                    "profile": {
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "AY1@OPTIMAL.COM"
+                    },
+                    "billingDetails": {
+                        "street": "5050 Southmain Drive",
+                        "city": "CAMBRIDGE",
+                        "state": "ON",
+                        "country": "CA",
+                        "zip": "M2RG1Y9"
+                    },
+                    "merchantDescriptor": {
+                        "dynamicDescriptor": "NBX*LABurger",
+                        "phone": "8984544545"
+                    },
+                    "visaAdditionalAuthData": {},
+                    "currencyCode": "USD",
+                    "avsResponse": "UNKNOWN",
+                    "cvvVerification": "MATCH",
+                    "links": [
+                        {
+                            "rel": "self",
+                            "href": "https://api.test.paysafe.com/cardpayments/v1/accounts/1001058570/settlements/7573f618-2f63-45aa-ae96-8412206ca403"
+                        }
+                    ]
+                }
 
 + Request Submit an Authorization Including Settlement (application/json)
 
@@ -4170,7 +4180,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=36_
     + threeDSecureVersion:`2.1.0` (string, required) - This is the 3D secure protocol version. **Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response.
         _min=5_ _max=8_
-    
+    + exemptionIndicator:`` (enum, required) - This exemption gives the customer the option to bypass the Strong Customer Authentication. **Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response.
 
 ## Authorization
 
