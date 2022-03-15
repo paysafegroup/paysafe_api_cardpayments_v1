@@ -585,15 +585,20 @@ The fundingTransaction object is used to identify authorization requests that ar
 | processorAppliedType  |enum                               |  The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li><li>NOT_APLLIED</li></ul>|
 
 ```apib
-  "fundingTransaction" :{
+Example for fundingTransaction Request
+
+ "fundingTransaction" :{
     "type" : "SVDW_FUNDS_TRANSFER"
   }
-  "fundingTransaction" :{
+```
+```apib
+Example for fundingTransaction Response
+
+ "fundingTransaction" :{
     "type" : "SVDW_FUNDS_TRANSFER",
     "processorAppliedType": "NOT_APPLIED"
   }
 ```
-
 <a name="leg" title="leg Object"></a>
 ## leg
 
@@ -4282,7 +4287,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include paymentFacilitator
 + Include Splitpay
 + Include Error Response
-+ Include fundingTransaction
 
 ## `Billing Details`
 
@@ -4705,15 +4709,6 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=2_
     + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         _length<=10_
-
-## fundingTransaction
-+ fundingTransaction (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
-    + (object)
-        + Properties
-            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account. This account must already be linked to the merchant account.
-            + One of
-                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
-                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
