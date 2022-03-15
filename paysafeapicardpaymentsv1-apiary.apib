@@ -575,9 +575,9 @@ When providing card information, merchants can provide either card details or a 
 The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide information for their purpose.  It can be used by merchants registered with MCC 4829, 6012, 6051 or 6540.
 
 **Note** 
- * If you  send fundingTransaction type value in the authorization request, but the your acquirer doesn't support funding transactions or your account is not configured, the transaction will be declined.
- * If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to specific card brand,  the transaction will be successfully processed and the processorAppliedType in the response will be "NOT_APPLIED".
- * If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions and you are registered to process funding transactions to the respective card brand,  the transaction will be successfully processed and the processorAppliedType equal to the fundingTransaction type, provided in the request.
+ + If you  send fundingTransaction type value in the authorization request, but the your acquirer doesn't support funding transactions or your account is not configured, the transaction will be declined.
+ + If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to specific card brand,  the transaction will be successfully processed and the processorAppliedType in the response will be "NOT_APPLIED".
+ + If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions and you are registered to process funding transactions to the respective card brand,  the transaction will be successfully processed and the processorAppliedType equal to the fundingTransaction type, provided in the request.
 
 |Element                |Type                               | Description|
 |---                    |---                                |---            |
@@ -4282,6 +4282,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include paymentFacilitator
 + Include Splitpay
 + Include Error Response
++ Include fundingTransaction
 
 ## `Billing Details`
 
@@ -4704,6 +4705,15 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=2_
     + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         _length<=10_
+
+## fundingTransaction
++ fundingTransaction (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
+    + (object)
+        + Properties
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account. This account must already be linked to the merchant account.
+            + One of
+                + amount:`505` (number, optional) - This is the amount to transfer to the linked account in minor currency units.
+                + percent:`5` (number, optional) - This is the percentage of the total transaction amount to transfer to that account.
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
