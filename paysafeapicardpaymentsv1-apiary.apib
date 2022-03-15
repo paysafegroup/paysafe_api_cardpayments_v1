@@ -319,7 +319,7 @@ These are raw results returned by the acquirer.
 |signatureStatus                    |enum                           |This is the 3D Secure signature verification result value.<ul><li>Y &ndash; All transaction and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul><br/>**Note:** This exists only for 3DS 1.0.2.|
 |directoryServerTransactionId       |string<br/>`length<=36`        |This is the unique directory server transaction ID required for Mastercard. <br/>**Note:** This exists only for 3D Secure 2. |
 |threeDSecureVersion                |string<br/>`min=5 max=8`       |This is the 3D secure protocol version. <br/>**Note:** Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response. |
-|exemptionIndicator                 |enum                           |This exemption gives the customer the option to bypass the Strong Customer Authentication. <ul><li> LOW_VALUE_EXEMPTION - This exemption is valid only for transactions lower or equal to 30 euro, not exceeding five transactions in a row or 100 euro total amount transactions with no SCA (Strong Customer Authentication)</li> **Note:**: This exists only for 3D Secure 2. |
+|exemptionIndicator                 |enum                           |This exemption gives the customer the option to bypass the Strong Customer Authentication. <ul><li> LOW_VALUE_EXEMPTION - This exemption is valid only for transactions lower or equal to 30 euro, not exceeding five transactions in a row or 100 euro total amount transactions with no SCA (Strong Customer Authentication)</li> **Note**: This exists only for 3D Secure 2. |
 
 The following is an example of the 3DS 1.0.2 authentication object:
 ```apib
@@ -4180,7 +4180,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=36_
     + threeDSecureVersion:`2.1.0` (string, required) - This is the 3D secure protocol version. **Note:** If no version is specified in the request, value defaults to 1.0.2. and is echoed in the response.
         _min=5_ _max=8_
-    + exemptionIndicator:`` (enum, required) - This exemption gives the customer the option to bypass the Strong Customer Authentication. **Note:** This exists only for 3D Secure 2.
+    + exemptionIndicator:`LOW_VALUE_EXEMPTION` (enum, required) - This exemption gives the customer the option to bypass the Strong Customer Authentication. **Note:** This exists only for 3D Secure 2.
 
 ## Authorization
 
