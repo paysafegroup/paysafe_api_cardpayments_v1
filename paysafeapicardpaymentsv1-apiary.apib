@@ -4287,6 +4287,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include paymentFacilitator
 + Include Splitpay
 + Include Error Response
++ Include fundingTransaction
 
 ## `Billing Details`
 
@@ -4709,6 +4710,10 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=2_
     + zip:M5H 2N2 (string, optional) - This is the postal/zip code in the shipping address.
         _length<=10_
+
+## fundingTransaction
++ fundingTransaction (object, optional) - The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide additional information for the purpose of the transaction. **Note** Not all processing gateways support this parameter. To use the fundingTransaction object your account  must be properly configured by Paysafe.
+
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
