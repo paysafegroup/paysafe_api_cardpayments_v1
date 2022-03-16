@@ -582,7 +582,7 @@ The fundingTransaction object is used to identify authorization requests that ar
 |Element                |Type                               | Description|
 |---                    |---                                |---            |
 | type                  |enum                               | The fundingTransaction type is included in the request and set by the merchant. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li></ul>| 
-| processorAppliedType  |enum                               |  The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li><li>NOT_APLLIED</li></ul>|
+| processorAppliedType  |string<br/>`length<=25`            | The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li><li>NOT_APLLIED</li></ul>|
 
 ```apib
 Example for fundingTransaction Request
@@ -4712,8 +4712,15 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=10_
 
 ## fundingTransaction
-+ fundingTransaction (object, optional) - The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide additional information for the purpose of the transaction. **Note** Not all processing gateways support this parameter. To use the fundingTransaction object your account  must be properly configured by Paysafe.
-
++ fundingTransaction - 
+    + Properties
+        + Element: type
+        + Type: enum 
+        + Description: The fundingTransaction type is included in the request and set by the merchant.Supported funding transaction type values: - SVDW_FUNDS_TRANSFER  - SDW_WALLET_TRANSFER
+    + Properties
+        + Element: processorAppliedType
+        + Type: string<br/>`length<=25`    
+        + Description:  The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT-APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values: - SVDW_FUNDS_TRANSFER  - SDW_WALLET_TRANSFER - NOT_APLLIED
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
