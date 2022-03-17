@@ -4717,11 +4717,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         + type: (enum, required) - The fundingTransaction type is included in the request and set by the merchant. Supported funding transaction type values: 
             - SVDW_FUNDS_TRANSFER
             - SDW_WALLET_TRANSFER
-        + processorAppliedType: (string, required) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values: 
+        + processorAppliedType: (string, required) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values:
             - SVDW_FUNDS_TRANSFER
-            - SDW_WALLET_TRANSFER
+            - SDW_WALLET_TRANSFER     
             - NOT_APLLIED
-        _length<=25_ 
+            _length<=25_ 
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
