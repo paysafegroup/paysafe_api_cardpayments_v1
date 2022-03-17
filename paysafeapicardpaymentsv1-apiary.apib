@@ -4712,15 +4712,12 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
         _length<=10_
 
 ## fundingTransaction
-+ fundingTransaction (object, optional) - The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide additional information for the purpose of a transaction.
++ fundingTransaction (object) - The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide additional information for the purpose of a transaction.
     + Properties
         + type: (enum, required) - The fundingTransaction type is included in the request and set by the merchant. Supported funding transaction type values: 
-            - SVDW_FUNDS_TRANSFER
-            - SDW_WALLET_TRANSFER
-        + processorAppliedType: (string, required) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values:
-            - SVDW_FUNDS_TRANSFER
-            - SDW_WALLET_TRANSFER     
-            - NOT_APLLIED
+            -   SVDW_FUNDS_TRANSFER
+            -   SDW_WALLET_TRANSFER
+        + processorAppliedType: (string, required) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values: SVDW_FUNDS_TRANSFER, SDW_WALLET_TRANSFER, NOT_APLLIED. 
             _length<=25_ 
 
 ## Splitpay
