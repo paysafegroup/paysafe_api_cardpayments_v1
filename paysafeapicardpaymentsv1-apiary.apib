@@ -4714,16 +4714,11 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 ## `fundingTransaction`
 
 + `fundingTransaction` (object, optional) 
-    + `type`:`Supported funding transaction type values:
-               SVDW_FUNDS_TRANSFER
-               SDW_WALLET_TRANSFER
- ` (string, required) - The fundingTransaction type is included in the request and set by the merchant.
-        _length<=25_ 
-    + `processorAppliedType`:`Supported funding transaction processorAppliedType values:
-               SVDW_FUNDS_TRANSFER
-               SDW_WALLET_TRANSFER
-               NOT_APLLIED
- ` (enum, optional) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response.
+    + `type`:`Supported funding transaction type values: -SVDW_FUNDS_TRANSFER -SDW_WALLET_TRANSFER
+    (string, required) - The fundingTransaction type is included in the request and set by the merchant.
+     _length<=25_ 
+    + `processorAppliedType`:`Supported funding transaction processorAppliedType values: -SVDW_FUNDS_TRANSFER -SDW_WALLET_TRANSFER -NOT_APLLIED
+    (enum, optional) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response.
     
 
 ## Splitpay
