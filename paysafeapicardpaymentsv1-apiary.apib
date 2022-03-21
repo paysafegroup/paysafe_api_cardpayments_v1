@@ -442,8 +442,8 @@ The following is an example of the 3D Secure 2 authentication object:
 |street             |string<br/>`length<=50`          |This is the first line of the street address in the billing address.|
 |street2            |string<br/>`length<=50`          |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city               |string<br/>`length<=40`          |This is the city in the billing address.|
-|state              |string<br/>`length<=40`          |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
-|country            |enum  <br/>`length=2`            |See [Country Codes](#countrycodes).|
+|state              |string<br/>`length<=40`          |See [Province Codes](https://developer.paysafe.com/en/vault/api/#/introduction/province-codes) or [State Codes](https://developer.paysafe.com/en/vault/api/#/introduction/state-codes) for Canada or the United States.|
+|country            |enum  <br/>`length=2`            |See [Country Codes](https://developer.paysafe.com/en/vault/api/#/introduction/country-codes).|
 |zip                |string<br/>`length<=10`          |This is the postal/zip code in the billing address.|
 |phone              |string<br/>`length<=40`          |This is the customer's telephone number.|
 
@@ -953,8 +953,8 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |recipientName      |string<br/>`length<=255`   |This is the name of the person receiving the goods.|
 |street             |string<br/>`length<=50`    |This is the recipient's street address.|
 |city               |string<br/>`length<=40`    |This is the city in which the recipient resides.|
-|state              |string                     |See [Province Codes](#provincecodes) or [State Codes](#statecodes) for Canada or the United States.|
-|country            |enum                       |See [Country Codes](#countrycodes). |
+|state              |string                     |See [Province Codes](https://developer.paysafe.com/en/vault/api/#/introduction/province-codes) or [State Codes](https://developer.paysafe.com/en/vault/api/#/introduction/state-codes) for Canada or the United States.|
+|country            |enum                       |See [Country Codes](https://developer.paysafe.com/en/vault/api/#/introduction/country-codes). |
 |zip                |string<br/>`length<=10`    |This is the recipient's postal/zip code. |
 
 ```apib
