@@ -266,6 +266,7 @@ These are raw results returned by the acquirer.
 
 ```apib
     "airlineTravelDetails": {
+    "passengerNameRecord": "ABCDE12345",
     "passengerName": "Joe Smith",
     "departureDate": "2021-01-26",
     "origin": "SXF",
@@ -4109,6 +4110,8 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
     _NOTE:This object is only for Airline Merchants_
     
     + Properties
+        + passengerNameRecord: `ABCDE12345` (string, required) - Used by the airline company for reservation number.
+            _min=1 max=10_
         + passengerName: `John Doe` (string, required) - Name of the passenger to whom the ticket was issued.
             _min=1 max=20_ 
         + departureDate: `2014-01-26` (string, required) - Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected.
