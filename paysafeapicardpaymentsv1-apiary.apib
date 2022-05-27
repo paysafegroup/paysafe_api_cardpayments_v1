@@ -573,29 +573,35 @@ When providing card information, merchants can provide either card details or a 
 <a name="fundingTransaction" title="fundingTransaction"></a>
 ## fundingTransaction
 
-The fundingTransaction object is used to identify authorization requests that are categorized as funding transactions by the merchant in order to provide information for their purpose.  It can be used by merchants registered with MCC 4829, 6012, 6051 or 6540.
+The fundingTransaction object is used to identify authorization requests categorized as funding transactions by the merchant to provide information for their purpose.
+It can be used by merchants registered with MCC 4829, 6012, 6051, or 6540. The merchant needs to add the authorization request fundingTransaction object with the property type and applicable value, as shown in the example below.
+Here is the list of options:
+<ul><li>SVDW_FUNDS_TRANSFER - Applicable for 4829, 6012 and 6540.</li>
+<li>SDW_WALLET_TRANSFER - Applicable for 6051 only.</li></ul>
 
 **Note** 
- + If you  send fundingTransaction type value in the authorization request, but the your acquirer doesn't support funding transactions or your account is not configured, the transaction will be declined.
- + If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to specific card brand,  the transaction will be successfully processed and the processorAppliedType in the response will be "NOT_APPLIED".
- + If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions and you are registered to process funding transactions to the respective card brand,  the transaction will be successfully processed and the processorAppliedType equal to the fundingTransaction type, provided in the request.
-
+ + If you send fundingTransaction type value in the authorization request, but your acquirer doesn't support funding transactions, or your account is not configured, the transaction will be declined with error: 5040.
+ + If you send fundingTransaction type in the authorization request with a value not applicable for your MCC, the transaction will be declined with error: 3068.
+ + If you send fundingTransaction type in the authorization request with a value not part of the list below, the transaction will be declined with error: 5068.
+ + If you send fundingTransaction type value in the authorization request and your account is configured to process funding transactions, but you are not registered to process funding transactions to a specific card brand, the transaction will be successfully processed processorAppliedType in the response will be "NOT_APPLIED".
+ + Suppose you send fundingTransaction type value in the authorization request, and your account is configured to process funding transactions. You are registered to process funding transactions to the respective card brand. In that case, the transaction will be successfully processed, and the processorAppliedType will be equal to the fundingTransaction type provided in the request.
+ 
 |Element                |Type                               | Description|
 |---                    |---                                |---            |
-| type                  |enum                               | The fundingTransaction type is included in the request and set by the merchant. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li></ul>| 
-| processorAppliedType  |string<br/>`length<=25`            | The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER</li><li>SDW_WALLET_TRANSFER</li><li>NOT_APLLIED</li></ul>|
+| type                  |enum                               | The fundingTransaction type is included in the request and set by the merchant. <ul><li>SVDW_FUNDS_TRANSFER - Stored Value Digital Wallet Funds Transfer</li><li>SDW_WALLET_TRANSFER - Staged Digital Wallet Transfer</li></ul>| 
+| processorAppliedType  |string<br/>`length<=25`            | The fundingTransaction processorAppliedType is included in the response and is set by Paysafe based on the merchant configuration. <ul><li>SVDW_FUNDS_TRANSFER - Stored Value Digital Wallet Funds Transfer</li><li>SDW_WALLET_TRANSFER - Staged Digital Wallet Transfer</li><li>NOT_APLLIED - Not processed as funding transaction</li></ul>|
 
 ```apib
 Example for fundingTransaction Request
 
- "fundingTransaction" :{
+"fundingTransaction" :{
     "type" : "SVDW_FUNDS_TRANSFER"
   }
 ```
 ```apib
 Example for fundingTransaction Response
 
- "fundingTransaction" :{
+"fundingTransaction" :{
     "type" : "SVDW_FUNDS_TRANSFER",
     "processorAppliedType": "NOT_APPLIED"
   }
