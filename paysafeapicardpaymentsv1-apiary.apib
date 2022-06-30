@@ -4587,9 +4587,9 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 ## `Profile`
 
 + `profile` (object, optional) -  These are some details about the customer.
-    + firstName:John (string, optional)
+    + firstName:John (string, optional) - For Visa Direct and Mastercard Moneysend the field is mandatory due to AML requirements.
         _length<=80_
-    + lastName:Smith (string, optional)
+    + lastName:Smith (string, optional) - For Visa Direct and Mastercard Moneysend the field is mandatory due to AML requirements.
         _length<=80_
     + email:`jsmith@email.com` (string, optional)
         _length<=255_
