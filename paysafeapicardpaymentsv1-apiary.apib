@@ -247,22 +247,27 @@ These are raw results returned by the acquirer.
   }
   }
 ```
-<a name="airlineTravelDetailsobject" title="Airline Travel Details Object"></a>
+
+<a name="airlineTravelDetailsobject" title="airlineTravelDetails Object"></a>
 ## airlineTravelDetails
 
-**Note** This object is specific to Airline Merchants Only.
+|Element                |Type                           |Description| Required/Optional/Conditional | Condition | Request/Response/both | Sent to Processor (Yes/No) |
+|---                    |---                            |---       |---                             |---        |---                    |---                         |
+|passengerNameRecord    |string<br/>max=10              |The airline company uses the passengerNameRecord as a reservation number.|Optional | | Request|No|
+|passengerName          |string<br/>max=1 max=20        |The name of the passenger.|Required | | Request|Yes|
+|departureDate          |string<br/>UTC date format     |Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26.|Required | | Request|Yes|
+|origin                 |string<br/>min=3 max=3         |Departure Airport Code (IATA Airport Code). Example “YUL”|Required | | Request|Yes|
+|computerizedReservationSystem |enum                    |Indicates the computerized reservation system used to make the reservation and purchase the ticket. Possible values for tickets purchased in Germany are:<ul><li>STRT - Start</li><li>PARS - TWA</li><li>DATS - Delta</li><li>SABR - Sabre</li><li>DALA - Covia-Apollo</li><li>BLAN - Dr. Blank</li><li>DERD - DER</li><li>TUID - TUI</li></ul>|Conditional |It should be filled in only if the ticket is purchased in Germany. Otherwise it can be omitted. | Request|Yes|
+|additionalBookingReference    |string<br/>max=50             |BookingReference field. Typically used for the PNR, but should allow an airline to specify any other reference if they feel fit.|Optional | | Request|No|
+|totalFare    |number              |Total fare for all legs on the ticket, excluding taxes and fees. If multiple tickets are purchased, this is the total fare for all tickets|Optional | | Request|No|
+|totalFee    |number          |Total fee for all legs on the ticket. If multiple tickets are purchased, this is the total fee for all tickets.|Optional | | Request|No|
+|totalTaxes   |number              |Total taxes for all legs on the ticket. If multiple tickets are purchased, this is the total taxes for all tickets.|Optional | | Request|No|
+|[ticket](https://developer.paysafe.com/en/cards/api/#/ticket)                 |object                         |Information about the Airline Ticket Number and if the ticket is restricted.|Optional | | Request|No|
+|passengers   |object           |Information about the passengers reserved tickets with the same transaction.|Optional | | Request|No|
+|customerReferenceNumber|string<br/>min=1 max=20        |Contains the code that the cardholder supplied to the card acceptor.|Optional | | Request|No|
+|[travelAgency](https://developer.paysafe.com/en/cards/api/#/travelAgency)            |object                        |Information about the travel agency if the ticket was issued by a travel agency.|Optional | | Request|No|
+|[tripLegs](https://developer.paysafe.com/en/cards/api/#/tripLegs)                |object                        |A grouping of up to four trip legs. Each leg provides detailed itinerary data.|Optional | | Request|No|
 
-|Element                            |Type                           |Description                        |
-|---                                |---                            |---                                |
-|passengerNameRecord                |string<br/>`max=10`            |Passenger name record. Used by the airline company for reservation number.|
-|passengerName                      |string<br/>`min=1 max=20`      |Name of the passenger to whom the ticket was issued.|
-|departureDate                      |date <br/>`UTC date format`    |Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26|
-|origin                             |string<br/>`min=3 max=3`       |Departure Airport Code (IATA Airport Code).Example “YUL”|
-|computerizedReservationSystem      |enum                           |Indicates the computerized reservation system used to make the reservation and purchase the ticket. Possible values for tickets purchased in Germany are:<ul><li>STRT - Start</li><li>PARS - TWA</li><li>DATS - Delta</li><li>SABR - Sabre</li><li>DALA - Covia-Apollo</li><li>BLAN - Dr. Blank</li><li>DERD - DER</li><li>TUID - TUI</li></ul>|
-|[ticket](#ticket)                  |object                         |Information about the Airline Ticket Number and if the ticket is restricted.|
-|customerReferenceNumber            |string<br/>`min=1 max=20`      |Contains the code that the cardholder supplied to the card acceptor.|
-|[travelAgency](#travelAgency)      |object                         |Information about the travel agency if the ticket was issued by a travel agency.|
-|[tripLegs](#tripLegs)              |object                         |A grouping of up to four trip legs. Each leg provides detailed itinerary data. |
 
 ```apib
     "airlineTravelDetails": {
