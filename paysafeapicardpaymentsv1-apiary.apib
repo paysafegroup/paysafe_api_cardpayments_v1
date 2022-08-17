@@ -1087,6 +1087,55 @@ The *storedCredential* object is used to identify [authorization requests](#auth
     }
 }
 ```
+<a name="transactionIntent" title="transactionIntent"></a>
+## transactionIntent
+
+The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. 
++ It is an optional enum field applicable for every MCC. 
++ It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them.
++ The merchant needs to add in the request transactionIntent property value as shown in the example below.
+
+**Use cases and applicable valid enum transactionIntent options:**
+
+|Use case                                                                                                                                              |MCC                               | Valid transactionIntent value|
+|---                                                                                                                                                   |---                                |---            |
+| The consumer is acquiring cryptocurrency in a transaction.                                                                                           |6012, 6051                              | CRYPTO_ON_RAMP| 
+| The consumer is loading a cryptocurrency wallet or exchange account with fiat. *Applicable only in combination with  valid fundingTransaction object |6012, 6051           |WALLET_CRYPTO_ON_RAMP|
+| The consumer is acquiring quasi-cash in a transaction. *Quasi cash transactions represent the purchase of foreign currencies or items (including, but not limited to, casino chips, money orders, lottery tickets and travelers cheques) which may be convertible to cash.                 |4829, 6012, 6051                              | QUASI_CASH| 
+| For purchases of goods or services that leverage a live conversion of fiat into non - fiat currency.                                                 |ANY            | BUY_WITH_CRYPTO |
+
+**Default transactionIntent definition by Paysafe**
+
++ All authorizations processed by MCC 6051 will be classified as crypto related with transactionIntent "CRYPTO_ON_RAMP" or "WALLET_CRYPTO_ON_RAMP" (when funding a wallet), except their account is not configured by Paysafe for quasi-cash transactions.
++ All authorizations processed by MCC 6051 or 4829 with quasi-cash configuration turned on  will be classified as quasi-cash related with transactionIntent "QUASI_CASH" .
+
+**Expected errors related to invalid  transactioIntent values:**
+
++ If you send transactionIntent type in the authorization request with value not applicable for your MCC, the transaction will be declined with error  3072 - "Your request has been declined because the requested transactionIntent value is not applicable for your merchant category code (MCC)".
++ If you send transactionIntent type WALLET_CRYPTO_ON_RAMP in the authorization request, but you didn't classify the transaction as "funding" one with the respective valid fundingTransaction object, the transaction will be declined with error 3071 - Your request has been declined because of mismatch between the requested transactionIntent and fundingTransaction type.
+
+**Note:** More about the usage of transactionIntent in standalone credit request can be found here DRAFT - Transaction intent field in standalone credits - Technical documentation for merchant's comms (dev center address to be added).
+
+```apib
+Example for transactionIntent in Authorization Request
+
+{
+  // all other objects and fields in request
+  
+  "transactionIntent": "CRYPTO_ON_RAMP"
+}
+
+```
+```apib
+Example for transactionIntent in Authorization Response
+
+{
+  // all other objects and fields in response
+  
+  "transactionIntent": "CRYPTO_ON_RAMP"
+}
+```
+
 <a name="ticket" title="ticket Object"></a>
 ## ticket
 
@@ -4302,6 +4351,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + Include Splitpay
 + Include Error Response
 + Include fundingTransaction
++ Include transactionIntent
 
 ## `Billing Details`
 
@@ -4733,6 +4783,13 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
             -   SDW_WALLET_TRANSFER
         + processorAppliedType: (string) - The fundingTransaction processorAppliedType value is chosen by Paysafe based on the merchant configuration. It is either equal to the funding transaction type sent by the merchant or "NOT_APPLIED" in case the merchant is not registered in the relevant card scheme system. The processorAppliedType can be seen in the auth response. Supported funding transaction processorAppliedType values: SVDW_FUNDS_TRANSFER, SDW_WALLET_TRANSFER, NOT_APLLIED. 
             _length<=25_ 
+
+## transactionIntent
++ transactionIntent (object) - The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. </br> It is an optional enum field applicable for every MCC. </br> It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. </br>The merchant needs to add in the request transactionIntent property value as shown in the example below.
+    + Properties
+        + value: (enum) - The consumer is acquiring cryptocurrency in a transaction: 
+            -   MCC: 6012, 6051
+            -   Valid Transaction Value: CRYPTO_ON_RAMP
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
