@@ -1100,7 +1100,7 @@ The transactionIntent property is used to identify the intent of the authorizati
 |Use case                                                                                                                                              |MCC                               | Valid transactionIntent value|
 |---                                                                                                                                                   |---                                |---            |
 | The consumer is acquiring cryptocurrency in a transaction.                                                                                           |6012, 6051                              | CRYPTO_ON_RAMP| 
-| The consumer is loading a cryptocurrency wallet or exchange account with fiat. *Applicable only in combination with  valid fundingTransaction object |6012, 6051           |WALLET_CRYPTO_ON_RAMP|
+| The consumer is loading a cryptocurrency wallet or exchange account with fiat. *Applicable only in combination with  valid fundingTransaction object. |6012, 6051           |WALLET_CRYPTO_ON_RAMP|
 | The consumer is acquiring quasi-cash in a transaction. *Quasi cash transactions represent the purchase of foreign currencies or items (including, but not limited to, casino chips, money orders, lottery tickets and travelers cheques) which may be convertible to cash.                 |4829, 6012, 6051                              | QUASI_CASH| 
 | For purchases of goods or services that leverage a live conversion of fiat into non - fiat currency.                                                 |ANY            | BUY_WITH_CRYPTO |
 
@@ -1756,6 +1756,30 @@ In the case of an Authorization request using a payment token, you can use eithe
                     }
                 ]
             }
+            
++ Request Submit an Authorization Request Using a transactionIntent (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+    
+    {
+          // all other objects and fields in request
+          
+          "transactionIntent": "CRYPTO_ON_RAMP"
+    }
+
++ Response 200 (application/json)
+
+    + Body
+    
+    {
+          // all other objects and fields in response
+          
+          "transactionIntent": "CRYPTO_ON_RAMP"
+    }
 
 + Request Submit an Authorization Request with 3DS 1.0.2 Authentication Data (application/json)
 
@@ -4788,7 +4812,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 + transactionIntent (object) - The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. </br> It is an optional enum field applicable for every MCC. </br> It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. </br>The merchant needs to add in the request transactionIntent property value as shown in the example below.
     + Properties
         + value: (enum) - The consumer is acquiring cryptocurrency in a transaction: 
-            -   MCC: 6012, 6051
+            -   MCC: 6012 6051
             -   Valid Transaction Value: CRYPTO_ON_RAMP
 
 ## Splitpay
