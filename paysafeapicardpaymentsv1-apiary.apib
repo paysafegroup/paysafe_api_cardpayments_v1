@@ -821,7 +821,7 @@ merchants who provide more detailed information when processing card-not-present
 |firstName          |string <br/>`length<=80`   |This is the customer’s first name. |
 |lastName           |string <br/>`length<=80`   |This is the customer's last name.  |
 |email              |string <br/>`length<=255`  |This is the customer's email address. |
-
+|merchantCustomerId |string <br/>`length<=100`  |This is a customer ID that the merchant provides with the request for their own internal customer identification. This value must be unique for each customer belonging to a merchant. In NETBANX this is known as the Ref ID. **NOTE**: This field is mandatory for funding transactions. Send up to 34 symbols when processing a funding transaction. |
 ```apib
     {
     "profile": {
