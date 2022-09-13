@@ -587,7 +587,7 @@ Here is the list of options:
 
 **Note** 
  + If you want to support funding transactions for additional MCCs, please contact Paysafe's operational support.
- + If you send fundingTransaction type value in the authorization request you must also send: Profile, billingDetails, and merchantCustomerId. If not, the funding transaction will be declined due to missing data.
+ + If you send fundingTransaction type value in the authorization request you must also send: Profile, billingDetails. If not, the funding transaction will be declined due to missing data.
  + If you send fundingTransaction type value in the authorization request, but your acquirer doesn't support funding transactions, or your account is not configured, the transaction will be declined with error: 5040.
  + If you send fundingTransaction type in the authorization request with a value not applicable for your MCC, the transaction will be declined with error: 3068.
  + If you send fundingTransaction type in the authorization request with a value not part of the list below, the transaction will be declined with error: 5068.
