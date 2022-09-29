@@ -4813,11 +4813,13 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
             _length<=25_ 
 
 ## transactionIntent
-+ transactionIntent (object) - The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. </br> It is an optional enum field applicable for every MCC. </br> It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. </br>The merchant needs to add in the request transactionIntent property value as shown in the example below.
++ transactionIntent (object) - The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. It is an optional enum field applicable for every MCC. It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. The merchant needs to add in the request transactionIntent property value as shown in the example below.
     + Properties
-        + value: (enum) - The consumer is acquiring cryptocurrency in a transaction: 
-            -   MCC: 6012 6051
-            -   Valid Transaction Value: CRYPTO_ON_RAMP
+        + value: (enum) - The consumer is acquiring cryptocurrency in a transaction
+            -   CRYPTO_ON_RAMP
+            -   WALLET_CRYPTO_ON_RAMP
+            -   QUASI_CASH
+            -   BUY_WITH_CRYPTO
 
 ## Splitpay
 + splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
