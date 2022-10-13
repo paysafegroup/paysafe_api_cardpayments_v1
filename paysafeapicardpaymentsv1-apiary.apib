@@ -1169,11 +1169,16 @@ Example for transactionIntent in Authorization Response
 
 Information about the Airline Ticket Number and if the ticket is restricted
 
-|Element                       |Type                      |Description|
-|---                           |---                       |---|
-|ticketNumber                  |string <br/>`min=1 max=15`|Airline Ticket Number|
-|isRestrictedTicket            |boolean                   |Indicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket.Valid values are:<ul><li>false - No restriction (default)</li><li>true - Restricted (non-refundable) ticket</li></ul>|
-
+|Element                       |Type                           |Description|
+|---                           |---                            |---|
+|ticketNumber                  |string <br/>`min=1 max=15`     |Airline Ticket Number|
+|isRestrictedTicket            |boolean                        |Indicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket.Valid values are:<ul><li>false - No restriction (default)</li><li>true - Restricted (non-refundable) ticket</li></ul>|
+|cityOfTicketIssuing           |string <br/>`max=40`           |Place of issue for the ticket for this passenger|
+|ticketDeliveryMethod          |enum  <br/> `E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE`                 |Way of delivering the ticket. options: [E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE] |
+|isAgencyCard                  |Boolean |Specifies whether the purchaser is the ticket holder or agency.|
+|ticketIssueDate               |Date   <br/>`Date format = YYYY-MM-DD, ISO 8601 expected.`|Ticket's issue date. Sometime it is different that the date of the transaction (can be before that). Date format = YYYY-MM-DD, ISO 8601. Expected:  2021-01-26|
+|ticketPrice                   |Number |Price for one ticket. |
+|numberOfPax                   |Integer    <br/>`max=10`               |The number of the passengers which tickets are with the same PNR. |
 ```apib
 {
     "ticket": {
