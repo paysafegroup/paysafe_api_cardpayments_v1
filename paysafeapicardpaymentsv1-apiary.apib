@@ -253,20 +253,20 @@ These are raw results returned by the acquirer.
 
 |Element                |Type                           |Description| Required/Optional/Conditional | Condition | Request/Response/both | Sent to Processor (Yes/No) |
 |---                    |---                            |---       |---                             |---        |---                    |---                         |
-|passengerNameRecord    |string<br/>max=10              |The airline company uses the passengerNameRecord as a reservation number.|Optional | | Request|No|
+|passengerNameRecord    |string<br/>max=10              |The airline company uses the passengerNameRecord as a reservation number.|Optional| | Request|No|
 |passengerName          |string<br/>max=1 max=20        |The name of the passenger.|Required | | Request|Yes|
-|departureDate          |string<br/>UTC date format     |Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26.|Required | | Request|Yes|
-|origin                 |string<br/>min=3 max=3         |Departure Airport Code (IATA Airport Code). Example “YUL”|Required | | Request|Yes|
-|computerizedReservationSystem |enum                    |Indicates the computerized reservation system used to make the reservation and purchase the ticket. Possible values for tickets purchased in Germany are:<ul><li>STRT - Start</li><li>PARS - TWA</li><li>DATS - Delta</li><li>SABR - Sabre</li><li>DALA - Covia-Apollo</li><li>BLAN - Dr. Blank</li><li>DERD - DER</li><li>TUID - TUI</li></ul>|Conditional |It should be filled in only if the ticket is purchased in Germany. Otherwise it can be omitted. | Request|Yes|
-|additionalBookingReference    |string<br/>max=50             |BookingReference field. Typically used for the PNR, but should allow an airline to specify any other reference if they feel fit.|Optional | | Request|No|
-|totalFare    |number              |Total fare for all legs on the ticket, excluding taxes and fees. If multiple tickets are purchased, this is the total fare for all tickets|Optional | | Request|No|
-|totalFee    |number          |Total fee for all legs on the ticket. If multiple tickets are purchased, this is the total fee for all tickets.|Optional | | Request|No|
-|totalTaxes   |number              |Total taxes for all legs on the ticket. If multiple tickets are purchased, this is the total taxes for all tickets.|Optional | | Request|No|
-|[ticket](https://developer.paysafe.com/en/cards/api/#/ticket)                 |object                         |Information about the Airline Ticket Number and if the ticket is restricted.|Optional | | Request|No|
+|departureDate          |string<br/>UTC date format     |Date of passenger’s departure. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26.|Required| | Request|Yes|
+|origin                 |string<br/>min=3 max=3         |Departure Airport Code (IATA Airport Code). Example “YUL”|Required | |Request|Yes|
+|computerizedReservationSystem |enum                    |Indicates the computerized reservation system used to make the reservation and purchase the ticket. Possible values for tickets purchased in Germany are:<ul><li>STRT - Start</li><li>PARS - TWA</li><li>DATS - Delta</li><li>SABR - Sabre</li><li>DALA - Covia-Apollo</li><li>BLAN - Dr. Blank</li><li>DERD - DER</li><li>TUID - TUI</li></ul>|Conditional |It should be filled in only if the ticket is purchased in Germany. Otherwise it can be omitted. |Request|Yes|
+|additionalBookingReference    |string<br/>max=50             |BookingReference field. Typically used for the PNR, but should allow an airline to specify any other reference if they feel fit.|Optional | |Request|No|
+|totalFare    |number              |Total fare for all legs on the ticket, excluding taxes and fees. If multiple tickets are purchased, this is the total fare for all tickets|Optional | |Request|No|
+|totalFee    |number          |Total fee for all legs on the ticket. If multiple tickets are purchased, this is the total fee for all tickets.|Optional | |Request|No|
+|totalTaxes   |number              |Total taxes for all legs on the ticket. If multiple tickets are purchased, this is the total taxes for all tickets.|Optional | |Request|No|
+|[ticket](https://developer.paysafe.com/en/cards/api/#/ticket)                 |object                         |Information about the Airline Ticket Number and if the ticket is restricted.|Optional | |Request|No|
 |passengers   |object           |Information about the passengers reserved tickets with the same transaction.|Optional | | Request|No|
 |customerReferenceNumber|string<br/>min=1 max=20        |Contains the code that the cardholder supplied to the card acceptor.|Optional | | Request|No|
-|[travelAgency](https://developer.paysafe.com/en/cards/api/#/travelAgency)            |object                        |Information about the travel agency if the ticket was issued by a travel agency.|Optional | | Request|No|
-|[tripLegs](https://developer.paysafe.com/en/cards/api/#/tripLegs)                |object                        |A grouping of up to four trip legs. Each leg provides detailed itinerary data.|Optional | | Request|No|
+|[travelAgency](https://developer.paysafe.com/en/cards/api/#/travelAgency)            |object                        |Information about the travel agency if the ticket was issued by a travel agency.|Optional | |Request|No|
+|[tripLegs](https://developer.paysafe.com/en/cards/api/#/tripLegs)                |object                        |A grouping of up to four trip legs. Each leg provides detailed itinerary data.|Optional | |Request|No|
 
 
 ```apib
@@ -834,6 +834,28 @@ merchants who provide more detailed information when processing card-not-present
     }
 ```
 
+<a name="profileobject" title="profile Object"></a>
+## passenger
+|Element            |Type                       |Description    | Required/Optional/Conditional | Sent to schemes (Yes/No)|
+|---                |---                        |---                                |----|-----|
+|ticketNumber       |string <br/>`length<=15`   |Identifies the ticket for this passenger only. | Optional | No |
+|firstName          |string <br/>`length<=80`   |Passenger's first name. | Optional | No |
+|lastName           |string <br/>`length<=80`  |Passenger's last name. | Optional | No |
+|phoneNumber        |string <br/>`length<=40`  |Passenger's phone number. | Optional | No |
+|passengerCode      |string <br/>`length<=10`   |Code that identifies a type of passenger. For example 'INF' which indicates a child travelling on parent's lap. | Optional | No |
+|gender             |enum <br/>`M-Male, F-Female O-Other, N-Not Specified`  |Passenger gender. Options: [M – Male, F – Female, O – Other, N – Not Specified] | Optional | No |
+
+```apib
+    {
+    "profile": {
+        "firstName": "Joe",
+        "lastName": "Smith",
+        "email": "Joe.Smith@canada.com"
+        "merchantCustomerId": "UniqueUserIdInTheSystem"
+    }
+    }
+```
+
 <a name="paymentFacilitator" title="paymentFacilitator Object"></a>
 ## paymentFacilitator
 |Element                |Type                       |Description    |
@@ -1172,7 +1194,7 @@ Information about the travel agency if the ticket was issued by a travel agency.
 |---                           |---                       |---|
 |code                          |string <br/>`min=1 max=8` |Code identifying travel agency if the ticket was issued by a travel agency.|
 |name                          |string <br/>`min=1 max=25`|Name of travel agency if the ticket was issued by a travel agency.|
-
+|agencyAddress                 |object|Details for the agency address.|
 ```apib
 {
     "travelAgency": {
