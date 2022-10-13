@@ -311,7 +311,14 @@ These are raw results returned by the acquirer.
     }
   } 
 ```
+<a name="agencyaddressobject" title="agencyAddress Object"></a>
+## agencyAddress
 
+|Element                |Type                           |Description                                           | Required/Optional/Conditional          |  Request/Response/both | Sent to Processor (Yes/No) |
+|---                    |---                            |---                                                   |---                                     |---                     |---                         |
+|street       |string<br/>`length<=50`                  |Address line of the agent selling the ticket.         |Optional                                |Request                 |No                          |
+|zip          |string<br/>`length<=10`                  |Postal code of the agent selling the ticket.          |Optional                                |Request                 |No                          |
+|country|enum <br/>`ENUM ISO country codes`|Country code of agent selling the ticket.|Optional|Request|No|
 <a name="authenticationobject" title="Authentication Object"></a>
 ## authentication
 
@@ -569,12 +576,12 @@ When providing card information, merchants can provide either card details or a 
 
 **Note** This object is only for Airline Merchants
 
-|Element            |Type                      |Description                        |
-|---                |---                       |---                                |
-|carrierCode|string<br/>`min=2 max=2`|Operating Carrier Code; the standard abbreviation code indicating name of the operating carrier (United Airlines, Jet Blue, etc.).|
-|flightNumber|string<br/>`min=1 max=5`|Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|
-|airlineName|string<br/>`max=50`|Airline full name.|
-|airlineIcaoCode|string<br/>`min=3 max=3`|Airline ICAO code.|
+|Element            |Type                      |Description                        | Required/Optional/Conditional | Request/Response/Both | Sent to schemes (Yes/No) |
+|---                |---                       |---                                |---                             |---                   |---                       |
+|carrierCode|string<br/>`min=2 max=2`|Operating Carrier Code; the standard abbreviation code indicating name of the operating carrier (United Airlines, Jet Blue, etc.).| Optional |Request |Yes |
+|airlineName|string<br/>`max=50`|Airline full name.| Optional |Request |No |
+|airlineIcaoCode|string<br/>`min=3 max=3`|Airline ICAO code.| Optional |Request |No |
+|flightNumber|string<br/>`min=1 max=5`|Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|Optional |Request |Yes |
 
 <a name="fundingTransaction" title="fundingTransaction"></a>
 ## fundingTransaction
@@ -837,14 +844,14 @@ merchants who provide more detailed information when processing card-not-present
 
 <a name="profileobject" title="profile Object"></a>
 ## passenger
-|Element            |Type                       |Description    | Required/Optional/Conditional | Sent to schemes (Yes/No)|
-|---                |---                        |---                                |----|-----|
-|ticketNumber       |string <br/>`length<=15`   |Identifies the ticket for this passenger only. | Optional | No |
-|firstName          |string <br/>`length<=80`   |Passenger's first name. | Optional | No |
-|lastName           |string <br/>`length<=80`  |Passenger's last name. | Optional | No |
-|phoneNumber        |string <br/>`length<=40`  |Passenger's phone number. | Optional | No |
-|passengerCode      |string <br/>`length<=10`   |Code that identifies a type of passenger. For example 'INF' which indicates a child travelling on parent's lap. | Optional | No |
-|gender             |enum <br/>`M-Male, F-Female O-Other, N-Not Specified`  |Passenger gender. Options: [M – Male, F – Female, O – Other, N – Not Specified] | Optional | No |
+|Element            |Type                       |Description    | Required/Optional/Conditional | Request/Response/Both |Sent to schemes (Yes/No)|
+|---                |---                        |---                                |----|-----|-----|
+|ticketNumber       |string <br/>`length<=15`   |Identifies the ticket for this passenger only. | Optional |Request| No |
+|firstName          |string <br/>`length<=80`   |Passenger's first name. | Optional |Request| No |
+|lastName           |string <br/>`length<=80`  |Passenger's last name. | Optional |Request| No |
+|phoneNumber        |string <br/>`length<=40`  |Passenger's phone number. | Optional |Request| No |
+|passengerCode      |string <br/>`length<=10`   |Code that identifies a type of passenger. For example 'INF' which indicates a child travelling on parent's lap. | Optional |Request| No |
+|gender             |enum <br/>`M-Male, F-Female O-Other, N-Not Specified`  |Passenger gender. Options: [M – Male, F – Female, O – Other, N – Not Specified] | Optional |Request| No |
 
 ```apib
     {
@@ -1170,16 +1177,16 @@ Example for transactionIntent in Authorization Response
 
 Information about the Airline Ticket Number and if the ticket is restricted
 
-|Element                       |Type                           |Description|
-|---                           |---                            |---|
-|ticketNumber                  |string <br/>`min=1 max=15`     |Airline Ticket Number|
-|isRestrictedTicket            |boolean                        |Indicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket.Valid values are:<ul><li>false - No restriction (default)</li><li>true - Restricted (non-refundable) ticket</li></ul>|
-|cityOfTicketIssuing           |string <br/>`max=40`           |Place of issue for the ticket for this passenger|
-|ticketDeliveryMethod          |enum  <br/> `E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE`                 |Way of delivering the ticket. options: [E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE] |
-|isAgencyCard                  |Boolean |Specifies whether the purchaser is the ticket holder or agency.|
-|ticketIssueDate               |Date   <br/>`Date format = YYYY-MM-DD, ISO 8601 expected.`|Ticket's issue date. Sometime it is different that the date of the transaction (can be before that). Date format = YYYY-MM-DD, ISO 8601. Expected:  2021-01-26|
-|ticketPrice                   |Number |Price for one ticket. |
-|numberOfPax                   |Integer    <br/>`max=10`               |The number of the passengers which tickets are with the same PNR. |
+|Element                       |Type                           |Description| Required/Optional/Conditional | Request/Response/Both | Sent to schemes (Yes/No) |
+|---                           |---                            |---        |---                            |---                    |---                       |
+|ticketNumber                  |string <br/>`min=1 max=15`     |Airline Ticket Number                  |Required|Request |Yes |
+|isRestrictedTicket            |boolean                        |Indicates whether this ticket is non-refundable. This entry should be supplied on CPS/Passenger Transport 1 or 2 transactions if the ticket was purchased as a non-refundable ticket.Valid values are:<ul><li>false - No restriction (default)</li><li>true - Restricted (non-refundable) ticket</li></ul>|Optional|Request | Yes|
+|cityOfTicketIssuing           |string <br/>`max=40`           |Place of issue for the ticket for this passenger|Optional|Request | No|
+|ticketDeliveryMethod          |enum  <br/> `E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE` |Way of delivering the ticket. options: [E_TICKET, CITY_TICKET_OFFICE, AIRPORT_TICKET_OFFICE, TICKET_BY_MAIL, TICKET_ON_DEPARTURE] |Optional|Request |No |
+|isAgencyCard                  |Boolean |Specifies whether the purchaser is the ticket holder or agency.|Optional|Request |No |
+|ticketIssueDate               |Date   <br/>`Date format = YYYY-MM-DD, ISO 8601 expected.`|Ticket's issue date. Sometime it is different that the date of the transaction (can be before that). Date format = YYYY-MM-DD, ISO 8601. Expected:  2021-01-26| Optional| Request| No|
+|ticketPrice                   |Number                         |Price for one ticket. |Optional|Request |No |
+|numberOfPax                   |Integer    <br/>`max=10`       |The number of the passengers which tickets are with the same PNR. | Optional|Request|No |
 ```apib
 {
     "ticket": {
@@ -1196,11 +1203,11 @@ Information about the Airline Ticket Number and if the ticket is restricted
 
 Information about the travel agency if the ticket was issued by a travel agency.
 
-|Element                       |Type                      |Description|
-|---                           |---                       |---|
-|code                          |string <br/>`min=1 max=8` |Code identifying travel agency if the ticket was issued by a travel agency.|
-|name                          |string <br/>`min=1 max=25`|Name of travel agency if the ticket was issued by a travel agency.|
-|agencyAddress                 |object|Details for the agency address.|
+|Element                       |Type                      |Description|Required/Optional/Conditional | Request/Response/Both | Sent to schemes (Yes/No)|
+|---                           |---                       |---|---|---|
+|code                          |string <br/>`min=1 max=8` |Code identifying travel agency if the ticket was issued by a travel agency.|Optional|Request|Yes|
+|name                          |string <br/>`min=1 max=25`|Name of travel agency if the ticket was issued by a travel agency.|Optional|Request|Yes|
+|agencyAddress                 |object|Details for the agency address.|Optional|Request|No|
 ```apib
 {
     "travelAgency": {
@@ -1217,12 +1224,28 @@ Information about the travel agency if the ticket was issued by a travel agency.
 
 A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 
-|Element                       |Type    |Description|
-|---                           |---     |---|
-|[leg1](#leg)                  |object  |Description of first leg of trip.|
-|[leg2](#leg)                  |object  |Description of second leg of trip.|
-|[leg3](#leg)                  |object  |Description of third leg of trip.|
-|[leg4](#leg)                  |object  |Description of fourth leg of trip.|
+|Element|Type|Description|Required/Optional/Conditional| Request/Response/Both| Sent to schemes (Yes/No)|
+|---|---|---|----|----|
+|flight|object   |Operating Carrier Code and the Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|Optional|Request|Yes|
+|serviceClass|string<br/>`min=1 max=1`   |Indicates service class (first class, business class, etc.). Example values (not limited to): F - first class, J - business class, W - premium economy class, Y - economy class|Optional|Request|Yes|
+|serviceClassFee|number  |Fee applied to a specific leg.|Optional|Request|No|
+|isStopOverAllowed|boolean |Indicates whether a stopover is allowed on this ticket. Valid values are: <ul><li>false - not allowed</li><li>true - allowed</li></ul>|Optional|Request|Yes|
+|departureAirport|string<br/>`min=3 max=3`   |Departure airport.|Optional|Request|No|
+|destination|string<br/>`min=3 max=3`   |Destination Airport Code (IATA Airport Code). Example “YUL”|Optional|Request|Yes|
+|fareBasis|string<br/>`min=1 max=6`  |Contains a Fare Basis Code for Leg that carriers assign to a particular ticket type, such as business class or discounted/nonrefundable.|Optional|Request|Yes|
+|departureDate|Date<br/>`UTC formatted date`   |Date of passenger’s departure for this leg. Date format = YYYY-MM-DD, ISO 8601 expected. For example, 2014-01-26|Required|Request|Yes|
+|departureTime|Datetime in UTC ISO 8601<br/>`Date format = YYYY-MM-DDTHH:MM:SSZ`    |Departure time at the airport of departure Date format = YYYY-MM-DDTHH:MM:SSZ, ISO 8601 expected: 2014-01-26T10:32:28Z|Optional|Request|No|
+|arrivalTime|Datetime in UTC ISO 8601<br/>`Date format = YYYY-MM-DDTHH:MM:SSZ`   |Arrival time at the airport for that specific leg. Date format = YYYY-MM-DDTHH:MM:SSZ, ISO 8601 expected: 2014-01-26T10:32:28Z|Optional|Request|No|
+|conjunctionTicket|string<br/>`length<=15`   |Specifying a number of the conjunction ticket within a single contract of carriage.|Optional|Request|No|
+|couponNumber|string<br/>`length<=10`   |Coupon number associated with the leg. Every leg could have a coupon number.|Optional|Request|No|
+|notation|string<br/>`length<=20`   |An endorsement can be an agency-added notation or a mandatory government required notation, such as value-added tax. A restriction is a limitation based on the type of fare, such as a ticket with a 3-day minimum stay.|Optional|Request|No|
+|taxes|number  |Taxes for a specific leg.|Optional|Request|No|
+|[leg1](#leg)|object<br/>`length<=36`   |Description of first leg of trip.|Required|Request|No|
+|[leg2](#leg)|object<br/>`length<=36`   |Description of second leg of trip.|Required|Request|No|
+|[leg3](#leg)|object<br/>`length<=36`   |Description of third leg of trip.|Required|Request|No|
+|[leg4](#leg)|object<br/>`length<=36`   |Description of fourth leg of trip.|Required|Request|No|
+|[leg1](#leg)|object<br/>`length<=36`   |Description of first leg of trip.|Required|Request|No|
+
 
 ```apib
 {
