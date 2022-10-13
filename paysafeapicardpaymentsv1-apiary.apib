@@ -1203,11 +1203,11 @@ Information about the Airline Ticket Number and if the ticket is restricted
 
 Information about the travel agency if the ticket was issued by a travel agency.
 
-|Element                       |Type                      |Description|Required/Optional/Conditional | Request/Response/Both | Sent to schemes (Yes/No)|
-|---                           |---                       |---|---|---|
+|Element  |Type     |Description |Required/Optional/Conditional | Request/Response/Both |Sent to schemes (Yes/No)|
+|---      |---      |---         |---                           |---                    |---                     |
 |code                          |string <br/>`min=1 max=8` |Code identifying travel agency if the ticket was issued by a travel agency.|Optional|Request|Yes|
 |name                          |string <br/>`min=1 max=25`|Name of travel agency if the ticket was issued by a travel agency.|Optional|Request|Yes|
-|agencyAddress                 |object|Details for the agency address.|Optional|Request|No|
+|[agencyAddress](https://developer.paysafe.com/en/cards/api/#/introduction/complex-json-objects/agencyaddress)                 |object|Details for the agency address.|Optional|Request|No|
 ```apib
 {
     "travelAgency": {
@@ -1224,9 +1224,9 @@ Information about the travel agency if the ticket was issued by a travel agency.
 
 A grouping of up to four trip legs. Each leg provides detailed itinerary data.
 
-|Element|Type|Description|Required/Optional/Conditional| Request/Response/Both| Sent to schemes (Yes/No)|
-|---|---|---|----|----|
-|flight|object   |Operating Carrier Code and the Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|Optional|Request|Yes|
+|Element  |Type      |Description      |Required/Optional/Conditional     |Request/Response/Both     |Sent to schemes (Yes/No) |
+|---      |---       |---              |---                               |---                       |---                      | 
+|flight   |object    |Operating Carrier Code and the Number of the airline flight to be taken on Leg of the trip (excluding the carrier code).|Optional   |Request   |Yes|
 |serviceClass|string<br/>`min=1 max=1`   |Indicates service class (first class, business class, etc.). Example values (not limited to): F - first class, J - business class, W - premium economy class, Y - economy class|Optional|Request|Yes|
 |serviceClassFee|number  |Fee applied to a specific leg.|Optional|Request|No|
 |isStopOverAllowed|boolean |Indicates whether a stopover is allowed on this ticket. Valid values are: <ul><li>false - not allowed</li><li>true - allowed</li></ul>|Optional|Request|Yes|
