@@ -593,9 +593,10 @@ Here is the list of options:
 <li>SDW_WALLET_TRANSFER - Applicable for 6051 only.</li></ul>
 
 
-**Note** 
+**Notes** 
 
- + If you want to support funding transactions for additional MCCs, please contact Paysafe's operational support.
+ + The fundingTransaction type is optional field. Even if the account is configured to process funding transactions (VISA Account funding transactions and MC funding transaction) if this field is not sent in the authorization request, the transaction will be processed as a normal purchase.
+ + If you want to support funding transactions for additional MCCs, please contact Paysafe's operational support. Not every processor supports fundigng transactions for all MCCs listed here.
  + If you send fundingTransaction type value in the authorization request in addition, you must also send profile and billingDetails. If not, the funding transaction will be declined due to missing data.
  + If you send fundingTransaction type value in the authorization request, but your acquirer doesn't support funding transactions, or your account is not configured, the transaction will be declined with error: 5040.
  + If you send fundingTransaction type in the authorization request with a value not applicable for your MCC, the transaction will be declined with error: 3068.
