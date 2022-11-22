@@ -1123,8 +1123,8 @@ The *storedCredential* object is used to identify [authorization requests](#auth
     }
 }
 ```
-<a name="transactionIntent" title="transactionIntent"></a>
-## transactionIntent
+<a name="transactionIntentAuth" title="transactionIntentAuth"></a>
+## transactionIntent in Authorization
 
 The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. 
 + It is an optional enum field applicable for every MCC. 
@@ -1150,7 +1150,7 @@ The transactionIntent property is used to identify the intent of the authorizati
 + If you send transactionIntent type in the authorization request with value not applicable for your MCC, the transaction will be declined with error  3072 - "Your request has been declined because the requested transactionIntent value is not applicable for your merchant category code (MCC)".
 + If you send transactionIntent type WALLET_CRYPTO_ON_RAMP in the authorization request, but you didn't classify the transaction as "funding" one with the respective valid fundingTransaction object, the transaction will be declined with error 3071 - Your request has been declined because of mismatch between the requested transactionIntent and fundingTransaction type.
 
-**Note:** More about the usage of transactionIntent in standalone credit request can be found here DRAFT - Transaction intent field in standalone credits - Technical documentation for merchant's comms (dev center address to be added).
+**Note:** More about the usage of transactionIntent in Standalone Credit request and response can be found [here](#transactionIntentSC).
 
 ```apib
 Example for transactionIntent in Authorization Request
@@ -1170,6 +1170,58 @@ Example for transactionIntent in Authorization Response
   
   "transactionIntent": "CRYPTO_ON_RAMP"
 }
+```
+
+<a name="transactionIntentSC" title="transactionIntentSC"></a>
+## transactionIntent in Standalone Credit
+
++ The transactionIntent property is used to identify the intent of the standalone credit requests. 
++ The value of the transactionIntent in the standalone credit request shows if the transaction is crypto related one. 
++ It is an optional enum field applicable for MCC 4829,  6012, 6051 and 6211.
++ It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. 
++ The merchant needs to add in the request transactionIntent property value as shown in the example below.
+
+**Use cases and applicable valid enum transactionIntent options for Standalone Credits:**
+
+|Use case                                                                                     |MCC                               | Valid transactionIntent value|
+|---                                                                                          |---                                |---            |
+| The consumer initiates a disbursement from a crypto-capable digital wallet to a card.       |4829,  6012, 6051, 6211           | WALLET_CRYPTO_OFF_RAMP| 
+| The consumer initiates a disbursement from a crypto-capable brokerage / exchange to a card. |6012, 6051, 6211          |CRYPTO_OFF_RAMP|
+
+**Default transactionIntent definition by Paysafe**
+
+All standalone credits processed by account with MCC 6051 and configured for Visa Direct will be classified as crypto as follow:
+
++ If VISA DIRECT set up is FUNDS DISBURSMENT with transactionIntent "CRYPTO_OFF_RAMP"
++ If VISA DIRECT set up is WALLET TRANSFER or FUNDS TRANSFER with transactionIntent "WALLET_CRYPTO_OFF_RAMP"
+
+**Expected errors related to invalid  transactioIntent values:**
+
++ If you send transactionIntent in the request with value not applicable for your MCC, the transaction will be declined with error  3072.
++ If you send transactionIntentin the request with value applicable for your MCC, but not for your VISA direct configuration, the transaction will be declined with error  3069.
++ If you send transactionIntent with value different than the options above,  the transaction will be declined with error 5068. 
+
+**Note:** More about the usage of transactionIntent in Standalone Credit request can be found [here](#transactionIntentAuth).
+
+```apib
+Example for transactionIntent in Standalone Credit Request
+
+{
+  // all other objects and fields in the request
+  
+  "transactionIntent": "CRYPTO_OFF_RAMP"
+}
+
+```
+```apib
+Example for transactionIntent in Standalone Credit Response
+
+{
+  // all other objects and fields in the response
+  
+  "transactionIntent": "CRYPTO_OFF_RAMP"
+}
+
 ```
 
 <a name="ticket" title="ticket Object"></a>
