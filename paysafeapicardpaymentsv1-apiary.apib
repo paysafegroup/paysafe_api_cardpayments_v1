@@ -1184,9 +1184,9 @@ Example for transactionIntent in Authorization Response
 **Use cases and applicable valid enum transactionIntent options for Standalone Credits:**
 
 |Use case                                                                                     |MCC                               | Valid transactionIntent value|
-|---                                                                                          |---                                |---            |
+|---                                                                                          |---                               |---            |
 | The consumer initiates a disbursement from a crypto-capable digital wallet to a card.       |4829,  6012, 6051, 6211           | WALLET_CRYPTO_OFF_RAMP| 
-| The consumer initiates a disbursement from a crypto-capable brokerage / exchange to a card. |6012, 6051, 6211          |CRYPTO_OFF_RAMP|
+| The consumer initiates a disbursement from a crypto-capable brokerage / exchange to a card. |6012, 6051, 6211                  |CRYPTO_OFF_RAMP|
 
 **Default transactionIntent definition by Paysafe**
 
@@ -1201,7 +1201,7 @@ All standalone credits processed by account with MCC 6051 and configured for Vis
 + If you send transactionIntentin the request with value applicable for your MCC, but not for your VISA direct configuration, the transaction will be declined with error  3069.
 + If you send transactionIntent with value different than the options above,  the transaction will be declined with error 5068. 
 
-**Note:** More about the usage of transactionIntent in Standalone Credit request can be found [here](#transactionIntentAuth).
+**Note:** More about the usage of transactionIntent in Standalone Credit request and response can be found [here](#transactionIntentAuth).
 
 ```apib
 Example for transactionIntent in Standalone Credit Request
