@@ -3972,6 +3972,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
     + Include Standalone Credit
     + Include Links Standalone Credit
     + Include gatewayReconciliationId
+    + Include transactionIntent1
 
 + Request Submit a Standalone Credit (application/json)
 
@@ -3992,6 +3993,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
                         "year": 2019
                     }
                 },
+                "transactionIntent": "CRYPTO_OFF_RAMP",
                 "customerIp": "204.91.0.12",
                 "description": "Winning payment from Loto"
             }
@@ -4027,6 +4029,7 @@ You **cannot** use [Apple Pay single-use tokens](https://developer.paysafe.com/e
                     "country": "CA",
                     "zip": "M5H2N2"
                 },
+                "transactionIntent": "CRYPTO_OFF_RAMP",
                 "customerIp": "204.91.0.12",
                 "description": "Winning payment from Loto",
                 "currencyCode": "CAD",
@@ -4365,6 +4368,14 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
    _Note: Not all processing gateways support this parameter. Contact your account manager for more information_
 
     _Read Only_, _length<=255_
+    
+## `transactionIntent1` 
+
++ `transactionIntent` (enum) - This property is used to identify the intent of the Standalone Credit requests and its value shows if the transaction is crypto related one.
+_WALLET CRYPTO OFF RAMP_
+_CRYPTO OFF RAMP_
+
+    
 ## `Authentication`
 
 + `authentication` (object, optional) - These are [3D Secure](#authenticationobject) details.
