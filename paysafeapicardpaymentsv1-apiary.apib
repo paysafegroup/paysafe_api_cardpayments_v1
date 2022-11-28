@@ -446,7 +446,53 @@ The following is an example of the 3D Secure 2 authentication object:
   ]
 }    
 ```
+**transactionIntent in Authorization**
 
+The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. 
++ It is an optional enum field applicable for every MCC. 
++ It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them.
++ The merchant needs to add in the request transactionIntent property value as shown in the example below.
+
+**Use cases and applicable valid enum transactionIntent options:**
+
+|Use case                                                                                                                                              |MCC                               | Valid transactionIntent value|
+|---                                                                                                                                                   |---                                |---            |
+| The consumer is acquiring cryptocurrency in a transaction.                                                                                           |6012, 6051                              | CRYPTO_ON_RAMP| 
+| The consumer is loading a cryptocurrency wallet or exchange account with fiat. *Applicable only in combination with  valid fundingTransaction object. |6012, 6051           |WALLET_CRYPTO_ON_RAMP|
+| The consumer is acquiring quasi-cash in a transaction. *Quasi cash transactions represent the purchase of foreign currencies or items (including, but not limited to, casino chips, money orders, lottery tickets and travelers cheques) which may be convertible to cash.                 |4829, 6012, 6051                              | QUASI_CASH| 
+| For purchases of goods or services that leverage a live conversion of fiat into non - fiat currency.                                                 |ANY            | BUY_WITH_CRYPTO |
+
+**Default transactionIntent definition by Paysafe**
+
++ All authorizations processed by MCC 6051 will be classified as crypto related with transactionIntent "CRYPTO_ON_RAMP" or "WALLET_CRYPTO_ON_RAMP" (when funding a wallet), except their account is not configured by Paysafe for quasi-cash transactions.
++ All authorizations processed by MCC 6051 or 4829 with quasi-cash configuration turned on  will be classified as quasi-cash related with transactionIntent "QUASI_CASH" .
+
+**Expected errors related to invalid  transactioIntent values:**
+
++ If you send transactionIntent type in the authorization request with value not applicable for your MCC, the transaction will be declined with error  3072 - "Your request has been declined because the requested transactionIntent value is not applicable for your merchant category code (MCC)".
++ If you send transactionIntent type WALLET_CRYPTO_ON_RAMP in the authorization request, but you didn't classify the transaction as "funding" one with the respective valid fundingTransaction object, the transaction will be declined with error 3071 - Your request has been declined because of mismatch between the requested transactionIntent and fundingTransaction type.
+
+**Note:** More about the usage of transactionIntent in Standalone Credit request and response can be found [here](#transactionIntentSC).
+
+```apib
+Example for transactionIntent in Authorization Request
+
+{
+  // all other objects and fields in request
+  
+  "transactionIntent": "CRYPTO_ON_RAMP"
+}
+
+```
+```apib
+Example for transactionIntent in Authorization Response
+
+{
+  // all other objects and fields in response
+  
+  "transactionIntent": "CRYPTO_ON_RAMP"
+}
+```
 
 <a name="billingdetailsobject" title="billingDetails Object"></a>
 ## billingDetails
@@ -1094,86 +1140,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
   "description":"Refund without receipt"
 }    
 ```
-
-<a name="storedcredentialobject" title="storedCredential Object"></a>
-## storedCredential
-
-The *storedCredential* object is used to identify [authorization requests](#authrequest) that use stored credentials for a consumer, in order to improve authorization rates and reduce fraud. Stored credentials can be used in two cases: 
- - Using a payment token &ndash; An authorization request that uses a *paymentToken* from the [Customer Vault API](https://developer.paysafe.com/en/vault/api/)
- - Using a card number &ndash; An authorization request that uses a credit card number stored by the merchant 
-
-**Notes:** 
- - If you use a *paymentToken* in the authorization request but do not include the *storedCredential* object, Paysafe will provide default information taken from Customer Vault data.
- - You cannot include both the *storedCredential* object and the *recurring* parameter in the same authorization request. Paysafe recommends using the *storedCredential* object.
- - The *cvv* parameter of the [card object](#cardobject) is required when the *occurrence* parameter is set to *INITIAL*. However, *cvv* is not required when the *occurrence* parameter is set to *SUBSEQUENT*.
- - The *storedCredential* object cannot be used for Apple Pay or Google Pay transactions.
-
-|Element                       |Type                   |Description|
-|---                           |---                    |---|
-|type                          |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash;  Unscheduled merchant-iniitated request </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
-|occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
-|initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
-|externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
-
-```apib
-{
-    "storedCredential": {
-        "type": "RECURRING",
-        "occurrence": "SUBSEQUENT"
-    }
-}
-```
-<a name="transactionIntentAuth" title="transactionIntentAuth"></a>
-## transactionIntent in Authorization
-
-The transactionIntent property is used to identify the intent of the authorization requests.  The value of the transactionIntent shows if the transaction is crypto or quasi-cash related one. 
-+ It is an optional enum field applicable for every MCC. 
-+ It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them.
-+ The merchant needs to add in the request transactionIntent property value as shown in the example below.
-
-**Use cases and applicable valid enum transactionIntent options:**
-
-|Use case                                                                                                                                              |MCC                               | Valid transactionIntent value|
-|---                                                                                                                                                   |---                                |---            |
-| The consumer is acquiring cryptocurrency in a transaction.                                                                                           |6012, 6051                              | CRYPTO_ON_RAMP| 
-| The consumer is loading a cryptocurrency wallet or exchange account with fiat. *Applicable only in combination with  valid fundingTransaction object. |6012, 6051           |WALLET_CRYPTO_ON_RAMP|
-| The consumer is acquiring quasi-cash in a transaction. *Quasi cash transactions represent the purchase of foreign currencies or items (including, but not limited to, casino chips, money orders, lottery tickets and travelers cheques) which may be convertible to cash.                 |4829, 6012, 6051                              | QUASI_CASH| 
-| For purchases of goods or services that leverage a live conversion of fiat into non - fiat currency.                                                 |ANY            | BUY_WITH_CRYPTO |
-
-**Default transactionIntent definition by Paysafe**
-
-+ All authorizations processed by MCC 6051 will be classified as crypto related with transactionIntent "CRYPTO_ON_RAMP" or "WALLET_CRYPTO_ON_RAMP" (when funding a wallet), except their account is not configured by Paysafe for quasi-cash transactions.
-+ All authorizations processed by MCC 6051 or 4829 with quasi-cash configuration turned on  will be classified as quasi-cash related with transactionIntent "QUASI_CASH" .
-
-**Expected errors related to invalid  transactioIntent values:**
-
-+ If you send transactionIntent type in the authorization request with value not applicable for your MCC, the transaction will be declined with error  3072 - "Your request has been declined because the requested transactionIntent value is not applicable for your merchant category code (MCC)".
-+ If you send transactionIntent type WALLET_CRYPTO_ON_RAMP in the authorization request, but you didn't classify the transaction as "funding" one with the respective valid fundingTransaction object, the transaction will be declined with error 3071 - Your request has been declined because of mismatch between the requested transactionIntent and fundingTransaction type.
-
-**Note:** More about the usage of transactionIntent in Standalone Credit request and response can be found [here](#transactionIntentSC).
-
-```apib
-Example for transactionIntent in Authorization Request
-
-{
-  // all other objects and fields in request
-  
-  "transactionIntent": "CRYPTO_ON_RAMP"
-}
-
-```
-```apib
-Example for transactionIntent in Authorization Response
-
-{
-  // all other objects and fields in response
-  
-  "transactionIntent": "CRYPTO_ON_RAMP"
-}
-```
-
-<a name="transactionIntentSC" title="transactionIntentSC"></a>
-## transactionIntent in Standalone Credit
+**transactionIntent in Standalone Credit**
 
 + The transactionIntent property is used to identify the intent of the standalone credit requests. 
 + The value of the transactionIntent in the standalone credit request shows if the transaction is crypto related one. 
@@ -1222,6 +1189,35 @@ Example for transactionIntent in Standalone Credit Response
   "transactionIntent": "CRYPTO_OFF_RAMP"
 }
 
+```
+
+<a name="storedcredentialobject" title="storedCredential Object"></a>
+## storedCredential
+
+The *storedCredential* object is used to identify [authorization requests](#authrequest) that use stored credentials for a consumer, in order to improve authorization rates and reduce fraud. Stored credentials can be used in two cases: 
+ - Using a payment token &ndash; An authorization request that uses a *paymentToken* from the [Customer Vault API](https://developer.paysafe.com/en/vault/api/)
+ - Using a card number &ndash; An authorization request that uses a credit card number stored by the merchant 
+
+**Notes:** 
+ - If you use a *paymentToken* in the authorization request but do not include the *storedCredential* object, Paysafe will provide default information taken from Customer Vault data.
+ - You cannot include both the *storedCredential* object and the *recurring* parameter in the same authorization request. Paysafe recommends using the *storedCredential* object.
+ - The *cvv* parameter of the [card object](#cardobject) is required when the *occurrence* parameter is set to *INITIAL*. However, *cvv* is not required when the *occurrence* parameter is set to *SUBSEQUENT*.
+ - The *storedCredential* object cannot be used for Apple Pay or Google Pay transactions.
+
+|Element                       |Type                   |Description|
+|---                           |---                    |---|
+|type                          |enum                   |This specifies the type of request being made. Possible values are: <ul><li>ADHOC &ndash; Ad hoc consumer-initiated request</li><li>TOPUP &ndash;  Unscheduled merchant-iniitated request </li><li>RECURRING &ndash; Scheduled, merchant-initiated recurring request</li></ul><br/>**Note:** This value defaults to *ADHOC*.|
+|occurrence                    |enum                   |This specifies whether this stored credential request is initial or recurring. Possible values are: <ul><li>INITIAL &ndash; Used when this is the first time the consumer uses this credit card</li><li>SUBSEQUENT &ndash; Used when the consumer uses this credit card for subsquent requests </li></ul><br/>**Note:** This value defaults to *INITIAL*.|
+|initialTransactionId          |string <br/>`length<=36`  |Id of the initial Recurring Payment transaction. <br/>This id should be stored from the auth response of the transaction indicated as initial with the following: type=RECURRING/TOPUP, occurrence=INITIAL.<br/>This reference should be provided when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT<li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference is a must to meet PSD 2 authentication process requirements for merchant initiated transactions successfully.|
+|externalInitialTransactionId  |string <br/>`length<=256`|Id of the initial Recurring Payment transaction in case this transaction was processed through external PSP.<br/>This reference should be provided only when:<br/><ul><li>type=RECURRING and occurrence=SUBSEQUENT</li><li>type=TOPUP and occurrence=SUBSEQUENT</li></ul><br/>**Note:** This reference cannot be provided along with initialTransactionId.|
+
+```apib
+{
+    "storedCredential": {
+        "type": "RECURRING",
+        "occurrence": "SUBSEQUENT"
+    }
+}
 ```
 
 <a name="ticket" title="ticket Object"></a>
@@ -4373,7 +4369,7 @@ Click on **Get Standalone Credit Using Merchant Reference Number** above to see 
 
 + `transactionIntent`:`CRYPTO_OFF_RAMP` (enum) - This property is used to identify the intent of the Standalone Credit requests and its value indicates if the transaction is crypto-related.
 
-    _Read Only_
+    _Only for Crypto Merchants_
     
     + Members
         + `WALLET_CRYPTO_OFF_RAMP`
