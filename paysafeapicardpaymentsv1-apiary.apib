@@ -1112,6 +1112,7 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
 |riskReasonCode     |array                                  |An array of integers is returned, displaying the detailed Risk reason codes if your transaction was declined. It is returned only if your account is configured accordingly.|
 |acquirerResponse   |[acquirerResponse](#acquirerresponseobject) |This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
 |gatewayReconciliationId           |string <br/>`length<=255`            |Transaction identifier that can be used to reconcile this transaction with the acquirer/processor.<br/>**Note** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|transactionIntent                 | enum |<ul><li>The transactionIntent property is used to identify the intent of the standalone credit requests.</li><li>The value of the transactionIntent in the standalone credit request shows if the transaction is crypto related one.</li><li>It is an optional enum field applicable for MCC 4829,  6012, 6051 and 6211. It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them.</li><li>The merchant needs to add in the request transactionIntent property value as shown in the example below.</li></ol>|
 
 ```apib
 {
@@ -1136,17 +1137,18 @@ If you [look up an authorization request](#getauth)  that used the *visaAddition
     "country":"CA",
     "zip":"M5H 2N2"
   },
+  "transactionIntent": "CRYPTO_OFF_RAMP"
   "customerIp":"204.91.0.12",
   "description":"Refund without receipt"
 }    
 ```
 **transactionIntent in Standalone Credit**
 
-+ The transactionIntent property is used to identify the intent of the standalone credit requests. 
++ 
 + The value of the transactionIntent in the standalone credit request shows if the transaction is crypto related one. 
-+ It is an optional enum field applicable for MCC 4829,  6012, 6051 and 6211.
-+ It is required only if the use cases explained below are applicable for the merchants or the default behavior is not acceptable for them. 
-+ The merchant needs to add in the request transactionIntent property value as shown in the example below.
++ 
++ 
++ 
 
 **Use cases and applicable valid enum transactionIntent options for Standalone Credits:**
 
@@ -1169,25 +1171,6 @@ All standalone credits processed by account with MCC 6051 and configured for Vis
 + If you send transactionIntent with value different than the options above,  the transaction will be declined with error 5068. 
 
 **Note:** More about the usage of transactionIntent in Standalone Credit request and response can be found [here](#transactionIntentAuth).
-
-```apib
-Example for transactionIntent in Standalone Credit Request
-
-{
-  // all other objects and fields in the request
-  
-  "transactionIntent": "CRYPTO_OFF_RAMP"
-}
-
-```
-```apib
-Example for transactionIntent in Standalone Credit Response
-
-{
-  // all other objects and fields in the response
-  
-  "transactionIntent": "CRYPTO_OFF_RAMP"
-}
 
 ```
 
